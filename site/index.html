@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ragbaz — studio runtime</title>
+  <meta name="description" content="ragbaz is a small studio. flagship runtime: matches — autonomous cinematic battle simulation. warm solarized-dark, deterministic, prospectus-grade." />
+  <link rel="icon" href="./assets/logo-ragbaz.png" />
+  <!-- design-system tokens (colors, type scale, components) -->
+  <link rel="stylesheet" href="./colors_and_type.css" />
+  <style>
+    /* page layout — borders not shadows, dark surfaces only */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 600px at 80% -10%, #1d1812 0%, transparent 60%),
+        var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+    .rule { border: 0; border-top: 1px solid var(--border-2, #2a2a2a); margin: 0; }
+
+    /* top chrome */
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
+    .wordmark img { height: 22px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+
+    /* hero */
+    .hero { padding: clamp(3.5rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 4rem); }
+    .eyebrow { font-family: "Intel One Mono", monospace; font-size: .8rem; color: var(--orange-1, #f3c46c); letter-spacing: .04em; }
+    .hero h1 {
+      font-family: "Noto Sans", sans-serif; font-weight: 800;
+      font-size: clamp(2.4rem, 1rem + 6vw, 5.2rem); line-height: 1.02;
+      letter-spacing: -0.02em; color: var(--fg-1, #f6d7a7); margin: .5rem 0 0;
+    }
+    .hero h1 .ember { color: var(--orange-3, #ff9900); }
+    .hero .lede { max-width: 60ch; margin-top: 1.3rem; font-family: "Noto Serif", serif; font-size: clamp(1.05rem, 1rem + .4vw, 1.3rem); color: var(--fg-2, #d8c29d); }
+    .hud { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+    .chip {
+      font-family: "Intel One Mono", monospace; font-size: .76rem; color: var(--fg-3, #d4c19a);
+      border: 1px solid var(--border-warm, #3a2a18); background: var(--bg-elev, #1d1812);
+      padding: .26rem .6rem; border-radius: 6px;
+    }
+    .chip b { color: var(--orange-1, #f3c46c); font-weight: 600; }
+    .cta { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .8rem; }
+    .btn { font-family: "Intel One Mono", monospace; font-size: .86rem; border-radius: 8px; padding: .62rem 1rem; border: 1px solid var(--border-3, #2d2d2d); color: var(--fg-1, #f6d7a7); background: var(--bg-2, #121212); transition: border-color .15s, color .15s, transform .15s; }
+    .btn:hover { transform: translateY(-1px); border-color: var(--orange-4, #d97742); color: var(--orange-1, #f3c46c); }
+    .btn.primary { background: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); border-color: var(--orange-3, #ff9900); font-weight: 600; }
+    .btn.primary:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); color: var(--fg-on-warm, #1a1208); }
+
+    /* ethos / pathos manifesto — kernel-log voice */
+    .manifesto { padding: clamp(2rem, 5vw, 3.5rem) 0; }
+    .manifesto .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .manifesto h2 { font-family: "Intel One Mono", monospace; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; color: var(--fg-4, #9f9f9f); margin: 0 0 2rem; }
+    .tenet .k { font-family: "Intel One Mono", monospace; color: var(--orange-1, #f3c46c); font-size: .82rem; }
+    .tenet p { margin: .4rem 0 0; color: var(--fg-2, #d8c29d); }
+
+    /* product grid */
+    .products { padding: clamp(2.5rem, 6vw, 4rem) 0 1rem; }
+    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+    .sec-head h2 { font-family: "Intel One Mono", monospace; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; color: var(--fg-4, #9f9f9f); margin: 0; }
+    .sec-head .count { font-family: "Intel One Mono", monospace; font-size: .78rem; color: var(--fg-5, #737373); }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .card {
+      display: flex; flex-direction: column; gap: .55rem;
+      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 10px; padding: 1.1rem 1.15rem 1.2rem;
+      transition: border-color .16s, transform .16s, box-shadow .16s;
+    }
+    .card:hover { transform: translateY(-2px); border-color: var(--border-warm, #3a2a18); box-shadow: 0 10px 30px -18px #000; }
+    .card .top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+    .card h3 { font-family: "Intel One Mono", monospace; font-size: 1rem; color: var(--fg-1, #f6d7a7); margin: 0; letter-spacing: .01em; }
+    .card .status { font-family: "Intel One Mono", monospace; font-size: .68rem; color: var(--fg-5, #737373); border: 1px solid var(--border-2, #2a2a2a); border-radius: 999px; padding: .12rem .5rem; white-space: nowrap; }
+    .card.flagship { border-color: var(--border-warm, #3a2a18); background: linear-gradient(180deg, var(--bg-elev, #1d1812), var(--bg-2, #121212)); }
+    .card.flagship .status { color: var(--orange-1, #f3c46c); border-color: var(--border-warm, #3a2a18); }
+    .card p { margin: 0; color: var(--fg-3, #d4c19a); font-size: .92rem; line-height: 1.55; }
+    .card .tags { margin-top: auto; padding-top: .5rem; font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--fg-5, #737373); }
+
+    /* footer */
+    footer { margin-top: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--border-2, #2a2a2a); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
+    @media (max-width: 560px) { .bar nav { display: none; } }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" />RAGBAZ</span>
+      <nav>
+        <a href="#products">products</a>
+        <a href="https://doc.ragbaz.xyz">docs</a>
+        <a href="https://offer.ragbaz.xyz">prospekt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow mono">studio · runtime · prospekt</div>
+        <h1>autonomous cinematic<br />battle <span class="ember">runtime</span></h1>
+        <p class="lede">ragbaz is a small studio. it builds deterministic runtimes, containment-first systems, and prospectus-grade tools — warm solarized-dark, terse, factual. the flagship is <strong style="color:var(--fg-1)">matches</strong>: grounded locomotion, tactical ai, procedural choreography, per-bone keyframe timelines.</p>
+        <div class="hud">
+          <span class="chip mono">flagship: <b>matches</b></span>
+          <span class="chip mono">surfaces: <b>7</b></span>
+          <span class="chip mono">aesthetic: <b>gruvbox-dark-warm</b></span>
+          <span class="chip mono">type: <b>intel one mono</b></span>
+        </div>
+        <div class="cta">
+          <a class="btn primary mono" href="#products">view product lines</a>
+          <a class="btn mono" href="https://doc.ragbaz.xyz">read the docs</a>
+          <a class="btn mono" href="https://offer.ragbaz.xyz">prospekt (early-bird)</a>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <section class="manifesto">
+      <div class="wrap">
+        <h2>// ethos</h2>
+        <div class="grid">
+          <div class="tenet"><span class="k mono">deterministic</span><p>runtimes reproduce. same seed, same frame. choreography is data, not chance.</p></div>
+          <div class="tenet"><span class="k mono">containment-first</span><p>hostile inputs run in isolation. observe the payload, never the blast radius.</p></div>
+          <div class="tenet"><span class="k mono">terse</span><p>copy reads like kernel log lines. labels are identifiers. numbers are mono, tabular.</p></div>
+          <div class="tenet"><span class="k mono">in-family</span><p>one warm dark system across engine, studio, decks, and pages. borders, not shadows.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <section class="products" id="products">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>// product lines</h2>
+          <span class="count mono">7 surfaces</span>
+        </div>
+        <div class="cards">
+          <article class="card flagship">
+            <div class="top"><h3>matches</h3><span class="status mono">flagship</span></div>
+            <p>autonomous cinematic battle runtime. grounded locomotion, tactical ai, procedural choreography, and a per-bone keyframe timeline in an in-browser studio.</p>
+            <div class="tags mono">runtime · 3d-viewport · dsl-editor</div>
+          </article>
+          <article class="card">
+            <div class="top"><h3>articulate</h3><span class="status mono">live</span></div>
+            <p>headless commerce + cms family. secure wordpress gateway, next.js storefront, multi-tenant provisioning, graphql edge.</p>
+            <div class="tags mono">commerce · headless-wp · storefront</div>
+          </article>
+          <article class="card">
+            <div class="top"><h3>mailroute</h3><span class="status mono">beta</span></div>
+            <p>imap mail-stream guard. rule-driven filtering, quarantine buckets, audited rule edits, webhook delivery, smtp intercept.</p>
+            <div class="tags mono">mail-security · rules · litestream</div>
+          </article>
+          <article class="card">
+            <div class="top"><h3>detcordon</h3><span class="status mono">research</span></div>
+            <p>containment-first malware-observation environment. watches hostile web payloads in isolation; records behavior without exposure.</p>
+            <div class="tags mono">isolation · observation · web</div>
+          </article>
+          <article class="card">
+            <div class="top"><h3>scipub</h3><span class="status mono">alpha</span></div>
+            <p>scientific-publishing toolkit. literature retrieval, structured database access, and evaluation over primary sources.</p>
+            <div class="tags mono">research · retrieval · evaluation</div>
+          </article>
+          <article class="card">
+            <div class="top"><h3>esp32tolk</h3><span class="status mono">alpha</span></div>
+            <p>esp32 speech-translator firmware. i2s mic or bluetooth capture, on-device transcription, live translation.</p>
+            <div class="tags mono">firmware · stt · translate</div>
+          </article>
+          <article class="card">
+            <div class="top"><h3>shipwrecks.se</h3><span class="status mono">live</span></div>
+            <p>interactive swedish shipwreck explorer. charted wrecks, dive records, and documented provenance.</p>
+            <div class="tags mono">maps · archive · react</div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" />RAGBAZ</span>
+      <div class="links">
+        <a href="https://doc.ragbaz.xyz">docs</a>
+        <a href="https://offer.ragbaz.xyz">prospekt · early-bird</a>
+        <a href="https://github.com/tabenius/matches">matches · github</a>
+      </div>
+      <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
+    </div>
+  </footer>
+</body>
+</html>
