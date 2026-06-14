@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ragbaz — studio runtime</title>
   <meta name="description" content="ragbaz is a small studio. flagship runtime: matches — autonomous cinematic battle simulation. warm solarized-dark, deterministic, prospectus-grade." />
-  <link rel="icon" href="./assets/logo-ragbaz.png" />
+  <link rel="icon" href="./assets/logo-mark.svg" />
   <!-- design-system tokens (colors, type scale, components) -->
   <link rel="stylesheet" href="./colors_and_type.css" />
   <style>
@@ -38,12 +38,13 @@
     }
     .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
     .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
-    .bar .wordmark img { height: 56px; width: auto; display: block; object-fit: contain; }
+    .bar .wordmark img { height: 39px; width: auto; display: block; object-fit: contain; }
     footer .wordmark img { height: 22px; width: auto; display: block; }
     .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
     section[id], article[id] { scroll-margin-top: 70px; }
     .bar nav a { color: var(--fg-4, #9f9f9f); }
     .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+    .bar nav a.active { color: var(--orange-1, #f3c46c); }
 
     /* hero */
     .hero { padding: clamp(3.5rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 4rem); }
@@ -295,11 +296,11 @@
 <body>
   <header class="bar">
     <div class="wrap">
-      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" /></span>
+      <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
       <nav>
-        <a href="/">home</a>
+        <a href="/" class="active">home</a>
         <a href="/pricing">pricing</a>
-        <a href="#products">products</a>
+        <a href="/#products">products</a>
         <a href="https://doc.ragbaz.cc">docs</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
@@ -328,7 +329,7 @@
   <main>
     <section class="hero">
       <div class="wrap">
-        <div class="eyebrow mono">studio · runtime · prospekt</div>
+        <div class="eyebrow mono">studio · product lines</div>
         <div class="featured-showcase" aria-label="featured RAGBAZ products">
           <div class="featured-frame">
             <article class="featured-slide active" data-featured-slide>
@@ -566,7 +567,7 @@
 
   <footer>
     <div class="wrap">
-      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" /></span>
+      <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
       <div class="links">
         <a href="/pricing">pricing</a>
         <a href="https://doc.ragbaz.cc">docs</a>
