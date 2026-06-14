@@ -1,8 +1,15 @@
 services:
-  ragbaz-xyz:
+  ragbaz-cc:
     build: .
-    image: ragbaz-xyz:local
-    container_name: ragbaz-xyz
+    image: ragbaz-cc:local
+    container_name: ragbaz-cc
     restart: unless-stopped
     ports:
       - "127.0.0.1:8820:80"
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    name: traefik-public
+    external: true

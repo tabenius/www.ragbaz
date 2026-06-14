@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ragbaz — pricing</title>
+  <meta name="description" content="ragbaz pricing plans — articulate headless commerce and cms. free, writer, commerce, agency, secure." />
+  <link rel="icon" href="./assets/logo-ragbaz.png" />
+  <link rel="stylesheet" href="./colors_and_type.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+    .rule { border: 0; border-top: 1px solid var(--border-2, #2a2a2a); margin: 0; }
+
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
+    .wordmark img { height: 22px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+    .bar nav a.active { color: var(--orange-1, #f3c46c); }
+
+    .page-head { padding: clamp(2.5rem, 6vw, 4rem) 0 1.5rem; }
+    .page-head h1 { font-family: "Intel One Mono", monospace; font-size: 1.6rem; color: var(--fg-1, #f6d7a7); margin: 0; }
+    .page-head p { max-width: 60ch; margin: .6rem 0 0; color: var(--fg-3, #d4c19a); }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding-bottom: clamp(3rem, 7vw, 5rem); }
+
+    .plan {
+      display: flex; flex-direction: column; gap: .4rem;
+      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 10px; padding: 1.4rem 1.15rem 1.2rem;
+      transition: border-color .16s, transform .16s;
+    }
+    .plan:hover { transform: translateY(-2px); border-color: var(--border-warm, #3a2a18); }
+    .plan.featured { border-color: var(--border-warm, #3a2a18); background: linear-gradient(180deg, var(--bg-elev, #1d1812), var(--bg-2, #121212)); }
+
+    .plan h3 { font-family: "Intel One Mono", monospace; font-size: 1rem; color: var(--fg-1, #f6d7a7); margin: 0; letter-spacing: .01em; }
+    .plan .price { font-family: "Intel One Mono", monospace; font-size: 1.8rem; color: var(--orange-3, #ff9900); margin: .2rem 0; }
+    .plan .price span { font-size: .8rem; color: var(--fg-4, #9f9f9f); }
+    .plan .desc { color: var(--fg-3, #d4c19a); font-size: .86rem; margin: .2rem 0 .4rem; }
+    .plan ul { list-style: none; padding: 0; margin: .6rem 0; }
+    .plan li { padding: .3rem 0; font-size: .82rem; color: var(--fg-4, #9f9f9f); }
+    .plan li::before { content: "> "; color: var(--orange-1, #f3c46c); }
+
+    .btn { font-family: "Intel One Mono", monospace; font-size: .86rem; border-radius: 8px; padding: .62rem 1rem; border: 1px solid var(--border-3, #2d2d2d); color: var(--fg-1, #f6d7a7); background: var(--bg-2, #121212); transition: border-color .15s, color .15s, transform .15s; text-align: center; cursor: pointer; }
+    .btn:hover { transform: translateY(-1px); border-color: var(--orange-4, #d97742); color: var(--orange-1, #f3c46c); }
+    .btn.primary { background: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); border-color: var(--orange-3, #ff9900); font-weight: 600; }
+    .btn.primary:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); color: var(--fg-on-warm, #1a1208); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .form-row { display: flex; flex-direction: column; gap: .3rem; margin: .8rem 0; }
+    .form-row label { font-family: "Intel One Mono", monospace; font-size: .76rem; color: var(--fg-4, #9f9f9f); }
+    .form-row input { background: var(--bg-3, #151515); border: 1px solid var(--border-2, #2a2a2a); border-radius: 6px; padding: .5rem .6rem; color: var(--fg-1, #f6d7a7); font-family: "Intel One Mono", monospace; font-size: .86rem; outline: none; }
+    .form-row input:focus { border-color: var(--orange-1, #f3c46c); }
+
+    .status-banner { padding: .8rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-family: "Intel One Mono", monospace; font-size: .82rem; display: none; }
+    .status-banner.success { display: block; background: #16241a; border: 1px solid #4a6a3a; color: var(--green-1, #b8bb26); }
+    .status-banner.error { display: block; background: #2a1818; border: 1px solid #6a3a3a; color: var(--red-1, #fb4934); }
+    .status-banner.info { display: block; background: #122230; border: 1px solid var(--blue-3, #2a8d9e); color: var(--blue-1, #7ab8ff); }
+
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 12px; padding: 1.5rem; max-width: 420px; width: 90%;
+    }
+    .modal h3 { font-family: "Intel One Mono", monospace; font-size: 1rem; color: var(--fg-1, #f6d7a7); margin: 0 0 .6rem; }
+    .modal .close { float: right; cursor: pointer; color: var(--fg-5, #737373); font-size: 1.2rem; }
+    .modal .close:hover { color: var(--fg-1, #f6d7a7); }
+
+    footer { margin-top: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--border-2, #2a2a2a); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
+    @media (max-width: 560px) { .bar nav { display: none; } }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" />RAGBAZ</span>
+      <nav>
+        <a href="/">home</a>
+        <a href="/pricing" class="active">pricing</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <div class="wrap">
+        <h1 class="mono">// pricing</h1>
+        <p>articulate plans — headless commerce, multisite, and managed WordPress. all tiers include a <strong style="color:var(--fg-1)">*.ragbaz.cc</strong> subdomain, automated ssl, and email forwarding.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div id="status-banner" class="status-banner"></div>
+        <div class="pricing-grid" id="pricing-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="signup-modal">
+    <div class="modal">
+      <span class="close mono" onclick="closeModal()">&times;</span>
+      <h3 class="mono" id="modal-title">sign up</h3>
+      <div class="form-row">
+        <label>email</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" />
+      </div>
+      <div class="form-row">
+        <label>subdomain</label>
+        <input type="text" id="signup-slug" placeholder="my-site" />
+        <span style="font-size:.72rem;color:var(--fg-5)">your-site.ragbaz.cc</span>
+      </div>
+      <div id="modal-error" class="status-banner error" style="margin:.6rem 0 0"></div>
+      <button class="btn primary mono" id="signup-btn" onclick="startCheckout()" style="width:100%;margin-top:1rem">continue to stripe</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" />RAGBAZ</span>
+      <div class="links">
+        <a href="/">home</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="https://github.com/tabenius/matches">matches · github</a>
+      </div>
+      <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
+    </div>
+  </footer>
+
+  <script>
+    const PLANS = [
+      {
+        tier: "free", name: "free", price: "0", desc: "single-site wordpress. basic cms, no backup.",
+        features: ["1 WordPress site", "256 MB RAM", "No backup", "Community support", "*.ragbaz.cc subdomain"],
+        featured: false,
+      },
+      {
+        tier: "writer", name: "writer", price: "12", desc: "personal blog or portfolio. lightweight cms + mail.",
+        features: ["1 WordPress site", "512 MB RAM", "Email forwarding", "Standard support", "Custom domain ready"],
+        featured: false,
+      },
+      {
+        tier: "commerce", name: "commerce", price: "29", desc: "shop or course platform. headless + storefront.",
+        features: ["1 WordPress site", "1 GB RAM", "Daily backups", "Storefront (Next.js)", "WooCommerce + LearnDash", "GraphQL API access"],
+        featured: true,
+      },
+      {
+        tier: "agency", name: "agency", price: "79", desc: "multisite for agencies. white-label ready.",
+        features: ["Up to 5 sites", "2 GB RAM per site", "Daily backups", "White-label option", "Priority support", "Custom integrations"],
+        featured: false,
+      },
+      {
+        tier: "secure", name: "secure", price: "149", desc: "isolated tenant for compliance-sensitive workloads.",
+        features: ["1 site, hardened isolation", "2 GB RAM", "Daily backups + off-site", "WAF + DDoS protection", "SLA-backed uptime", "Dedicated IP available"],
+        featured: false,
+      },
+    ];
+
+    function renderPlans() {
+      const grid = document.getElementById("pricing-grid");
+      grid.innerHTML = PLANS.map(p => `
+        <div class="plan${p.featured ? " featured" : ""}">
+          <h3 class="mono">${p.name}</h3>
+          <div class="price mono">${p.price === "0" ? "free" : "$" + p.price}<span>${p.price !== "0" ? "/mo" : ""}</span></div>
+          <div class="desc">${p.desc}</div>
+          <ul>${p.features.map(f => `<li>${f}</li>`).join("")}</ul>
+          <button class="btn ${p.price === "0" ? "" : "primary"} mono" onclick="openSignup('${p.tier}', '${p.name}')" style="margin-top:auto">
+            ${p.price === "0" ? "start free" : "subscribe · $" + p.price + "/mo"}
+          </button>
+        </div>
+      `).join("");
+    }
+
+    let selectedTier = "";
+
+    function openSignup(tier, name) {
+      selectedTier = tier;
+      document.getElementById("modal-title").textContent = "sign up · " + name;
+      document.getElementById("signup-email").value = "";
+      document.getElementById("signup-slug").value = "";
+      document.getElementById("modal-error").style.display = "none";
+      document.getElementById("signup-btn").disabled = false;
+      document.getElementById("signup-btn").textContent = "continue to stripe";
+      document.getElementById("signup-modal").classList.add("open");
+    }
+
+    function closeModal() {
+      document.getElementById("signup-modal").classList.remove("open");
+    }
+
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+    async function startCheckout() {
+      const email = document.getElementById("signup-email").value.trim();
+      const slug = document.getElementById("signup-slug").value.trim();
+      const errEl = document.getElementById("modal-error");
+
+      if (!email || !slug) {
+        errEl.textContent = "email and subdomain are required";
+        errEl.style.display = "block";
+        return;
+      }
+      if (!/^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$/i.test(slug)) {
+        errEl.textContent = "subdomain: 3-50 chars, letters/dashes only";
+        errEl.style.display = "block";
+        return;
+      }
+
+      document.getElementById("signup-btn").disabled = true;
+      document.getElementById("signup-btn").textContent = "redirecting to stripe…";
+      errEl.style.display = "none";
+
+      try {
+        const r = await fetch("https://provision.ragbaz.cc/api/create-checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tier: selectedTier,
+            email: email,
+            slug: slug,
+            success_url: "https://ragbaz.cc/pricing?status=success&slug=" + slug,
+            cancel_url: "https://ragbaz.cc/pricing?status=cancelled",
+          }),
+        });
+        const data = await r.json();
+        if (!r.ok) {
+          errEl.textContent = data.detail || "server error";
+          errEl.style.display = "block";
+          document.getElementById("signup-btn").disabled = false;
+          document.getElementById("signup-btn").textContent = "continue to stripe";
+          return;
+        }
+        window.location.href = data.url;
+      } catch (e) {
+        errEl.textContent = "network error — check connection";
+        errEl.style.display = "block";
+        document.getElementById("signup-btn").disabled = false;
+        document.getElementById("signup-btn").textContent = "continue to stripe";
+      }
+    }
+
+    function showBanner(msg, kind) {
+      const el = document.getElementById("status-banner");
+      el.textContent = msg;
+      el.className = "status-banner " + kind;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("status") === "success") {
+      showBanner("provisioning your tenant — you will receive an email when it is ready.", "success");
+    } else if (params.get("status") === "cancelled") {
+      showBanner("checkout cancelled — no charges were made.", "info");
+    }
+
+    renderPlans();
+  </script>
+</body>
+</html>

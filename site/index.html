@@ -33,13 +33,15 @@
     /* top chrome */
     header.bar {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      background: #15120c;
       border-bottom: 1px solid var(--border-2, #2a2a2a);
     }
     .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
     .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
-    .wordmark img { height: 22px; width: auto; display: block; }
+    .bar .wordmark img { height: 56px; width: auto; display: block; object-fit: contain; }
+    footer .wordmark img { height: 22px; width: auto; display: block; }
     .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    section[id], article[id] { scroll-margin-top: 70px; }
     .bar nav a { color: var(--fg-4, #9f9f9f); }
     .bar nav a:hover { color: var(--orange-1, #f3c46c); }
 
@@ -66,6 +68,158 @@
     .btn.primary { background: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); border-color: var(--orange-3, #ff9900); font-weight: 600; }
     .btn.primary:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); color: var(--fg-on-warm, #1a1208); }
 
+    .featured-showcase {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 10px;
+      background:
+        linear-gradient(180deg, rgba(29, 24, 18, .96), rgba(18, 18, 18, .98)),
+        var(--bg-2, #121212);
+      overflow: hidden;
+    }
+    .featured-frame {
+      position: relative;
+      min-height: 360px;
+    }
+    .featured-slide {
+      display: none;
+      grid-template-columns: minmax(0, 1.05fr) minmax(260px, .75fr);
+      gap: clamp(1rem, 4vw, 2.5rem);
+      padding: clamp(1.2rem, 4vw, 2rem);
+    }
+    .featured-slide.active { display: grid; }
+    .featured-copy { display: grid; align-content: center; gap: .85rem; }
+    .featured-kicker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      align-items: center;
+      font-family: "Intel One Mono", monospace;
+      font-size: .72rem;
+      color: var(--fg-5, #737373);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .featured-kicker .status {
+      color: var(--orange-1, #f3c46c);
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 999px;
+      padding: .12rem .5rem;
+      background: rgba(255, 153, 0, .07);
+    }
+    .featured-slide h2 {
+      margin: 0;
+      font-family: "Noto Sans", sans-serif;
+      font-size: clamp(2rem, 1.2rem + 4vw, 4.4rem);
+      line-height: 1.02;
+      color: var(--fg-1, #f6d7a7);
+    }
+    .featured-slide h2 span { color: var(--orange-3, #ff9900); }
+    .featured-desc {
+      max-width: 58ch;
+      margin: 0;
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Serif", serif;
+      font-size: clamp(1.02rem, 1rem + .3vw, 1.2rem);
+    }
+    .featured-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-top: .35rem;
+    }
+    .featured-tags span {
+      font-family: "Intel One Mono", monospace;
+      font-size: .72rem;
+      color: var(--blue-1, #7ab8ff);
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 6px;
+      padding: .18rem .5rem;
+      background: var(--bg-3, #151515);
+    }
+    .featured-panel {
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: var(--bg-0, #0a0908);
+      padding: 1rem;
+      display: grid;
+      align-content: space-between;
+      gap: 1rem;
+      min-height: 250px;
+    }
+    .featured-panel .label {
+      font-family: "Intel One Mono", monospace;
+      font-size: .72rem;
+      color: var(--fg-5, #737373);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .featured-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: .55rem;
+    }
+    .featured-panel li {
+      color: var(--fg-3, #d4c19a);
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+    .featured-panel li::before {
+      content: "> ";
+      color: var(--orange-1, #f3c46c);
+      font-family: "Intel One Mono", monospace;
+    }
+    .featured-panel .link {
+      justify-self: start;
+      font-family: "Intel One Mono", monospace;
+      font-size: .8rem;
+      color: var(--orange-1, #f3c46c);
+    }
+    .featured-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .75rem 1rem;
+      border-top: 1px solid var(--border-2, #2a2a2a);
+      background: rgba(10, 9, 8, .65);
+    }
+    .featured-arrows { display: flex; gap: .45rem; }
+    .featured-arrow,
+    .featured-dot {
+      font-family: "Intel One Mono", monospace;
+      border: 1px solid var(--border-2, #2a2a2a);
+      background: var(--bg-2, #121212);
+      color: var(--fg-3, #d4c19a);
+      cursor: pointer;
+    }
+    .featured-arrow {
+      border-radius: 6px;
+      padding: .38rem .55rem;
+      min-width: 2.2rem;
+    }
+    .featured-arrow:hover,
+    .featured-dot:hover,
+    .featured-dot.active {
+      color: var(--orange-1, #f3c46c);
+      border-color: var(--border-warm, #3a2a18);
+    }
+    .featured-dots { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: flex-end; }
+    .featured-dot {
+      width: 2.4rem;
+      height: 1.7rem;
+      border-radius: 999px;
+      font-size: .68rem;
+    }
+    @media (max-width: 760px) {
+      .featured-slide { grid-template-columns: 1fr; }
+      .featured-frame { min-height: 0; }
+      .featured-controls { align-items: flex-start; flex-direction: column; }
+      .featured-dots { justify-content: flex-start; }
+    }
+
     /* ethos / pathos manifesto — kernel-log voice */
     .manifesto { padding: clamp(2rem, 5vw, 3.5rem) 0; }
     .manifesto .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
@@ -73,26 +227,39 @@
     .tenet .k { font-family: "Intel One Mono", monospace; color: var(--orange-1, #f3c46c); font-size: .82rem; }
     .tenet p { margin: .4rem 0 0; color: var(--fg-2, #d8c29d); }
 
-    /* product grid */
-    .products { padding: clamp(2.5rem, 6vw, 4rem) 0 1rem; }
-    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
-    .sec-head h2 { font-family: "Intel One Mono", monospace; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; color: var(--fg-4, #9f9f9f); margin: 0; }
-    .sec-head .count { font-family: "Intel One Mono", monospace; font-size: .78rem; color: var(--fg-5, #737373); }
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-    .card {
-      display: flex; flex-direction: column; gap: .55rem;
-      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
-      border-radius: 10px; padding: 1.1rem 1.15rem 1.2rem;
-      transition: border-color .16s, transform .16s, box-shadow .16s;
+    /* product sections */
+    .pl { padding: clamp(2.5rem, 6vw, 4rem) 0 1rem; }
+    .pl .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+    .pl .sec-head h2 { font-family: "Intel One Mono", monospace; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; color: var(--fg-4, #9f9f9f); margin: 0; }
+    .pl .sec-head .count { font-family: "Intel One Mono", monospace; font-size: .78rem; color: var(--fg-5, #737373); }
+
+    .prod {
+      border: 1px solid var(--border-2, #2a2a2a); border-radius: 10px;
+      padding: 1.15rem 1.25rem 1.2rem; margin-bottom: .8rem;
+      background: var(--bg-2, #121212);
+      transition: border-color .16s;
     }
-    .card:hover { transform: translateY(-2px); border-color: var(--border-warm, #3a2a18); box-shadow: 0 10px 30px -18px #000; }
-    .card .top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-    .card h3 { font-family: "Intel One Mono", monospace; font-size: 1rem; color: var(--fg-1, #f6d7a7); margin: 0; letter-spacing: .01em; }
-    .card .status { font-family: "Intel One Mono", monospace; font-size: .68rem; color: var(--fg-5, #737373); border: 1px solid var(--border-2, #2a2a2a); border-radius: 999px; padding: .12rem .5rem; white-space: nowrap; }
-    .card.flagship { border-color: var(--border-warm, #3a2a18); background: linear-gradient(180deg, var(--bg-elev, #1d1812), var(--bg-2, #121212)); }
-    .card.flagship .status { color: var(--orange-1, #f3c46c); border-color: var(--border-warm, #3a2a18); }
-    .card p { margin: 0; color: var(--fg-3, #d4c19a); font-size: .92rem; line-height: 1.55; }
-    .card .tags { margin-top: auto; padding-top: .5rem; font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--fg-5, #737373); }
+    .prod:hover { border-color: var(--border-warm, #3a2a18); }
+    .prod.flagship { border-color: var(--border-warm, #3a2a18); background: linear-gradient(180deg, var(--bg-elev, #1d1812), var(--bg-2, #121212)); }
+
+    .prod .hd { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; margin-bottom: .2rem; }
+    .prod .hd h3 { font-family: "Intel One Mono", monospace; font-size: .95rem; color: var(--fg-1, #f6d7a7); margin: 0; letter-spacing: .01em; }
+    .prod .hd .st { font-family: "Intel One Mono", monospace; font-size: .65rem; color: var(--fg-5, #737373); border: 1px solid var(--border-2, #2a2a2a); border-radius: 999px; padding: .1rem .5rem; white-space: nowrap; }
+    .prod.flagship .hd .st { color: var(--orange-1, #f3c46c); border-color: var(--border-warm, #3a2a18); }
+
+    .prod .desc { color: var(--fg-3, #d4c19a); font-size: .86rem; margin: .3rem 0 .7rem; }
+
+    .prod .comp-head { font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--fg-5, #737373); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
+    .prod .comps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .5rem; margin-bottom: .7rem; }
+    .prod .comp {
+      border-left: 2px solid var(--border-2, #2a2a2a); padding-left: .6rem;
+    }
+    .prod .comp h4 { font-family: "Intel One Mono", monospace; font-size: .82rem; color: var(--orange-1, #f3c46c); margin: 0; font-weight: 600; }
+    .prod .comp p { margin: .15rem 0 0; color: var(--fg-4, #9f9f9f); font-size: .78rem; line-height: 1.5; }
+
+    .prod .flow { display: flex; flex-wrap: wrap; gap: .3rem .6rem; align-items: center; font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--fg-5, #737373); padding-top: .5rem; border-top: 1px solid var(--border-2, #2a2a2a); }
+    .prod .flow .f-node { color: var(--blue-1, #7ab8ff); }
+    .prod .flow .f-arr { color: var(--fg-5, #737373); }
 
     /* footer */
     footer { margin-top: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--border-2, #2a2a2a); }
@@ -100,43 +267,186 @@
     footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
     footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
     @media (max-width: 560px) { .bar nav { display: none; } }
+
+    /* hamburger menu */
+    .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; margin-left: auto; display: flex; align-items: center; }
+    .hm-btn:hover { color: var(--orange-1, #f3c46c); }
+    .hm-overlay {
+      position: fixed; top: 0; right: 0; width: 260px; height: 100vh;
+      background: #15120c; border-left: 1px solid var(--border-2, #2a2a2a);
+      transform: translateX(100%); transition: transform .2s ease;
+      z-index: 20; padding: 1.5rem; overflow-y: auto;
+    }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-overlay .hm-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; }
+    .hm-overlay .hm-close:hover { color: var(--orange-1, #f3c46c); }
+    .hm-overlay .hm-head { font-family: "Intel One Mono", monospace; font-size: .7rem; color: var(--fg-5, #737373); text-transform: uppercase; letter-spacing: .12em; margin-top: .5rem; margin-bottom: .15rem; }
+    .hm-overlay .hm-head:first-of-type { margin-top: 2rem; }
+    .hm-overlay a { display: block; padding: .35rem 0; font-family: "Intel One Mono", monospace; font-size: .85rem; color: var(--fg-2, #d8c29d); text-decoration: none; }
+    .hm-overlay a.sub { padding-left: 1rem; font-size: .78rem; color: var(--fg-4, #9f9f9f); }
+    .hm-overlay a:hover { color: var(--orange-1, #f3c46c); }
+    .hm-scrim {
+      position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 19;
+      opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
   </style>
 </head>
 <body>
   <header class="bar">
     <div class="wrap">
-      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" />RAGBAZ</span>
+      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" /></span>
       <nav>
+        <a href="/">home</a>
+        <a href="/pricing">pricing</a>
         <a href="#products">products</a>
-        <a href="https://doc.ragbaz.xyz">docs</a>
-        <a href="https://offer.ragbaz.xyz">prospekt</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
       </nav>
+      <button class="hm-btn mono" onclick="toggleHM()">☰</button>
     </div>
   </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay" id="hm-overlay">
+    <button class="hm-close" onclick="closeHM()">✕</button>
+    <div class="hm-head">sections</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="#ethos" onclick="closeHM()">ethos</a>
+    <a href="#products" onclick="closeHM()">products</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <div class="hm-head">product lines</div>
+    <a class="sub" href="#p-matches" onclick="closeHM()">matches</a>
+    <a class="sub" href="#p-articulate" onclick="closeHM()">articulate</a>
+    <a class="sub" href="#p-mailroute" onclick="closeHM()">mailroute</a>
+    <a class="sub" href="#p-detcordon" onclick="closeHM()">detcordon</a>
+    <a class="sub" href="#p-scipub" onclick="closeHM()">scipub</a>
+    <a class="sub" href="#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
+    <a class="sub" href="#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
+  </div>
 
   <main>
     <section class="hero">
       <div class="wrap">
         <div class="eyebrow mono">studio · runtime · prospekt</div>
-        <h1>autonomous cinematic<br />battle <span class="ember">runtime</span></h1>
-        <p class="lede">ragbaz is a small studio. it builds deterministic runtimes, containment-first systems, and prospectus-grade tools — warm solarized-dark, terse, factual. the flagship is <strong style="color:var(--fg-1)">matches</strong>: grounded locomotion, tactical ai, procedural choreography, per-bone keyframe timelines.</p>
-        <div class="hud">
-          <span class="chip mono">flagship: <b>matches</b></span>
-          <span class="chip mono">surfaces: <b>7</b></span>
-          <span class="chip mono">aesthetic: <b>gruvbox-dark-warm</b></span>
-          <span class="chip mono">type: <b>intel one mono</b></span>
+        <div class="featured-showcase" aria-label="featured RAGBAZ products">
+          <div class="featured-frame">
+            <article class="featured-slide active" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">flagship</span><span>01 / matches</span></div>
+                <h2>autonomous cinematic<br />battle <span>runtime</span></h2>
+                <p class="featured-desc">Grounded locomotion, tactical AI, procedural choreography, and per-bone keyframe timelines in a deterministic in-browser studio.</p>
+                <div class="featured-tags"><span>3d viewport</span><span>dsl editor</span><span>blender export</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>turns fighter intent into reproducible cinematic combat clips</li>
+                  <li>exports timeline, camera, and semantic contact data</li>
+                  <li>runs in browser, headless node, and offline render pipelines</li>
+                </ul>
+                <a class="link" href="#p-matches">open product line</a>
+              </div>
+            </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">live</span><span>02 / articulate</span></div>
+                <h2>headless commerce<br />and <span>cms</span></h2>
+                <p class="featured-desc">A secure WordPress gateway, Next.js storefront, multi-tenant provisioning, DNS automation, mail, and GraphQL edge surface.</p>
+                <div class="featured-tags"><span>gatekeeper</span><span>storefront</span><span>tenant provisioner</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>provisions WordPress tenants with public ragbaz.cc routes</li>
+                  <li>keeps authoring private while serving cached storefronts</li>
+                  <li>connects billing, DNS, mail, and deployment workflow</li>
+                </ul>
+                <a class="link" href="#p-articulate">open product line</a>
+              </div>
+            </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">beta</span><span>03 / mailroute</span></div>
+                <h2>mail stream<br /><span>guard</span></h2>
+                <p class="featured-desc">Rule-driven IMAP and SMTP inspection with quarantine buckets, audited rule edits, event hooks, and operator review.</p>
+                <div class="featured-tags"><span>mail security</span><span>quarantine</span><span>audit trail</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>filters hostile or unwanted mail before inbox delivery</li>
+                  <li>records rule changes through propose, apply, revert cycles</li>
+                  <li>emits signed events for downstream automation</li>
+                </ul>
+                <a class="link" href="#p-mailroute">open product line</a>
+              </div>
+            </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">research</span><span>04 / detcordon</span></div>
+                <h2>containment-first<br /><span>observation</span></h2>
+                <p class="featured-desc">Disposable browser and payload analysis environments for watching hostile web behavior without exposing the operator surface.</p>
+                <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>captures network, DOM, storage, and file-system behavior</li>
+                  <li>keeps payload execution isolated from workstation state</li>
+                  <li>turns observations into structured indicators and reports</li>
+                </ul>
+                <a class="link" href="#p-detcordon">open product line</a>
+              </div>
+            </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">live</span><span>05 / atlas + docs</span></div>
+                <h2>product atlas<br />and <span>status</span></h2>
+                <p class="featured-desc">The documentation and operations surface for RAGBAZ products, specs, status checks, deployment notes, and design-system references.</p>
+                <div class="featured-tags"><span>doc.ragbaz.cc</span><span>status</span><span>design system</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>publishes product specs and implementation notes</li>
+                  <li>keeps infrastructure and uptime information discoverable</li>
+                  <li>anchors every surface to the RAGBAZ visual system</li>
+                </ul>
+                <a class="link" href="https://doc.ragbaz.cc">open docs</a>
+              </div>
+            </article>
+          </div>
+
+          <div class="featured-controls">
+            <div class="featured-arrows">
+              <button class="featured-arrow" type="button" aria-label="Previous featured product" onclick="moveFeatured(-1)">‹</button>
+              <button class="featured-arrow" type="button" aria-label="Next featured product" onclick="moveFeatured(1)">›</button>
+            </div>
+            <div class="featured-dots" aria-label="Featured product slides">
+              <button class="featured-dot active" type="button" onclick="showFeatured(0)">01</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(1)">02</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(2)">03</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(3)">04</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(4)">05</button>
+            </div>
+          </div>
         </div>
         <div class="cta">
-          <a class="btn primary mono" href="#products">view product lines</a>
-          <a class="btn mono" href="https://doc.ragbaz.xyz">read the docs</a>
-          <a class="btn mono" href="https://offer.ragbaz.xyz">prospekt (early-bird)</a>
+          <a class="btn primary mono" href="/pricing">pricing & signup</a>
+          <a class="btn mono" href="#products">product lines</a>
+          <a class="btn mono" href="https://doc.ragbaz.cc">read the docs</a>
         </div>
       </div>
     </section>
 
     <hr class="rule" />
 
-    <section class="manifesto">
+    <section class="manifesto" id="ethos">
       <div class="wrap">
         <h2>// ethos</h2>
         <div class="grid">
@@ -150,63 +460,143 @@
 
     <hr class="rule" />
 
-    <section class="products" id="products">
+    <section class="pl" id="products">
       <div class="wrap">
         <div class="sec-head">
           <h2>// product lines</h2>
           <span class="count mono">7 surfaces</span>
         </div>
-        <div class="cards">
-          <article class="card flagship">
-            <div class="top"><h3>matches</h3><span class="status mono">flagship</span></div>
-            <p>autonomous cinematic battle runtime. grounded locomotion, tactical ai, procedural choreography, and a per-bone keyframe timeline in an in-browser studio.</p>
-            <div class="tags mono">runtime · 3d-viewport · dsl-editor</div>
-          </article>
-          <article class="card">
-            <div class="top"><h3>articulate</h3><span class="status mono">live</span></div>
-            <p>headless commerce + cms family. secure wordpress gateway, next.js storefront, multi-tenant provisioning, graphql edge.</p>
-            <div class="tags mono">commerce · headless-wp · storefront</div>
-          </article>
-          <article class="card">
-            <div class="top"><h3>mailroute</h3><span class="status mono">beta</span></div>
-            <p>imap mail-stream guard. rule-driven filtering, quarantine buckets, audited rule edits, webhook delivery, smtp intercept.</p>
-            <div class="tags mono">mail-security · rules · litestream</div>
-          </article>
-          <article class="card">
-            <div class="top"><h3>detcordon</h3><span class="status mono">research</span></div>
-            <p>containment-first malware-observation environment. watches hostile web payloads in isolation; records behavior without exposure.</p>
-            <div class="tags mono">isolation · observation · web</div>
-          </article>
-          <article class="card">
-            <div class="top"><h3>scipub</h3><span class="status mono">alpha</span></div>
-            <p>scientific-publishing toolkit. literature retrieval, structured database access, and evaluation over primary sources.</p>
-            <div class="tags mono">research · retrieval · evaluation</div>
-          </article>
-          <article class="card">
-            <div class="top"><h3>esp32tolk</h3><span class="status mono">alpha</span></div>
-            <p>esp32 speech-translator firmware. i2s mic or bluetooth capture, on-device transcription, live translation.</p>
-            <div class="tags mono">firmware · stt · translate</div>
-          </article>
-          <article class="card">
-            <div class="top"><h3>shipwrecks.se</h3><span class="status mono">live</span></div>
-            <p>interactive swedish shipwreck explorer. charted wrecks, dive records, and documented provenance.</p>
-            <div class="tags mono">maps · archive · react</div>
-          </article>
-        </div>
+
+        <article class="prod flagship" id="p-matches">
+          <div class="hd"><h3>matches</h3><span class="st mono">flagship</span></div>
+          <div class="desc">autonomous cinematic battle runtime — grounded locomotion, tactical ai, procedural choreography, per-bone keyframe timeline in an in-browser studio.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>viewport</h4><p>real-time 3d scene renderer. webgl2 viewport with orbit controls, selection, transform gizmos. multi-camera layout (perspective, top, front).</p></div>
+            <div class="comp"><h4>timeline</h4><p>per-bone keyframe editor. dope sheet and curve editor. blend modes, easing presets, frame-stepping. deterministic replay.</p></div>
+            <div class="comp"><h4>tactical ai</h4><p>goal-oriented action planner. perception system (sight, sound, damage). stance state machine, formation logic, cover evaluation.</p></div>
+            <div class="comp"><h4>dsl editor</h4><p>embedded domain-specific language for choreography. syntax-highlighted editor with live preview. seed-based determinism for reproducible playback.</p></div>
+            <div class="comp"><h4>procedural engine</h4><p>locomotion blending, ragdoll transitions, procedural wind/react. constraint solver for foot-planting and hand-placement.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">dsl-editor</span><span class="f-arr">→</span><span class="f-node">tactical-ai</span><span class="f-arr">→</span><span class="f-node">procedural-engine</span><span class="f-arr">→</span><span class="f-node">viewport</span><span class="f-arr">←</span><span class="f-node">timeline</span></div>
+        </article>
+
+        <article class="prod" id="p-articulate">
+          <div class="hd"><h3>articulate</h3><span class="st mono">live</span></div>
+          <div class="desc">headless commerce + cms family — secure wordpress gateway, next.js storefront, multi-tenant provisioning, graphql edge federation.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>gatekeeper</h4><p>secure ingress proxy. authenticates and routes requests to tenant wordpress instances. handles custom domain ssl, rate limiting, waf rules.</p></div>
+            <div class="comp"><h4>storefront</h4><p>next.js 16 headless frontend. app router, tailwind v4, stripe payments, oauth (google/facebook/microsoft/apple). courses, shop, events, digital downloads.</p></div>
+            <div class="comp"><h4>provisioner</h4><p>multi-tenant lifecycle manager. creates wordpress instances via docker-compose, manages dns (cloudflare), mail users, ssl certs. stripe webhook integration for billing.</p></div>
+            <div class="comp"><h4>graphql edge</h4><p>federated graphql gateway (strawberry + fastapi). aggregates wp graphql, storefront data, and tenant management into a single endpoint. mcp server for ai-driven operations.</p></div>
+            <div class="comp"><h4>mailstack</h4><p>tenant email infrastructure. dovecot imap, postfix smtp, dkim signing, alias management, mailbox provisioning per tenant.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">provisioner</span><span class="f-arr">→</span><span class="f-node">gatekeeper</span><span class="f-arr">→</span><span class="f-node">wordpress</span><span class="f-arr">↔</span><span class="f-node">graphql-edge</span><span class="f-arr">↔</span><span class="f-node">storefront</span><span class="f-arr">→</span><span class="f-node">stripe</span></div>
+        </article>
+
+        <article class="prod" id="p-mailroute">
+          <div class="hd"><h3>mailroute</h3><span class="st mono">beta</span></div>
+          <div class="desc">imap mail-stream guard — rule-driven filtering, quarantine buckets, audited rule edits, webhook delivery, smtp intercept.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>rule engine</h4><p>pattern-match pipeline. header, body, attachment analysis. allow/block/reject actions, scoring, tag injection. hot-reloadable rule sets.</p></div>
+            <div class="comp"><h4>bucket store</h4><p>quarantine and archive buckets. sqlite-backed with litestream replication. time-based retention policies, manual release or delete.</p></div>
+            <div class="comp"><h4>audit</h4><p>propose-apply-revert cycle for rule changes. full diff history per rule. operator approvals, rollback on failure. immutable event log.</p></div>
+            <div class="comp"><h4>webhook relay</h4><p>event-driven delivery for matched mail. configurable endpoints, retry with backoff, delivery receipts, secret signing.</p></div>
+            <div class="comp"><h4>imap proxy</h4><p>transparent smtp/imap intercept. sits between mta and mailbox. inspects in transit, no client config changes required.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">smtp</span><span class="f-arr">→</span><span class="f-node">imap-proxy</span><span class="f-arr">→</span><span class="f-node">rule-engine</span><span class="f-arr">→</span><span class="f-node">bucket-store</span><span class="f-arr">|</span><span class="f-node">webhook-relay</span></div>
+        </article>
+
+        <article class="prod" id="p-detcordon">
+          <div class="hd"><h3>detcordon</h3><span class="st mono">research</span></div>
+          <div class="desc">containment-first malware-observation environment — watches hostile web payloads in isolation, records behavior without exposure.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>sandbox</h4><p>hardened browser or headless runtime in a disposable container. no network egress except to capture sinks. memory and filesystem snapshots.</p></div>
+            <div class="comp"><h4>recorder</h4><p>captures all i/o: http requests, dom mutations, canvas reads, clipboard access, storage writes. structured event stream, not just video.</p></div>
+            <div class="comp"><h4>analyzer</h4><p>static and dynamic analysis. payload deobfuscation, call graph extraction, data-flow tracking. ioc and signature generation.</p></div>
+            <div class="comp"><h4>feeder</h4><p>url or attachment ingestion queue. pulls from rss feeds, mailroute buckets, api submissions. dedup and priority scheduling.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">feeder</span><span class="f-arr">→</span><span class="f-node">sandbox</span><span class="f-arr">→</span><span class="f-node">recorder</span><span class="f-arr">→</span><span class="f-node">analyzer</span></div>
+        </article>
+
+        <article class="prod" id="p-scipub">
+          <div class="hd"><h3>scipub</h3><span class="st mono">alpha</span></div>
+          <div class="desc">scientific-publishing toolkit — literature retrieval, structured database access, and evaluation over primary sources.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>retriever</h4><p>multi-source literature fetcher. pubmed, arxiv, crossref, openalex adapters. full-text and metadata extraction, dedup, canonical id resolution.</p></div>
+            <div class="comp"><h4>evaluator</h4><p>structured assessment over source texts. claim extraction, evidence grading, citation-network analysis. outputs machine-readable verdicts.</p></div>
+            <div class="comp"><h4>database</h4><p>sqlite with fts5 full-text search over ingested papers. normalized schema for authors, affiliations, funders. export to json/bibtex/csl.</p></div>
+            <div class="comp"><h4>api</h4><p>graphql and rest endpoints for querying the corpus. faceted search, citation graph traversal, batch export. api-key auth with usage tracking.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">retriever</span><span class="f-arr">→</span><span class="f-node">database</span><span class="f-arr">↔</span><span class="f-node">evaluator</span><span class="f-arr">→</span><span class="f-node">api</span></div>
+        </article>
+
+        <article class="prod" id="p-esp32tolk">
+          <div class="hd"><h3>esp32tolk</h3><span class="st mono">alpha</span></div>
+          <div class="desc">esp32 speech-translator firmware — i2s mic or bluetooth capture, on-device transcription, live translation.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>capture</h4><p>i2s digital microphone input or bluetooth a2dp source. 16khz/16bit mono pipeline, configurable gain and noise gate. ringbuffer with dma.</p></div>
+            <div class="comp"><h4>stt engine</h4><p>on-device speech-to-text via esp-sr or whisper.cpp (q4 quantized). streaming inference, voice-activity detection, keyword spotting.</p></div>
+            <div class="comp"><h4>translate</h4><p>local nllb or tiny-llm translation model. phrase cache for low-latency repeat translations. configurable source/target language pair.</p></div>
+            <div class="comp"><h4>output</h4><p>serial/uart text out, i2s tts playback, or ble gatt characteristic. lcd display for standalone mode. wifi or bt transport.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">mic</span><span class="f-arr">→</span><span class="f-node">capture</span><span class="f-arr">→</span><span class="f-node">stt-engine</span><span class="f-arr">→</span><span class="f-node">translate</span><span class="f-arr">→</span><span class="f-node">output</span></div>
+        </article>
+
+        <article class="prod" id="p-shipwrecks">
+          <div class="hd"><h3>shipwrecks.se</h3><span class="st mono">live</span></div>
+          <div class="desc">interactive swedish shipwreck explorer — charted wrecks, dive records, and documented provenance over the swedish coast.</div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>map</h4><p>leaflet-based interactive map of the swedish coast. clustered wreck markers with depth contours, exclusion zones, and maritime navigation layers.</p></div>
+            <div class="comp"><h4>archive</h4><p>curated registry with per-wreck provenance. coordinates, depth, cargo, sinking date, discovery story. photos, sonar scans, and diver reports.</p></div>
+            <div class="comp"><h4>backend</h4><p>fastapi data server with sqlite. geo queries (radius, bounding-box), full-text search, image serving. admin interface for curators.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">map</span><span class="f-arr">↔</span><span class="f-node">backend</span><span class="f-arr">↔</span><span class="f-node">archive</span></div>
+        </article>
+
       </div>
     </section>
   </main>
 
   <footer>
     <div class="wrap">
-      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" />RAGBAZ</span>
+      <span class="wordmark"><img src="./assets/logo-ragbaz.png" alt="ragbaz" /></span>
       <div class="links">
-        <a href="https://doc.ragbaz.xyz">docs</a>
-        <a href="https://offer.ragbaz.xyz">prospekt · early-bird</a>
+        <a href="/pricing">pricing</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
         <a href="https://github.com/tabenius/matches">matches · github</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
     </div>
   </footer>
+<script>
+function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
+function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
+var featuredIndex = 0;
+var featuredTimer = null;
+function showFeatured(index){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('[data-featured-slide]'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('.featured-dot'));
+  if (!slides.length) return;
+  featuredIndex = (index + slides.length) % slides.length;
+  slides.forEach(function(slide, i){ slide.classList.toggle('active', i === featuredIndex); });
+  dots.forEach(function(dot, i){ dot.classList.toggle('active', i === featuredIndex); });
+  if (featuredTimer) window.clearInterval(featuredTimer);
+  featuredTimer = window.setInterval(function(){ moveFeatured(1, true); }, 7000);
+}
+function moveFeatured(delta, fromTimer){
+  var slides = document.querySelectorAll('[data-featured-slide]');
+  if (!slides.length) return;
+  if (!fromTimer && featuredTimer) window.clearInterval(featuredTimer);
+  showFeatured(featuredIndex + delta);
+}
+showFeatured(0);
+</script>
 </body>
 </html>
