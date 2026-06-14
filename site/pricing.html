@@ -221,7 +221,7 @@
 
     async function startCheckout() {
       const email = document.getElementById("signup-email").value.trim();
-      const slug = document.getElementById("signup-slug").value.trim();
+      const slug = document.getElementById("signup-slug").value.trim().toLowerCase();
       const errEl = document.getElementById("modal-error");
 
       if (!email || !slug) {
@@ -229,8 +229,8 @@
         errEl.style.display = "block";
         return;
       }
-      if (!/^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$/i.test(slug)) {
-        errEl.textContent = "subdomain: 3-50 chars, letters/dashes only";
+      if (!/^[a-z0-9][a-z0-9-]{1,30}$/.test(slug)) {
+        errEl.textContent = "subdomain: 2-31 chars, lowercase letters, numbers, and dashes";
         errEl.style.display = "block";
         return;
       }
