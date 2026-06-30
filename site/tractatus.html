@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>tractatus custodicus — ragbaz governance</title>
+  <meta name="description" content="tractatus logico-custodicus: a formal account of the konsonans ai governance platform in numbered propositions, after wittgenstein. ad conformitatem legis de intelligentia artificiali." />
+  <link rel="icon" href="./assets/logo-mark.svg" />
+  <link rel="stylesheet" href="./colors_and_type.css?v=2" />
+  <style>
+    /* ── page ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-1, #0f0f10);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Serif", "Iowan Old Style", Georgia, serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; }
+    a { color: var(--blue-1, #7ab8ff); text-underline-offset: 2px; }
+    a:hover { color: var(--orange-1, #f3c46c); }
+
+    /* ── top chrome (ragbaz.cc nav) ── */
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: #15120c;
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); display: flex; align-items: center; gap: 1rem; height: 56px; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
+    .bar .wordmark img { height: 39px; width: auto; display: block; object-fit: contain; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+    .bar nav a.active { color: var(--orange-1, #f3c46c); }
+
+    @media (max-width: 560px) { .bar nav { display: none; } }
+
+    /* ── WIP banner ── */
+    .wip {
+      background: var(--bg-elev, #1d1812);
+      border-bottom: 1px solid var(--border-warm, #3a2a18);
+      padding: 8px 0;
+      text-align: center;
+      font-family: "Intel One Mono", monospace;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--orange-3, #ff9900);
+    }
+
+    /* ── INCREASED MARGINS ── */
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem clamp(2rem, 6vw, 4rem);
+    }
+
+    /* ── COVER ── */
+    .cover {
+      padding: 6mm 0;
+      min-height: 200mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .cover .rule-top { border-top: 2px solid var(--border-warm, #3a2a18); margin: 5mm 0 auto 0; }
+    .cover .latin {
+      font-family: "Noto Serif", serif; font-style: italic; font-size: 13pt;
+      color: var(--fg-4, #9f9f9f); margin: 0 0 6mm 0; letter-spacing: .02em;
+    }
+    .cover h1.title {
+      font-family: "Noto Serif", serif; font-weight: 700; font-size: 42pt;
+      line-height: 1.04; color: var(--fg-1, #f6d7a7); margin: 0; letter-spacing: -0.01em;
+    }
+    .cover h1.title .small { display: block; font-size: 20pt; color: var(--orange-1, #f3c46c); font-style: italic; font-weight: 400; margin-top: 3mm; }
+    .cover .subtitle {
+      font-family: "Noto Sans", sans-serif; font-size: 12pt; color: var(--fg-2, #d8c29d);
+      max-width: 135mm; margin: 7mm 0 0 0; line-height: 1.5;
+    }
+    .cover .meta-grid {
+      margin-top: auto; display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 0; border-top: 1px solid var(--border-2, #2a2a2a);
+    }
+    .cover .meta-grid .cell { padding: 4mm 4mm 4mm 0; border-right: 1px solid var(--border-2, #2a2a2a); }
+    .cover .meta-grid .cell:last-child { border-right: 0; }
+    .cover .meta-grid .k { font-family: "Intel One Mono", monospace; font-size: 7.5pt; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-5, #737373); }
+    .cover .meta-grid .v { font-family: "Intel One Mono", monospace; font-size: 9.5pt; color: var(--orange-2, #f2a77a); margin-top: 2mm; }
+    .cover .seal {
+      margin-top: 6mm; font-family: "Intel One Mono", monospace; font-size: 7.5pt;
+      color: var(--fg-5, #737373); letter-spacing: .04em; line-height: 1.7;
+    }
+
+    /* ── RUNNING HEAD ── */
+    .runhead {
+      display: flex; justify-content: space-between; align-items: baseline;
+      border-bottom: 1px solid var(--border-2, #2a2a2a); padding-bottom: 2mm; margin-bottom: 6mm;
+      font-family: "Intel One Mono", monospace; font-size: 7.5pt; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--fg-5, #737373);
+    }
+    .runhead .r { color: var(--orange-3, #ff9900); }
+
+    /* ── CARDINAL PROPOSITION ── */
+    .cardinal { display: flex; gap: 6mm; align-items: flex-start; margin: 0 0 5mm 0; }
+    .cardinal .num {
+      font-family: "Intel One Mono", monospace; font-weight: 700; font-size: 30pt;
+      color: var(--orange-3, #ff9900); line-height: 1; min-width: 18mm;
+    }
+    .cardinal .head h2 {
+      font-family: "Noto Sans", sans-serif; font-weight: 800; font-size: 17pt;
+      color: var(--blue-1, #7ab8ff); margin: 0 0 2mm 0; line-height: 1.12;
+    }
+    .cardinal .head .thesis {
+      font-family: "Noto Serif", serif; font-style: italic; font-size: 11.5pt;
+      color: var(--fg-1, #f6d7a7); line-height: 1.45; margin: 0;
+    }
+    .cardinal .head .gloss { font-family: "Intel One Mono", monospace; font-size: 7.5pt; letter-spacing: .1em; text-transform: uppercase; color: var(--orange-1, #f3c46c); margin: 3mm 0 0 0; }
+
+    /* ── PROPOSITIONS ── */
+    .prop { display: flex; gap: 5mm; margin: 3.5mm 0; }
+    .prop .n {
+      font-family: "Intel One Mono", monospace; font-weight: 600; font-size: 9.5pt;
+      color: var(--orange-1, #f3c46c); min-width: 15mm; text-align: right;
+      padding-top: .4mm; font-variant-numeric: tabular-nums;
+    }
+    .prop .t { flex: 1; }
+    .prop .t p { margin: 0; }
+    .prop.sub .n { color: var(--fg-4, #9f9f9f); font-weight: 400; }
+    .prop.sub .t { color: var(--fg-2, #d8c29d); font-size: 10pt; }
+    .prop .t .lead { color: var(--fg-1, #f6d7a7); }
+    em { font-family: "Noto Serif", serif; font-style: italic; color: var(--fg-1, #f6d7a7); }
+    strong { color: var(--fg-1, #f6d7a7); font-weight: 700; }
+    code {
+      font-family: "Intel One Mono", monospace; font-size: 8.6pt; background: var(--bg-2, #121212);
+      border: 1px solid var(--border-2, #2a2a2a); color: var(--orange-2, #f2a77a);
+      padding: .3px 4px; border-radius: 2px;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .divlabel {
+      font-family: "Intel One Mono", monospace; font-size: 8pt; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--orange-3, #ff9900);
+      border-top: 1px solid var(--border-warm, #3a2a18); border-bottom: 1px solid var(--border-warm, #3a2a18);
+      padding: 2mm 0; margin: 7mm 0 5mm 0; display: flex; justify-content: space-between;
+    }
+    .divlabel span:last-child { color: var(--fg-5, #737373); }
+
+    /* ── FEATURE CARDS ── */
+    .cardgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 4mm 0; }
+    .fcard {
+      background: var(--bg-2, #121212); border: 2px solid var(--border-2, #2a2a2a); border-radius: 8px;
+      padding: 4mm 4.5mm; display: flex; flex-direction: column; gap: 2.5mm;
+    }
+    .fcard.warm { background: #1a130c; border-color: var(--orange-4, #d97742); }
+    .fcard.cool { background: #0c1820; border-color: var(--blue-3, #2a8d9e); }
+    .fcard .tag { font-family: "Intel One Mono", monospace; font-size: 7pt; letter-spacing: .12em; text-transform: uppercase; color: var(--orange-3, #ff9900); }
+    .fcard.cool .tag { color: var(--blue-1, #7ab8ff); }
+    .fcard h4 { font-family: "Intel One Mono", monospace; font-weight: 700; font-size: 11pt; color: var(--fg-1, #f6d7a7); margin: 0; }
+    .fcard .row { display: flex; gap: 3mm; }
+    .fcard .row .lbl { font-family: "Intel One Mono", monospace; font-size: 7.5pt; color: var(--orange-1, #f3c46c); min-width: 11mm; padding-top: .5mm; text-transform: uppercase; letter-spacing: .06em; }
+    .fcard.cool .row .lbl { color: var(--blue-2, #4fb3c7); }
+    .fcard .row .txt { font-family: "Noto Sans", sans-serif; font-size: 9pt; color: var(--fg-2, #d8c29d); line-height: 1.45; flex: 1; }
+
+    /* ── TABLE ── */
+    table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-family: "Noto Sans", sans-serif; font-size: 8.6pt; }
+    th {
+      font-family: "Intel One Mono", monospace; font-size: 7.5pt; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--orange-3, #ff9900); text-align: left; padding: 2.5mm 3mm; border-bottom: 2px solid var(--border-warm, #3a2a18);
+      vertical-align: bottom;
+    }
+    td { padding: 2.4mm 3mm; border-bottom: 1px solid var(--border-1, #222); color: var(--fg-2, #d8c29d); vertical-align: top; }
+    td.art { font-family: "Intel One Mono", monospace; color: var(--orange-2, #f2a77a); white-space: nowrap; }
+    td.pn { font-family: "Intel One Mono", monospace; color: var(--orange-1, #f3c46c); white-space: nowrap; }
+    tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 3px solid var(--orange-3, #ff9900); background: var(--bg-elev, #1d1812);
+      padding: 3.5mm 5mm; margin: 4mm 0; border-radius: 0 6px 6px 0;
+    }
+    .callout .k { font-family: "Intel One Mono", monospace; font-size: 7.5pt; letter-spacing: .1em; text-transform: uppercase; color: var(--orange-3, #ff9900); }
+    .callout p { margin: 2mm 0 0 0; font-family: "Noto Serif", serif; font-style: italic; color: var(--fg-1, #f6d7a7); font-size: 10.5pt; }
+
+    /* ── CODE BLOCK ── */
+    pre {
+      background: var(--bg-0, #0a0908); border: 1px solid var(--border-2, #2a2a2a); border-left: 3px solid var(--blue-3, #2a8d9e);
+      border-radius: 6px; padding: 3.5mm 4.5mm; overflow: hidden;
+      font-family: "Intel One Mono", monospace; font-size: 8pt; line-height: 1.55; color: var(--fg-3, #d4c19a);
+      margin: 3.5mm 0; white-space: pre-wrap;
+    }
+    pre .c { color: var(--fg-5, #737373); }
+    pre .k { color: var(--blue-1, #7ab8ff); }
+    pre .s { color: var(--aqua-1, #8ec07c); }
+    pre .o { color: var(--orange-2, #f2a77a); }
+    pre .v { color: var(--orange-1, #f3c46c); }
+
+    /* ── DEFINITION LIST ── */
+    .deflist { display: flex; flex-direction: column; gap: 0; margin: 4mm 0; }
+    .deflist .item { display: grid; grid-template-columns: 38mm 1fr; gap: 4mm; padding: 3mm 0; border-bottom: 1px solid var(--border-1, #222); }
+    .deflist .item .term { font-family: "Intel One Mono", monospace; font-size: 9pt; color: var(--orange-2, #f2a77a); }
+    .deflist .item .term .sub { display: block; font-size: 7pt; color: var(--fg-5, #737373); letter-spacing: .06em; text-transform: uppercase; margin-top: 1mm; }
+    .deflist .item .desc { font-family: "Noto Sans", sans-serif; font-size: 9pt; color: var(--fg-2, #d8c29d); line-height: 1.5; }
+
+    /* ── COLOPHON ── */
+    .colophon { font-family: "Intel One Mono", monospace; font-size: 8pt; color: var(--fg-5, #737373); line-height: 1.8; }
+    .colophon .k { color: var(--orange-3, #ff9900); }
+  </style>
+</head>
+<body>
+
+  <!-- ── ragbaz.cc chrome ── -->
+  <header class="bar">
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <nav>
+        <a href="/">home</a>
+        <a href="/pricing">pricing</a>
+        <a href="/#products">products</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/tractatus" class="active">tractatus</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── WiP banner ── -->
+  <div class="wip">work in progress · non-normative design draft · not legal advice · <a href="https://doc.ragbaz.cc/docs/products/ai-governance" style="color:inherit;text-decoration:underline">live status &amp; breakdown ↗</a></div>
+  <div class="wip" style="opacity:.85">status legend · 🟢 complete · 🔵 near finish · 🟡 in progress · ⚪ planned</div>
+
+  <!-- ── content: increased margins ── -->
+  <div class="content">
+
+    <!-- ════════ COVER ════════ -->
+    <section class="cover">
+      <div class="wordmark" style="font-size:9pt;letter-spacing:.34em;color:var(--orange-3,#ff9900);margin:0">RAGBAZ · BAZ.AI</div>
+      <div class="rule-top"></div>
+      <p class="latin">— ad conformitatem legis de intelligentia artificiali —</p>
+      <h1 class="title">Tractatus<span class="small">Logico-Custodicus</span></h1>
+      <p class="subtitle">
+        A formal account of the BAZ.AI governance platform: a membrane-typed policy DSL
+        compiled to capability-sandboxed WASM components, an append-only tamper-evident
+        audit spine, human-in-the-loop oversight, and a small live orchestration —
+        arranged as numbered propositions for conformity with the EU AI Act.
+      </p>
+      <div class="meta-grid">
+        <div class="cell"><div class="k">Instrument</div><div class="v">draft tractatus v0.1</div></div>
+        <div class="cell"><div class="k">Regulation</div><div class="v">EU 2024/1689 (AI Act)</div></div>
+        <div class="cell"><div class="k">Applies from</div><div class="v">2026-08-02</div></div>
+      </div>
+      <div class="seal">
+        author · RAGBAZ — Tobias Abenius<br>
+        substrate · glither.* (roux/tangle) · wasm32-wasip2 · pharo 12 · postgresql 16<br>
+        status · design draft, non-normative · risk-class · high (annex III)
+      </div>
+    </section>
+
+    <!-- ════════ PREFACE ════════ -->
+    <section>
+      <div class="runhead"><span>Tractatus Logico-Custodicus</span><span class="r">preface</span></div>
+      <div class="cardinal">
+        <div class="num">0</div>
+        <div class="head">
+          <h2>Preface — what may be governed at all</h2>
+          <p class="thesis">The Act asks an operator to make the conduct of a high-risk AI system
+            <em>traceable, overseen, and demonstrable</em>. This document holds that these are not
+            procedures bolted onto a system but <em>structural properties</em> of how the system is built.</p>
+          <p class="gloss">whereof one can compile, thereof one can attest</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">0.1</div><div class="t"><p class="lead">The book treats a single thesis: a compliance obligation is best discharged by an architecture in which the obligation <em>cannot structurally be violated</em>, rather than one in which it is merely promised and later inspected.</p></div></div>
+      <div class="prop"><div class="n">0.2</div><div class="t"><p>Its form is borrowed: cardinal propositions <code>1</code>…<code>7</code> carry the argument; decimal propositions elaborate, in the manner of a tractatus, so that each claim has an address and each mechanism a place.</p></div></div>
+      <div class="prop"><div class="n">0.3</div><div class="t"><p>Each cardinal closes with the product feature it justifies — its <em>why</em> and its <em>what</em> — so the document reads simultaneously as philosophy of the design and as a product specification.</p></div></div>
+      <div class="prop sub"><div class="n">0.31</div><div class="t"><p>The seven cardinals: <strong>1</strong> the world under the Act · <strong>2</strong> the membrane &amp; the DSL · <strong>3</strong> the tamper-evident spine · <strong>4</strong> human oversight · <strong>5</strong> the small orchestration · <strong>6</strong> composition &amp; attestation · <strong>7</strong> the limit — fail-closed.</p></div></div>
+      <div class="callout">
+        <div class="k">central claim</div>
+        <p>What can be said about an agent's conduct can be said in a derived contract; what cannot be said there — an authority not granted, a guarantee not satisfiable — is not stalled at runtime but refused at compile time.</p>
+      </div>
+    </section>
+
+    <!-- ════════ 1 — WORLD ════════ -->
+    <section>
+      <div class="runhead"><span>1 · The world under the Act</span><span class="r">proposition 1</span></div>
+      <div class="cardinal">
+        <div class="num">1</div>
+        <div class="head">
+          <h2>The world of an agent is everything that is the case — and the Act asks for its record</h2>
+          <p class="thesis">An AI agent's world is the totality of its <em>actions</em>, not of its intentions. Governance is the discipline of which actions may cross into effect, in what state, and on whose record.</p>
+          <p class="gloss">art. 9 · risk management — art. 12 · logging</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">1.1</div><div class="t"><p class="lead">The world is the totality of agent <em>actions</em>, not of agent code. A model's weights are opaque; its actions are discrete, typed, and namable — and therefore governable.</p></div></div>
+      <div class="prop"><div class="n">1.11</div><div class="t"><p>An action is an artifact attempting to cross a boundary: <code>approveLoan:</code>, <code>denyClaim:</code>, <code>placeOrder:</code>. Each is a candidate fact about the world.</p></div></div>
+      <div class="prop"><div class="n">1.12</div><div class="t"><p>To govern is to interpose a <em>membrane</em> between the action and its effect, and to decide each crossing: admit, refuse, or suspend pending a human.</p></div></div>
+      <div class="prop"><div class="n">1.2</div><div class="t"><p>The Annex III categories — credit, recruitment, medical, law-enforcement, critical infrastructure, education — fix <em>which</em> worlds are high-risk. Risk classification (art. 9) is the prior act of naming the world.</p></div></div>
+      <div class="prop sub"><div class="n">1.21</div><div class="t"><p>Classification is itself a typed object: a <code>risk-profile</code> with a level on the lattice <code>minimal &lt; limited &lt; high &lt; unacceptable</code> and the required measures it implies.</p></div></div>
+      <div class="prop"><div class="n">1.3</div><div class="t"><p>That a thing happened must be recordable independently of the agent that did it (art. 12). The record is not a log file the agent writes; it is a witness the agent cannot edit.</p></div></div>
+      <div class="divlabel"><span>feature — risk classifier &amp; action capture</span><span>sub-component · roux / orchestrator</span></div>
+      <div class="cardgrid">
+        <div class="fcard warm">
+          <div class="tag">feature 1.A</div>
+          <h4>Risk classifier</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Art. 9 requires a documented risk-management system; obligations differ by Annex III category.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A typed <code>risk-profile</code> derived per agent session, fixing the SLA, oversight, and logging measures the rest of the platform enforces.</div></div>
+        </div>
+        <div class="fcard warm">
+          <div class="tag">feature 1.B</div>
+          <h4>Action capture</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Art. 12 logging must be agent-independent and tamper-evident from the first byte.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A transport-agnostic capture point (unix socket · TCP · HTTP) that intercepts every action before effect and hands it to the membrane.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 2 — MEMBRANE & DSL ════════ -->
+    <section>
+      <div class="runhead"><span>2 · The membrane &amp; the DSL</span><span class="r">proposition 2</span></div>
+      <div class="cardinal">
+        <div class="num">2</div>
+        <div class="head">
+          <h2>A policy is a contract over a membrane — and the contract is derived, not declared</h2>
+          <p class="thesis">Rules are written in <em>Glither</em>, a membrane/ligand DSL. The compiler derives the component's WIT world from the rules, so the published contract <em>is</em> the compiled one. Authority not named in a rule does not exist for that component.</p>
+          <p class="gloss">glither.governance · roux / tangle · wasm32-wasip2</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">2.1</div><div class="t"><p class="lead">A rule <em>selects</em> actions by their properties and <em>disposes</em> of them into a terminal state or a suspended one. The selectors are the boundary; the disposition is the verdict.</p></div></div>
+      <div class="prop"><div class="n">2.11</div><div class="t"><p>A <em>ligand</em> is a property a rule needs but does not itself possess — a risk level, an approval flag, a PII verdict. A ligand required but not produced is an <em>unsatisfiable guard</em>.</p></div></div>
+      <div class="prop"><div class="n">2.12</div><div class="t"><p><strong>The keystone.</strong> An unsatisfiable guard becomes a WIT <code>import</code> with no provider; the component <em>fails to link</em>. An incoherent policy is a compile error, never a silent runtime gap.</p></div></div>
+      <pre><span class="c">// glither.governance — a high-value action must hold for a human</span>
+<span class="k">rule</span> human_review_high_value_loan =
+  action | agent_class == <span class="s">"LoanApprovalAgent"</span>
+         | action.name == <span class="s">"approveLoan:"</span>
+         | action.arguments[1] &gt; 25000
+         | <span class="k">not</span> action.has_human_approval        <span class="c">// ⟨ligand · attested · audited⟩</span>
+  =&gt; <span class="o">hold</span> <span class="k">into</span> <span class="v">human_review</span>                   <span class="c">// suspended: Pending&lt;{allowed, blocked}&gt;</span>
+       on    reviewer.approved   <span class="k">into</span> <span class="v">allowed</span>
+       on    reviewer.denied     <span class="k">into</span> <span class="v">blocked</span> (reason = human_denied)
+       after 15m                 <span class="k">into</span> <span class="v">blocked</span> (reason = sla_exceeded)
+       <span class="c">// art. 14 §4 — the safe default on timeout is refusal</span></pre>
+      <div class="prop"><div class="n">2.2</div><div class="t"><p>The same grammar (<code>roux</code>) hosts many dialects. A dialect is a vocabulary plus host bindings — never a new compiler. <code>glither.governance</code> for the Act; <code>glither.hft</code> for pre-trade risk; <code>glither.mail</code> for mailguard.</p></div></div>
+      <div class="prop sub"><div class="n">2.21</div><div class="t"><p>Because dialects share lattices, an unlawful information <em>down</em>-flow across a rule is the same type error in each — Denning's lattice, enforced once.</p></div></div>
+      <div class="prop"><div class="n">2.3</div><div class="t"><p>From one typed IR the compiler emits two artifacts: a production <strong>Rust</strong> component and an auditable <strong>Gleam</strong> oracle. They must agree byte-for-byte on every conformance case; divergence is a compiler bug.</p></div></div>
+      <div class="prop sub"><div class="n">2.31</div><div class="t"><p>The Gleam oracle is the document's quiet hero for the Act: a small, readable, independently-runnable reference a notified body can audit <em>without trusting the build toolchain</em>.</p></div></div>
+      <div class="prop"><div class="n">2.4</div><div class="t"><p>The compiled component has authority <em>only</em> through its WIT imports. No sockets, no filesystem, no clock unless a host binding grants it. The capability sandbox is the product, not a setting.</p></div></div>
+      <div class="divlabel"><span>feature — the governance dialect</span><span>sub-component · tangle · glither-wit · glither-host</span></div>
+      <div class="cardgrid">
+        <div class="fcard cool">
+          <div class="tag">feature 2.A</div>
+          <h4>Rules-as-DSL</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Policy must be legible to compliance officers and provably equal to what executes.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A declarative <code>.glith</code> ruleset; the WIT contract and minimum capability set are <em>derived</em>, so the published policy is the running one.</div></div>
+        </div>
+        <div class="fcard cool">
+          <div class="tag">feature 2.B</div>
+          <h4>Differential oracle</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Art. 11 technical documentation is stronger when a reference implementation is auditable.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A Gleam rendering of the same IR, run in CI, asserting equality with the production component on every fixture.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 3 — TAMPER-EVIDENT SPINE ════════ -->
+    <section>
+      <div class="runhead"><span>3 · The tamper-evident spine</span><span class="r">proposition 3</span></div>
+      <div class="cardinal">
+        <div class="num">3</div>
+        <div class="head">
+          <h2>The record is append-only, hash-chained, and witnessed by independent replicas</h2>
+          <p class="thesis">An event is never mutated, only appended; each entry hashes its predecessor; and a synchronous replica — ideally third-party — holds an independent copy whose <em>divergence is itself the evidence of tampering</em>.</p>
+          <p class="gloss">art. 12 · logging — art. 72 · post-market monitoring</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">3.1</div><div class="t"><p class="lead">State changes are <em>events</em>, never updates. The store enforces this: <code>UPDATE</code> and <code>DELETE</code> are refused at the database rule level, not merely by convention.</p></div></div>
+      <div class="prop"><div class="n">3.11</div><div class="t"><p>Each entry carries <code>previous_hash</code> and a <code>signature = SHA-256(id ‖ time ‖ action ‖ previous_hash)</code>. The chain makes any insertion, deletion, or reordering detectable from the hashes alone.</p></div></div>
+      <div class="prop"><div class="n">3.2</div><div class="t"><p>One copy can be rewritten by whoever holds it. Therefore the record streams — synchronously — to a second host whose only role is to re-verify the chain as rows arrive.</p></div></div>
+      <div class="prop sub"><div class="n">3.21</div><div class="t"><p>With <code>synchronous_commit = remote_apply</code> the agent's action is not acknowledged until a replica has the event. The tamper window — the gap in which a compromised primary could rewrite-then-ship — is closed.</p></div></div>
+      <div class="prop sub"><div class="n">3.22</div><div class="t"><p>Two replicas give a majority: where primary and replicas disagree, the <em>diverging node is identified</em>, not merely the fact of divergence.</p></div></div>
+      <div class="prop"><div class="n">3.3</div><div class="t"><p>The strongest replica is one the operator does not control: an independent auditor node that signs a daily manifest over the chain's first and last hash. Leak-freeness toward it is structural — see proposition 6 (Dana).</p></div></div>
+      <div class="callout">
+        <div class="k">why this, and not a backup</div>
+        <p>A backup proves what you had; a witnessed chain proves what you cannot have changed. The Act asks for the second.</p>
+      </div>
+      <div class="divlabel"><span>feature — audit spine &amp; divergence detector</span><span>sub-component · postgresql · replica nodes</span></div>
+      <div class="cardgrid">
+        <div class="fcard warm">
+          <div class="tag">feature 3.A</div>
+          <h4>Append-only event store</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Art. 12 demands non-repudiable logs retained ≥ 6 months.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">INSERT-only PostgreSQL with rule-level immutability, SHA-256 hash chain, and a WORM cold archive.</div></div>
+        </div>
+        <div class="fcard warm">
+          <div class="tag">feature 3.B</div>
+          <h4>Divergence detector</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Art. 72 post-market monitoring needs continuous integrity assurance, not periodic audit.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">Synchronous logical replication to ≥ 2 nodes; a detector that raises a tamper alert and names the divergent node.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 4 — HUMAN OVERSIGHT ════════ -->
+    <section>
+      <div class="runhead"><span>4 · Human oversight</span><span class="r">proposition 4</span></div>
+      <div class="cardinal">
+        <div class="num">4</div>
+        <div class="head">
+          <h2>A high-stakes crossing suspends until a person decides — and silence means refusal</h2>
+          <p class="thesis">Human oversight is not a notification after the fact. It is a <em>suspended state</em> in the membrane: the action waits, a reviewer decides with a recorded rationale, and an expired deadline resolves to <em>blocked</em>, never to <em>allowed</em>.</p>
+          <p class="gloss">art. 14 · human oversight — art. 14 §4 · safe default</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">4.1</div><div class="t"><p class="lead">The suspended disposition <code>hold into human_review</code> is a real state with a liveness obligation: it carries a deadline, and its only lawful settlements are <code>allowed</code> or <code>blocked</code>.</p></div></div>
+      <div class="prop"><div class="n">4.11</div><div class="t"><p>The reviewer acts on a typed surface, not a chat message: the action, its arguments, its risk flags, the offending policy, and the audit entry's hash with its chain status.</p></div></div>
+      <div class="prop"><div class="n">4.12</div><div class="t"><p>A decision is itself an event: <code>{reviewer, decision, rationale, decided_at}</code> — appended to the chain. Oversight is auditable as conduct in its own right.</p></div></div>
+      <div class="prop"><div class="n">4.2</div><div class="t"><p><strong>Art. 14 §4, structurally.</strong> When the SLA expires the rule's <code>after</code> arm fires <code>into blocked</code>. The system defaults to the safe state by construction; an absent human cannot become a tacit approval.</p></div></div>
+      <div class="prop sub"><div class="n">4.21</div><div class="t"><p>The SLA is a function of risk: tighter for <code>high</code>, looser for <code>limited</code>. The deadline is data, not policy buried in code.</p></div></div>
+      <div class="prop"><div class="n">4.3</div><div class="t"><p>The reviewer works inside a live Smalltalk image (proposition 5): the queue, the inspector, and the decision controls are one running object graph, observable and modifiable while live.</p></div></div>
+      <div class="divlabel"><span>feature — human-in-the-loop gateway</span><span>sub-component · oversight · approval widget</span></div>
+      <div class="cardgrid">
+        <div class="fcard cool">
+          <div class="tag">feature 4.A</div>
+          <h4>Oversight gateway</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Art. 14 requires effective human oversight of high-risk decisions before effect.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A blocking approval gate with a per-risk SLA and a safe-default timeout to refusal.</div></div>
+        </div>
+        <div class="fcard cool">
+          <div class="tag">feature 4.B</div>
+          <h4>Approval widget</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">A reviewer needs full context and an enforced rationale for an accountable decision.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A live queue showing action, args, risk flags, policy, and chain status; rationale required before approve/deny.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 5 — ORCHESTRATION ════════ -->
+    <section>
+      <div class="runhead"><span>5 · The small orchestration</span><span class="r">proposition 5</span></div>
+      <div class="cardinal">
+        <div class="num">5</div>
+        <div class="head">
+          <h2>The conductor is small, live, and inspectable — a witness one can hand to an auditor</h2>
+          <p class="thesis">Orchestration is a Pharo Smalltalk image: an event bus, a session registry, transport proxies, and the reviewer IDE — held as one running object graph that can be <em>frozen and inspected at the moment of a disputed decision</em>.</p>
+          <p class="gloss">pharo 12 · spec2 · event-sourced projections</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">5.1</div><div class="t"><p class="lead">The orchestrator does little and shows everything. It routes captured actions to the membrane, suspends for oversight, appends to the spine, and projects live documents — and no more.</p></div></div>
+      <div class="prop"><div class="n">5.11</div><div class="t"><p>Agents connect over the transport that fits them: a <code>unix</code> socket for a co-located model, <code>tcp+mTLS</code> for a container, <code>HTTP/SSE</code> for a remote function. One wire protocol (JSON-RPC 2.0) underneath.</p></div></div>
+      <div class="prop"><div class="n">5.2</div><div class="t"><p>Live documents are projections of the event stream. A compliance dashboard is not generated nightly; it advances as events arrive, by subscription, not by polling.</p></div></div>
+      <div class="prop sub"><div class="n">5.21</div><div class="t"><p>The image is the witness. A regulator can be handed a snapshot of the exact runtime state at the moment in question and inspect every object and replay every decision with no tooling beyond Pharo.</p></div></div>
+      <div class="prop"><div class="n">5.3</div><div class="t"><p>The heavy, sandboxed work lives in WASM; the live, inspectable work lives in the image. The split is deliberate: provable isolation where authority matters, live malleability where humans look.</p></div></div>
+      <div class="divlabel"><span>feature — orchestrator &amp; governance IDE</span><span>sub-component · pharo image · spec2 presenters</span></div>
+      <div class="cardgrid">
+        <div class="fcard warm">
+          <div class="tag">feature 5.A</div>
+          <h4>Live orchestrator</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Post-market monitoring (art. 72) is easier when state is observable live, not reconstructed.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">An event bus + session registry + transport proxies in one inspectable image; minimal authority, maximal visibility.</div></div>
+        </div>
+        <div class="fcard warm">
+          <div class="tag">feature 5.B</div>
+          <h4>Governance IDE</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">Operators need to author policy, watch the stream, and decide approvals in one place.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A Spec2 app: syntax-highlighted policy editor, live monitor, approval queue, and compliance report.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 6 — COMPOSITION & ATTESTATION ════════ -->
+    <section>
+      <div class="runhead"><span>6 · Composition &amp; attestation</span><span class="r">proposition 6</span></div>
+      <div class="cardinal">
+        <div class="num">6</div>
+        <div class="head">
+          <h2>The whole deployment is a typed graph, signed, and provably one-way where it must be</h2>
+          <p class="thesis">Components compose into a membrane graph via <code>glither.world</code>; an unsatisfiable wiring is a <em>compose-time</em> failure. Edges to a witness are <em>Dana</em>: one-way by construction, with a signed <code>no_retrograde</code> vow a third party can check.</p>
+          <p class="gloss">glither.world · wac compose · dana / no_retrograde</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">6.1</div><div class="t"><p class="lead">The deployment is not a diagram; it is a typed object. <code>glither.world</code> selects components and guards each <em>Pour → Pier</em> wiring against the same discipline the inner rules use.</p></div></div>
+      <div class="prop"><div class="n">6.11</div><div class="t"><p>The keystone lifts to the graph: an edge whose types do not satisfy makes the composition fail. An unsound deployment does not start.</p></div></div>
+      <div class="prop"><div class="n">6.2</div><div class="t"><p>A <em>Dana</em> membrane imports but exports nothing that carries data back to the donor — a passive uniport, no retrograde channel, no side-channel. The audit replica is exactly this.</p></div></div>
+      <div class="prop sub"><div class="n">6.21</div><div class="t"><p>The vow is checkable, not asserted: a Dana world declares <em>no</em> donor-facing export, so the absence of a back-channel is visible in the signed contract the component compiles against.</p></div></div>
+      <div class="prop"><div class="n">6.3</div><div class="t"><p>The signed graph attestation records, per edge, the negotiated guarantee and flags every Dana edge — so a third party can verify the <em>whole deployment's information-flow shape</em> from signed artifacts alone.</p></div></div>
+      <pre><span class="c">// glither.world — audit store pours one-way into independent replicas</span>
+<span class="k">rule</span> audit_to_replicas =
+  edge | donor.dialect == glither.audit_store
+       | pier <span class="k">in</span> replica_nodes
+       | pier.attested.no_retrograde            <span class="c">// ⟨Dana vow · audited⟩</span>
+  =&gt; <span class="o">link</span> pour to pier <span class="k">into</span> <span class="v">linked</span></pre>
+      <div class="divlabel"><span>feature — graph composition &amp; Dana attestation</span><span>sub-component · glither.world · cosign</span></div>
+      <div class="cardgrid">
+        <div class="fcard cool">
+          <div class="tag">feature 6.A</div>
+          <h4>Membrane-graph compose</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">A deployment's soundness should be a build property, not an operational hope.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A <code>glither.world</code> ruleset lowered to a <code>wac</code> composition; unsatisfiable wiring is refused at compose time.</div></div>
+        </div>
+        <div class="fcard cool">
+          <div class="tag">feature 6.B</div>
+          <h4>Dana attestation</h4>
+          <div class="row"><div class="lbl">why</div><div class="txt">An independent witness is only credible if its one-wayness is provable to a third party.</div></div>
+          <div class="row"><div class="lbl">what</div><div class="txt">A signed <code>no_retrograde</code> predicate over the component's WIT world and hash; verifiable from artifacts alone.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ 7 — THE LIMIT ════════ -->
+    <section>
+      <div class="runhead"><span>7 · The limit</span><span class="r">proposition 7</span></div>
+      <div class="cardinal">
+        <div class="num">7</div>
+        <div class="head">
+          <h2>Whereof one cannot prove compliance, thereof one must fail closed</h2>
+          <p class="thesis">The platform's final commitment is negative and absolute: where a guarantee cannot be satisfied, an authority cannot be granted, or a witness cannot be reached, the system does not proceed degraded — it refuses.</p>
+          <p class="gloss">default-deny · fail-closed · the keystone, everywhere</p>
+        </div>
+      </div>
+      <div class="prop"><div class="n">7.1</div><div class="t"><p class="lead">A missing host binding is a link failure, not a silent degraded mode. A missing required ligand is a typed, audited guard-fail, never an exception that leaks.</p></div></div>
+      <div class="prop"><div class="n">7.11</div><div class="t"><p>An expired oversight deadline resolves to refusal (4.2). An unsatisfiable wiring fails the compose (6.11). An unverifiable Dana vow rejects the edge (6.21).</p></div></div>
+      <div class="prop"><div class="n">7.2</div><div class="t"><p>These are one principle in many places: the unsafe path is made <em>unrepresentable</em> or <em>unreachable</em>, so that compliance is the only state the system can occupy.</p></div></div>
+      <div class="prop"><div class="n">7.21</div><div class="t"><p>This is why the document is a tractatus and not a checklist: a checklist enumerates what one must remember to do; an architecture fixes what one cannot fail to do.</p></div></div>
+      <div class="callout">
+        <div class="k">the seventh proposition</div>
+        <p>What can be governed has been said in the contract. Of the rest — the unsatisfiable, the ungranted, the unwitnessed — the system must be silent, and silence here is refusal.</p>
+      </div>
+
+      <!-- ── CROSSWALK ── -->
+      <div class="divlabel"><span>appendix A — EU AI Act crosswalk</span><span>article → proposition → mechanism</span></div>
+      <table>
+        <thead><tr><th style="width:24mm">Article</th><th style="width:18mm">Prop.</th><th>Requirement</th><th>Mechanism</th></tr></thead>
+        <tbody>
+          <tr><td class="art">Art. 9</td><td class="pn">1.2 · 1.21</td><td>Risk-management system</td><td>RiskClassifier; typed <code>risk-profile</code> on the level lattice</td></tr>
+          <tr><td class="art">Art. 10</td><td class="pn">2.1</td><td>Data governance / minimisation</td><td><code>glither.governance</code> PII guard rule; argument scrubbing</td></tr>
+          <tr><td class="art">Art. 11</td><td class="pn">2.3 · 2.31</td><td>Technical documentation</td><td>Derived WIT contract; auditable Gleam oracle; compliance report</td></tr>
+          <tr><td class="art">Art. 12 §1</td><td class="pn">3.1 · 3.11</td><td>Logging of events</td><td>Append-only event store; SHA-256 hash chain</td></tr>
+          <tr><td class="art">Art. 12 §2</td><td class="pn">3.11</td><td>Retention ≥ 6 months</td><td>PostgreSQL + WORM cold archive</td></tr>
+          <tr><td class="art">Art. 13</td><td class="pn">1.3 · 4.11</td><td>Transparency to deployers</td><td>Typed audit entries; reviewer surface; query interface</td></tr>
+          <tr><td class="art">Art. 14</td><td class="pn">4.1 · 4.11</td><td>Human oversight</td><td>Oversight gateway; <code>hold into human_review</code>; approval widget</td></tr>
+          <tr><td class="art">Art. 14 §4</td><td class="pn">4.2</td><td>Safe default on inaction</td><td><code>after SLA → into blocked</code> in every hold rule</td></tr>
+          <tr><td class="art">Art. 47</td><td class="pn">6.3</td><td>Declaration of conformity</td><td>Signed graph attestation; per-edge guarantee record</td></tr>
+          <tr><td class="art">Art. 72</td><td class="pn">3.2 · 5.2</td><td>Post-market monitoring</td><td>Divergence detector; live event-sourced dashboard</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ════════ APPENDIX B ════════ -->
+    <section>
+      <div class="runhead"><span>Appendix B · the parts</span><span class="r">sub-components</span></div>
+      <div class="cardinal">
+        <div class="num">B</div>
+        <div class="head">
+          <h2>The parts and what each is for</h2>
+          <p class="thesis">A reading of the platform as a parts list — each sub-component named with the substrate it is built on and the proposition it serves.</p>
+        </div>
+      </div>
+      <div class="deflist">
+        <div class="item"><div class="term">roux<span class="sub">rust crate · shared core · 🟢 complete</span></div><div class="desc">The grammar engine, typed IR, and lattice checker shared by every Glither dialect. Adding a dialect is a vocabulary module here — never a new compiler. <em>Serves 2.2.</em></div></div>
+        <div class="item"><div class="term">tangle<span class="sub">rust crate · compiler CLI · 🟢 complete</span></div><div class="desc"><code>check · snapshot · wit · build · oci · conform</code>. Turns a <code>.glith</code> ruleset into a signed, digest-pinned WASM component. <em>Serves 2.1–2.4.</em></div></div>
+        <div class="item"><div class="term">glither-wit<span class="sub">rust crate · contract derivation · 🔵 near finish</span></div><div class="desc">Derives the WIT world from the IR — imports = capabilities, exports = verdicts — and computes the attestation hash. The published contract is provably the compiled one. <em>Serves 2.12.</em></div></div>
+        <div class="item"><div class="term">codegen-rust / -gleam<span class="sub">rust crates · dual emit · 🟢 complete</span></div><div class="desc">One IR, two artifacts: the production wasm32 component and the auditable differential oracle. <em>Serves 2.3 · 2.31.</em></div></div>
+        <div class="item"><div class="term">glither-host<span class="sub">rust · wasmtime embedder · 🟡 in progress</span></div><div class="desc">Instantiates a component per crossing, binds its imports to the governance subsystem, calls <code>dispose</code>, collects the receipt, drops the instance. The binding set is the only authority. <em>Serves 2.4 · 7.1.</em></div></div>
+        <div class="item"><div class="term">agent-proxy<span class="sub">rust · mcp ingress · 🔵 near finish</span></div><div class="desc">The production ingress sidecar: a Model-Context-Protocol gateway routing every agent tool-call through the policy gate (allow / hold / deny), with identity + RBAC at entry and audit egress to syslog. <em>Serves 5 · 4.</em></div></div>
+        <div class="item"><div class="term">governance-node<span class="sub">wasm · oci artifact · 🟡 in progress</span></div><div class="desc">The compiled <code>glither.governance</code> membrane: audit, policy, oversight, document. Published to <code>registry.ragbaz.cc</code>, cosign-signed. <em>Serves 2 · 4.</em></div></div>
+        <div class="item"><div class="term">governance-replica<span class="sub">wasm · dana world · 🟡 in progress</span></div><div class="desc">A witness component: imports only, no retrograde export. Re-verifies the chain and signs daily manifests (Ed25519 today; PKCS#11 / HSM planned). <em>Serves 3.3 · 6.2.</em></div></div>
+        <div class="item"><div class="term">audit spine<span class="sub">postgresql 16 · 🟢 complete</span></div><div class="desc">INSERT-only event store with rule-level immutability, hash chain, logical replication, and the compliance-metrics view. <em>Serves 3.1–3.2.</em></div></div>
+        <div class="item"><div class="term">orchestrator + IDE<span class="sub">pharo 12 · spec2 · ⚪ planned (optional)</span></div><div class="desc">An <em>optional</em> live research and oversight console. Production ingress and HITL run on the Rust <code>agent-proxy</code> (MCP) path; the Pharo image is a teaching and inspection surface, not load-bearing. <em>Serves 5 · 4.3.</em></div></div>
+        <div class="item"><div class="term">glither.world<span class="sub">meta-dialect · wac compose · ⚪ planned</span></div><div class="desc">Wires the components into a signed membrane graph; refuses unsound wiring at compose time. <em>Serves 6.</em></div></div>
+      </div>
+      <div class="colophon" style="margin-top:8mm; border-top:1px solid var(--border-2,#2a2a2a); padding-top:4mm;">
+        <span class="k">colophon</span> · set in Intel One Mono, Noto Sans, and Noto Serif on the RAGBAZ warm solarized-dark palette. structure after Wittgenstein's <em>Tractatus Logico-Philosophicus</em> (1921).<br>
+        <span class="k">status</span> · design draft, non-normative · not legal advice · compliance core in active implementation (<a href="https://doc.ragbaz.cc/docs/products/ai-governance" style="color:inherit">live status ↗</a>) · a conformity argument to be ratified with a notified body.<br>
+        <span class="k">substrate</span> · glither.* (roux/tangle/glither-wit/glither-host) · wasm32-wasip2 · rust agent-proxy (mcp) · postgresql 16 · pharo 12 (optional) · cosign<br>
+        <span class="k">author</span> · RAGBAZ — Tobias Abenius · <span class="k">regulation</span> · EU 2024/1689 · <span class="k">applies from</span> 2026-08-02
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

@@ -302,6 +302,7 @@
         <a href="/pricing">pricing</a>
         <a href="/#products">products</a>
         <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/tractatus">EU AI Act Governance</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
     </div>
@@ -316,6 +317,7 @@
     <a href="#products" onclick="closeHM()">products</a>
     <a href="/pricing" onclick="closeHM()">pricing</a>
     <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/tractatus" onclick="closeHM()">EU AI Act Governance</a>
     <div class="hm-head">product lines</div>
     <a class="sub" href="#p-matches" onclick="closeHM()">matches</a>
     <a class="sub" href="#p-articulate" onclick="closeHM()">articulate</a>
@@ -334,7 +336,25 @@
           <div class="featured-frame">
             <article class="featured-slide active" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">flagship</span><span>01 / matches</span></div>
+                <div class="featured-kicker mono"><span class="status">building</span><span>01 / governance</span></div>
+                <h2>eu ai act<br />governance <span>platform</span></h2>
+                <p class="featured-desc">KAGP — a policy-as-code control plane that governs AI agents for EU AI Act compliance: every action passes a typed policy gate, lands in a tamper-evident audit chain, and can be held for human approval.</p>
+                <div class="featured-tags"><span>policy gate</span><span>audit chain</span><span>human oversight</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>routes every agent tool-call through a risk-tiered policy gate (allow / hold / deny)</li>
+                  <li>writes a hash-chained, signable audit trail (art 9 / art 12)</li>
+                  <li>holds high-risk actions for human approval with safe-default timeouts (art 14)</li>
+                </ul>
+                <a class="link" href="https://doc.ragbaz.cc/docs/products/ai-governance">read the full breakdown</a>
+              </div>
+            </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">flagship</span><span>02 / matches</span></div>
                 <h2>autonomous cinematic<br />battle <span>runtime</span></h2>
                 <p class="featured-desc">Grounded locomotion, tactical AI, procedural choreography, and per-bone keyframe timelines in a deterministic in-browser studio.</p>
                 <div class="featured-tags"><span>3d viewport</span><span>dsl editor</span><span>blender export</span></div>
@@ -352,7 +372,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span>02 / articulate</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span>03 / articulate</span></div>
                 <h2>headless commerce<br />and <span>cms</span></h2>
                 <p class="featured-desc">A secure WordPress gateway, Next.js storefront, multi-tenant provisioning, DNS automation, mail, and GraphQL edge surface.</p>
                 <div class="featured-tags"><span>gatekeeper</span><span>storefront</span><span>tenant provisioner</span></div>
@@ -370,7 +390,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">beta</span><span>03 / mailroute</span></div>
+                <div class="featured-kicker mono"><span class="status">beta</span><span>04 / mailroute</span></div>
                 <h2>mail stream<br /><span>guard</span></h2>
                 <p class="featured-desc">Rule-driven IMAP and SMTP inspection with quarantine buckets, audited rule edits, event hooks, and operator review.</p>
                 <div class="featured-tags"><span>mail security</span><span>quarantine</span><span>audit trail</span></div>
@@ -388,7 +408,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">research</span><span>04 / detcordon</span></div>
+                <div class="featured-kicker mono"><span class="status">research</span><span>05 / detcordon</span></div>
                 <h2>containment-first<br /><span>observation</span></h2>
                 <p class="featured-desc">Disposable browser and payload analysis environments for watching hostile web behavior without exposing the operator surface.</p>
                 <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
@@ -406,7 +426,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span>05 / atlas + docs</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span>06 / atlas + docs</span></div>
                 <h2>product atlas<br />and <span>status</span></h2>
                 <p class="featured-desc">The documentation and operations surface for RAGBAZ products, specs, status checks, deployment notes, and design-system references.</p>
                 <div class="featured-tags"><span>doc.ragbaz.cc</span><span>status</span><span>design system</span></div>
@@ -434,6 +454,7 @@
               <button class="featured-dot" type="button" onclick="showFeatured(2)">03</button>
               <button class="featured-dot" type="button" onclick="showFeatured(3)">04</button>
               <button class="featured-dot" type="button" onclick="showFeatured(4)">05</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(5)">06</button>
             </div>
           </div>
         </div>
@@ -466,8 +487,23 @@
       <div class="wrap">
         <div class="sec-head">
           <h2>// product lines</h2>
-          <span class="count mono">7 surfaces</span>
+          <span class="count mono">8 surfaces</span>
         </div>
+
+        <article class="prod flagship" id="p-governance">
+          <div class="hd"><h3>ai governance</h3><span class="st mono">building</span></div>
+          <div class="desc">konsonans ai governance platform (KAGP) — eu ai act compliance for ai agents. a glither.governance policy dialect compiled to wasm, a tamper-evident audit chain, human-in-the-loop approvals, and hardware-signable replica manifests. <a class="link" href="https://doc.ragbaz.cc/docs/products/ai-governance">full breakdown →</a></div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>mcp ingress</h4><p>model-context-protocol gateway. every agent tool-call is intercepted and routed through the policy gate before it reaches the upstream tool. identity + rbac enforced at entry.</p></div>
+            <div class="comp"><h4>policy gate</h4><p>glither.governance dialect (risk-tiered, fold first-match) compiled to a wasm component. synchronous allow / hold / deny, fail-closed on missing evidence.</p></div>
+            <div class="comp"><h4>audit chain</h4><p>append-only postgres event store with sha-256 hash chain and verify-chain. ≥6-month retention. art 9 risk management, art 12 traceability.</p></div>
+            <div class="comp"><h4>human oversight</h4><p>hold-for-approval lifecycle with sla-timeout-to-deny. notifications to discord and email, rbac-gated approvers. art 14 human oversight.</p></div>
+            <div class="comp"><h4>manifest signer</h4><p>ed25519 replica-manifest signing, software or pkcs#11 / hsm backend, anchoring cross-node divergence detection and conformity evidence.</p></div>
+            <div class="comp"><h4>identity + rbac</h4><p>oidc / saml authentication, role→permission authorization (agent / reviewer / approver / admin) enforced at ingress and on approvals.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">agent</span><span class="f-arr">→</span><span class="f-node">mcp-ingress</span><span class="f-arr">→</span><span class="f-node">policy-gate</span><span class="f-arr">→</span><span class="f-node">audit-chain</span><span class="f-arr">→</span><span class="f-node">oversight</span><span class="f-arr">→</span><span class="f-node">replica-signer</span></div>
+        </article>
 
         <article class="prod flagship" id="p-matches">
           <div class="hd"><h3>matches</h3><span class="st mono">flagship</span></div>
@@ -572,6 +608,7 @@
       <div class="links">
         <a href="/pricing">pricing</a>
         <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/tractatus">EU AI Act Governance</a>
         <a href="https://github.com/tabenius/matches">matches · github</a>
         <a href="/assets/ragbaz-prospectus.pdf?v=20260614aa" download>prospectus · pdf</a>
       </div>
