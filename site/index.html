@@ -4,7 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ragbaz — studio runtime</title>
-  <meta name="description" content="ragbaz is a small studio. flagship runtime: matches — autonomous cinematic battle simulation. warm solarized-dark, deterministic, prospectus-grade." />
+  <meta name="description" content="ragbaz is a small studio. flagship runtime: matches — autonomous cinematic battle simulation. also: articulate headless commerce, ai governance (kagp), baz signal stack, detcordon, and more." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ragbaz — studio runtime" />
+  <meta property="og:description" content="ragbaz: autonomous battle runtime, headless commerce, eu ai act governance, systematic trading toolkit, mail security, and containment-first malware observation." />
+  <meta property="og:url" content="https://ragbaz.cc" />
+  <meta name="theme-color" content="#0a0908" />
   <link rel="icon" href="./assets/logo-mark.svg" />
   <!-- design-system tokens (colors, type scale, components) -->
   <link rel="stylesheet" href="./colors_and_type.css?v=2" />
@@ -321,10 +326,12 @@
     <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
     <a href="/tractatus" onclick="closeHM()">tractatus</a>
     <div class="hm-head">product lines</div>
+    <a class="sub" href="#p-governance" onclick="closeHM()">ai governance (kagp)</a>
     <a class="sub" href="#p-matches" onclick="closeHM()">matches</a>
     <a class="sub" href="#p-articulate" onclick="closeHM()">articulate</a>
     <a class="sub" href="#p-mailroute" onclick="closeHM()">mailroute</a>
     <a class="sub" href="#p-detcordon" onclick="closeHM()">detcordon</a>
+    <a class="sub" href="#p-baz" onclick="closeHM()">baz signal stack</a>
     <a class="sub" href="#p-scipub" onclick="closeHM()">scipub</a>
     <a class="sub" href="#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
     <a class="sub" href="#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
@@ -443,6 +450,24 @@
                 <a class="link" href="https://doc.ragbaz.cc">open docs</a>
               </div>
             </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">active embryo</span><span>07 / baz signal stack</span></div>
+                <h2>systematic<br />trading <span>toolkit</span></h2>
+                <p class="featured-desc">Three-tier HFT suite: glither.hft compiler dialect produces WASM strategies with signed Ed25519 audit receipts; Palantir orchestrates enrichment and streaming; Luna is the browser notebook.</p>
+                <div class="featured-tags"><span>compiler</span><span>orchestration</span><span>candlestick charts</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>compiles glither.hft trading strategies to WASM, signing every execution with Ed25519 monetary audit receipts</li>
+                  <li>enriches live tick data with SMA/EMA/RSI/Bollinger indicators and streams signals over WebSocket</li>
+                  <li>renders strategy execution in a CodeMirror 6 notebook with lightweight-charts candlestick view</li>
+                </ul>
+                <a class="link" href="https://doc.ragbaz.cc/docs/experiments/baz-architecture">platform architecture →</a>
+              </div>
+            </article>
           </div>
 
           <div class="featured-controls">
@@ -457,6 +482,7 @@
               <button class="featured-dot" type="button" onclick="showFeatured(3)">04</button>
               <button class="featured-dot" type="button" onclick="showFeatured(4)">05</button>
               <button class="featured-dot" type="button" onclick="showFeatured(5)">06</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(6)">07</button>
             </div>
           </div>
         </div>
@@ -506,7 +532,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2>// product lines</h2>
-          <span class="count mono">8 surfaces</span>
+          <span class="count mono">9 surfaces</span>
         </div>
 
         <article class="prod flagship" id="p-governance">
@@ -615,6 +641,19 @@
             <div class="comp"><h4>backend</h4><p>fastapi data server with sqlite. geo queries (radius, bounding-box), full-text search, image serving. admin interface for curators.</p></div>
           </div>
           <div class="flow mono"><span class="f-node">map</span><span class="f-arr">↔</span><span class="f-node">backend</span><span class="f-arr">↔</span><span class="f-node">archive</span></div>
+        </article>
+
+        <article class="prod" id="p-baz">
+          <div class="hd"><h3>baz signal stack</h3><span class="st mono">active embryo</span></div>
+          <div class="desc">three-tier systematic trading suite — glither.hft compiler dialect, palantir rust orchestration server, and luna vite browser notebook. compiler and signed audit receipts implemented; live order execution pending durable receipt + venue integration. <a class="link" href="https://doc.ragbaz.cc/docs/experiments/baz-architecture">platform architecture →</a></div>
+          <div class="comp-head mono">components</div>
+          <div class="comps">
+            <div class="comp"><h4>baz.hft</h4><p>glither.hft compiler dialect and no_std wasm host embryo. compiles trading strategies via baz-hft-roux. signed ed25519 monetary audit receipts, deterministic market-policy evaluation.</p></div>
+            <div class="comp"><h4>baz.palantir</h4><p>rust/axum orchestration server. rule lifecycle management, sma/ema/rsi/bollinger enrichment via bounded ring buffers, websocket streaming, sqlite backlog, bearer auth.</p></div>
+            <div class="comp"><h4>baz.luna</h4><p>vite 6 browser trading frontend. codemirror 6 glither.hft notebook editor, lightweight-charts candlestick + rsi view, signal markers, backlog viewer. ~2.7 kB initial js.</p></div>
+            <div class="comp"><h4>baz.cx</h4><p>python fastapi exchange connector. 5 venue adapters, websocket stream of tick data and enriched candles to palantir. live execution gate open pending durable receipts.</p></div>
+          </div>
+          <div class="flow mono"><span class="f-node">baz.cx</span><span class="f-arr">→</span><span class="f-node">baz.palantir</span><span class="f-arr">→</span><span class="f-node">baz.hft</span><span class="f-arr">→</span><span class="f-node">audit-receipts</span><span class="f-arr">|</span><span class="f-node">baz.luna</span></div>
         </article>
 
       </div>
