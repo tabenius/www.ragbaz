@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ragbaz — pricing</title>
   <meta name="description" content="ragbaz pricing plans — articulate headless commerce and cms. free, writer, commerce, agency, secure." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ragbaz — pricing" />
+  <meta property="og:description" content="articulate plans — headless commerce, multisite, and managed WordPress. free, writer, commerce, agency, and secure tiers." />
+  <meta property="og:url" content="https://ragbaz.cc/pricing" />
+  <meta name="theme-color" content="#0a0908" />
   <link rel="icon" href="./assets/logo-mark.svg" />
   <link rel="stylesheet" href="./colors_and_type.css?v=2" />
   <style>
@@ -110,6 +115,26 @@
     footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
     footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
     @media (max-width: 560px) { .bar nav { display: none; } }
+
+    /* hamburger */
+    .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; margin-left: .6rem; display: none; align-items: center; }
+    .hm-btn:hover { color: var(--orange-1, #f3c46c); }
+    @media (max-width: 560px) { .hm-btn { display: flex; } }
+    .hm-overlay {
+      position: fixed; top: 0; right: 0; width: 260px; height: 100vh;
+      background: #15120c; border-left: 1px solid var(--border-2, #2a2a2a);
+      transform: translateX(100%); transition: transform .2s ease;
+      z-index: 20; padding: 1.5rem; overflow-y: auto;
+    }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-overlay .hm-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; }
+    .hm-overlay .hm-close:hover { color: var(--orange-1, #f3c46c); }
+    .hm-overlay .hm-head { font-family: "Intel One Mono", monospace; font-size: .7rem; color: var(--fg-5, #737373); text-transform: uppercase; letter-spacing: .12em; margin-top: 2rem; margin-bottom: .15rem; }
+    .hm-overlay a { display: block; padding: .35rem 0; font-family: "Intel One Mono", monospace; font-size: .85rem; color: var(--fg-2, #d8c29d); text-decoration: none; }
+    .hm-overlay a:hover { color: var(--orange-1, #f3c46c); }
+    .hm-overlay a.active { color: var(--orange-1, #f3c46c); }
+    .hm-scrim { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 19; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
   </style>
 </head>
 <body>
@@ -124,8 +149,20 @@
         <a href="https://doc.ragbaz.cc">docs</a>
         <a href="/tractatus">tractatus</a>
       </nav>
+      <button class="hm-btn mono" onclick="toggleHM()">☰</button>
     </div>
   </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay" id="hm-overlay">
+    <button class="hm-close" onclick="closeHM()">✕</button>
+    <div class="hm-head">navigate</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" class="active" onclick="closeHM()">pricing</a>
+    <a href="/#products" onclick="closeHM()">products</a>
+    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/tractatus" onclick="closeHM()">ai governance</a>
+  </div>
 
   <main>
     <section class="page-head">
@@ -341,6 +378,10 @@
 
     renderPlans();
     loadPrices();
+  </script>
+  <script>
+    function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
+    function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
   </script>
 </body>
 </html>

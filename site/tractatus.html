@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>tractatus custodicus — ragbaz governance</title>
   <meta name="description" content="tractatus logico-custodicus: a formal account of the konsonans ai governance platform in numbered propositions, after wittgenstein. ad conformitatem legis de intelligentia artificiali." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="tractatus custodicus — ragbaz governance" />
+  <meta property="og:description" content="A formal account of the KAGP AI governance platform: policy dialect, tamper-evident audit chain, human oversight lifecycle, and EU AI Act compliance crosswalk." />
+  <meta property="og:url" content="https://ragbaz.cc/tractatus" />
+  <meta name="theme-color" content="#0f0f10" />
   <link rel="icon" href="./assets/logo-mark.svg" />
   <link rel="stylesheet" href="./colors_and_type.css?v=2" />
   <style>
@@ -40,6 +45,26 @@
     .bar nav a.active { color: var(--orange-1, #f3c46c); }
 
     @media (max-width: 560px) { .bar nav { display: none; } }
+
+    /* hamburger */
+    .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; margin-left: .6rem; display: none; align-items: center; }
+    .hm-btn:hover { color: var(--orange-1, #f3c46c); }
+    @media (max-width: 560px) { .hm-btn { display: flex; } }
+    .hm-overlay {
+      position: fixed; top: 0; right: 0; width: 260px; height: 100vh;
+      background: #15120c; border-left: 1px solid var(--border-2, #2a2a2a);
+      transform: translateX(100%); transition: transform .2s ease;
+      z-index: 20; padding: 1.5rem; overflow-y: auto;
+    }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-overlay .hm-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; }
+    .hm-overlay .hm-close:hover { color: var(--orange-1, #f3c46c); }
+    .hm-overlay .hm-head { font-family: "Intel One Mono", monospace; font-size: .7rem; color: var(--fg-5, #737373); text-transform: uppercase; letter-spacing: .12em; margin-top: 2rem; margin-bottom: .15rem; }
+    .hm-overlay a { display: block; padding: .35rem 0; font-family: "Intel One Mono", monospace; font-size: .85rem; color: var(--fg-2, #d8c29d); text-decoration: none; }
+    .hm-overlay a:hover { color: var(--orange-1, #f3c46c); }
+    .hm-overlay a.active { color: var(--orange-1, #f3c46c); }
+    .hm-scrim { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 19; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
 
     /* ── WIP banner ── */
     .wip {
@@ -224,8 +249,20 @@
         <a href="https://doc.ragbaz.cc">docs</a>
         <a href="/tractatus" class="active">tractatus</a>
       </nav>
+      <button class="hm-btn mono" onclick="toggleHM()">☰</button>
     </div>
   </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay" id="hm-overlay">
+    <button class="hm-close" onclick="closeHM()">✕</button>
+    <div class="hm-head">navigate</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <a href="/#products" onclick="closeHM()">products</a>
+    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/tractatus" class="active" onclick="closeHM()">tractatus</a>
+  </div>
 
   <!-- ── WiP banner ── -->
   <div class="wip">work in progress · non-normative design draft · not legal advice · <a href="https://doc.ragbaz.cc/docs/products/ai-governance" style="color:inherit;text-decoration:underline">live status &amp; breakdown ↗</a></div>
@@ -577,5 +614,9 @@
     </section>
 
   </div>
+  <script>
+    function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
+    function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
+  </script>
 </body>
 </html>
