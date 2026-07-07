@@ -33,6 +33,7 @@ header.bar { position: sticky; top: 0; z-index: 10; background: #15120c; border-
 .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
 .wordmark { display: flex; align-items: center; gap: .6rem; font-family: var(--font-mono); font-weight: 600; letter-spacing: .14em; color: var(--fg-1); text-transform: uppercase; }
 .bar .wordmark img { height: 34px; width: auto; display: block; object-fit: contain; }
+footer .wordmark img { height: 22px; width: auto; display: block; }
 .wordmark .slash { color: var(--fg-5); }
 .wordmark .sub { color: var(--orange-1); }
 .bar nav { margin-left: auto; display: flex; gap: 1.2rem; font-family: var(--font-mono); font-size: .8rem; }
@@ -47,9 +48,9 @@ header.bar { position: sticky; top: 0; z-index: 10; background: #15120c; border-
 .hm-overlay.open { transform: translateX(0); }
 .hm-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:var(--fg-2); font-size:1.2rem; cursor:pointer; }
 .hm-close:hover { color: var(--orange-1); }
-.hm-head { font-family:var(--font-mono); font-size:.68rem; color:var(--fg-5); text-transform:uppercase; letter-spacing:.12em; margin:1.6rem 0 .3rem; }
-.hm-head:first-of-type { margin-top: 2rem; }
-.hm-overlay a { display:block; padding:.32rem 0; font-family:var(--font-mono); font-size:.84rem; color:var(--fg-2); }
+.hm-head { font-family:var(--font-mono); font-size:.68rem; color:var(--fg-5); text-transform:uppercase; letter-spacing:.12em; margin:.9rem 0 .25rem; }
+.hm-head:first-of-type { margin-top: 1.5rem; }
+.hm-overlay a { display:block; padding:.24rem 0; font-family:var(--font-mono); font-size:.84rem; color:var(--fg-2); }
 .hm-overlay a.sub { padding-left:1rem; font-size:.78rem; color:var(--fg-4); }
 .hm-overlay a:hover { color: var(--orange-1); }
 .hm-scrim { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:19; opacity:0; pointer-events:none; transition:opacity .2s ease; }
