@@ -68,6 +68,19 @@
     .btn.primary { background: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); border-color: var(--orange-3, #ff9900); font-weight: 600; }
     .btn.primary:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); color: var(--fg-on-warm, #1a1208); }
     .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn:disabled:hover { border-color: var(--border-3, #2d2d2d); color: var(--fg-1, #f6d7a7); }
+    .btn.primary:disabled:hover { background: var(--orange-3, #ff9900); border-color: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); }
+    /* coming-soon: disabled CTA with hover tooltip + note */
+    .cta-wrap { margin-top: auto; position: relative; }
+    .cta-wrap .btn { width: 100%; }
+    .cta-wrap[data-tip]:hover::after, .cta-wrap[data-tip]:focus-within::after {
+      content: attr(data-tip); position: absolute; bottom: calc(100% + .45rem); left: 50%; transform: translateX(-50%);
+      white-space: nowrap; background: var(--bg-5, #1a1a1a); color: var(--fg-2, #d8c29d);
+      border: 1px solid var(--border-warm, #3a2a18); border-radius: 6px; padding: .32rem .6rem;
+      font-family: "Intel One Mono", monospace; font-size: .72rem; z-index: 5; pointer-events: none;
+      box-shadow: 0 4px 18px rgba(0,0,0,.45);
+    }
+    .soon-note { font-family: "Intel One Mono", monospace; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--orange-1, #f3c46c); text-align: center; margin-top: .45rem; }
 
     .form-row { display: flex; flex-direction: column; gap: .3rem; margin: .8rem 0; }
     .form-row label { font-family: "Intel One Mono", monospace; font-size: .76rem; color: var(--fg-4, #9f9f9f); }
@@ -219,9 +232,12 @@
           <div class="price mono">${escapeHtml(price)}<span>${price !== "free" && available ? escapeHtml(interval) : ""}</span></div>
           <div class="desc">${escapeHtml(desc)}</div>
           <ul>${(p.features || []).map(f => `<li>${escapeHtml(f)}</li>`).join("")}</ul>
-          <button class="btn ${price === "free" ? "" : "primary"} mono" onclick="openSignup('${tier}', this.dataset.planName)" data-plan-name="${escapeHtml(name)}" style="margin-top:auto" ${available ? "" : "disabled"}>
-            ${escapeHtml(cta)}
-          </button>
+          <div class="cta-wrap" data-tip="coming soon — checkout isn't live yet">
+            <button class="btn ${price === "free" ? "" : "primary"} mono" title="Coming soon — checkout isn't live yet" disabled aria-disabled="true" data-plan-name="${escapeHtml(name)}">
+              ${escapeHtml(cta)}
+            </button>
+            <div class="soon-note">coming soon</div>
+          </div>
         </div>
       `}).join("");
     }
@@ -241,6 +257,8 @@
     let selectedTier = "";
 
     function openSignup(tier, name) {
+      // Checkout is not live yet — CTAs are disabled; guard defensively.
+      return;
       selectedTier = tier;
       document.getElementById("modal-title").textContent = "sign up · " + name;
       document.getElementById("signup-email").value = "";
@@ -317,6 +335,8 @@
       showBanner("provisioning your tenant — you will receive an email when it is ready.", "success");
     } else if (params.get("status") === "cancelled") {
       showBanner("checkout cancelled — no charges were made.", "info");
+    } else {
+      showBanner("checkout is coming soon — plans aren't purchasable yet. browse the tiers below.", "info");
     }
 
     renderPlans();
