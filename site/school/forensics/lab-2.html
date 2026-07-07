@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lab 2 · persistence hunt — ragbaz forensics</title>
+<meta name="description" content="Lab 2: Find a planted stalkerware-like app using evidence output alone, identify its persistence surface, and write your first mini-report." />
+<link rel="icon" href="/assets/logo-mark.svg" />
+<link rel="stylesheet" href="/colors_and_type.css?v=2" />
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #1d1812 0%, transparent 60%),
+    var(--bg-0, #0a0908);
+  color: var(--fg-2, #d8c29d);
+  font-family: "Noto Sans", system-ui, sans-serif;
+  font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+a { color: var(--orange-1); text-decoration: none; }
+a:hover { color: var(--orange-3); }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+.rule { border: 0; border-top: 1px solid var(--border-2); margin: 0; }
+section[id] { scroll-margin-top: 72px; }
+
+/* top chrome */
+header.bar { position: sticky; top: 0; z-index: 10; background: #15120c; border-bottom: 1px solid var(--border-2); }
+.bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
+.wordmark { display: flex; align-items: center; gap: .6rem; font-family: var(--font-mono); font-weight: 600; letter-spacing: .14em; color: var(--fg-1); text-transform: uppercase; }
+.bar .wordmark img { height: 34px; width: auto; display: block; object-fit: contain; }
+.wordmark .slash { color: var(--fg-5); }
+.wordmark .sub { color: var(--orange-1); }
+.bar nav { margin-left: auto; display: flex; gap: 1.2rem; font-family: var(--font-mono); font-size: .8rem; }
+.bar nav a { color: var(--fg-4); }
+.bar nav a:hover, .bar nav a.active { color: var(--orange-1); }
+.hm-btn { background: none; border: none; color: var(--fg-2); font-size: 1.2rem; cursor: pointer; line-height: 1; margin-left: .4rem; }
+.hm-btn:hover { color: var(--orange-1); }
+@media (max-width: 720px){ .bar nav { display: none; } .hm-btn { margin-left: auto; } }
+
+/* hamburger */
+.hm-overlay { position: fixed; top:0; right:0; width:280px; height:100vh; background:#15120c; border-left:1px solid var(--border-2); transform:translateX(100%); transition:transform .2s ease; z-index:20; padding:1.4rem; overflow-y:auto; }
+.hm-overlay.open { transform: translateX(0); }
+.hm-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:var(--fg-2); font-size:1.2rem; cursor:pointer; }
+.hm-close:hover { color: var(--orange-1); }
+.hm-head { font-family:var(--font-mono); font-size:.68rem; color:var(--fg-5); text-transform:uppercase; letter-spacing:.12em; margin:1.6rem 0 .3rem; }
+.hm-head:first-of-type { margin-top: 2rem; }
+.hm-overlay a { display:block; padding:.32rem 0; font-family:var(--font-mono); font-size:.84rem; color:var(--fg-2); }
+.hm-overlay a.sub { padding-left:1rem; font-size:.78rem; color:var(--fg-4); }
+.hm-overlay a:hover { color: var(--orange-1); }
+.hm-scrim { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:19; opacity:0; pointer-events:none; transition:opacity .2s ease; }
+.hm-scrim.open { opacity:1; pointer-events:auto; }
+
+/* hero */
+.hero { padding: clamp(2.4rem, 7vw, 4.4rem) 0 clamp(1.4rem, 4vw, 2.4rem); }
+.eyebrow { font-family: var(--font-mono); font-size: .78rem; color: var(--orange-1); letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { font-family: "Noto Sans", sans-serif; font-weight: 800; font-size: clamp(2.1rem, 1rem + 5vw, 4.2rem); line-height: 1.03; letter-spacing: -0.02em; color: var(--fg-1); margin: .5rem 0 0; }
+.hero h1 .ember { color: var(--orange-3); }
+.lede { max-width: 64ch; margin-top: 1.15rem; font-family: "Noto Serif", serif; font-size: clamp(1.02rem, 1rem + .35vw, 1.24rem); color: var(--fg-2); }
+.metabar { margin-top: 1.4rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { font-family: var(--font-mono); font-size: .74rem; color: var(--fg-3); border: 1px solid var(--border-warm); background: var(--bg-elev); padding: .24rem .6rem; border-radius: 6px; }
+.chip b { color: var(--orange-1); font-weight: 600; }
+.chip.cool { border-color: var(--blue-3); color: var(--blue-1); }
+
+/* buttons + downloads */
+.cta { margin-top: 1.7rem; display: flex; flex-wrap: wrap; gap: .7rem; }
+.btn { font-family: var(--font-mono); font-size: .84rem; border-radius: 8px; padding: .58rem .95rem; border: 1px solid var(--border-3); color: var(--fg-1); background: var(--bg-2); transition: border-color .15s, color .15s, transform .15s; display:inline-flex; align-items:center; gap:.5rem; }
+.btn:hover { transform: translateY(-1px); border-color: var(--orange-4); color: var(--orange-1); }
+.btn.primary { background: var(--orange-3); color: var(--fg-on-warm); border-color: var(--orange-3); font-weight: 600; }
+.btn.primary:hover { background: var(--orange-1); border-color: var(--orange-1); color: var(--fg-on-warm); }
+.btn.cool:hover { border-color: var(--blue-3); color: var(--blue-1); }
+
+/* section heads (kernel-log voice: "// name") */
+.sec { padding: clamp(2rem, 5vw, 3rem) 0 0; }
+.sec > .wrap > h2, h2.sec-h { font-family: var(--font-mono); text-transform: lowercase; letter-spacing: .1em; font-size: .82rem; color: var(--fg-4); margin: 0 0 1.3rem; }
+h2.sec-h::before { content: "// "; color: var(--orange-1); }
+
+/* prose */
+.prose { font-family: "Noto Serif", serif; color: var(--fg-2); line-height: 1.75; max-width: 74ch; }
+.prose p { margin: .8rem 0; }
+.prose strong { color: var(--fg-1); font-weight: 600; }
+.prose h3 { font-family: var(--font-mono); font-size: 1rem; color: var(--orange-1); letter-spacing: .02em; margin: 1.8rem 0 .5rem; }
+.prose h4 { font-family: var(--font-mono); font-size: .86rem; color: var(--orange-2); margin: 1.3rem 0 .35rem; }
+.prose ul, .prose ol { padding-left: 1.3rem; }
+.prose li { margin: .35rem 0; }
+.prose li::marker { color: var(--orange-1); }
+code.ic { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); border: 1px solid var(--border-2); color: var(--orange-2); padding: 1px 5px; border-radius: 2px; }
+
+/* terminal block */
+.term { border: 1px solid var(--border-2); border-radius: 8px; background: var(--bg-0); margin: 1.1rem 0; overflow: hidden; }
+.term__bar { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-5); background: var(--bg-4); border-bottom: 1px solid var(--border-2); padding: .4rem .8rem; }
+.term pre { margin: 0; padding: .85rem 1rem; overflow-x: auto; font-family: var(--font-mono); font-size: .82rem; line-height: 1.6; color: var(--fg-3); }
+.term .p { color: var(--orange-1); }
+.term .c { color: var(--fg-5); }
+
+/* callouts */
+.callout { border: 1px solid var(--border-2); border-left-width: 3px; border-radius: 6px; padding: .85rem 1rem .9rem; margin: 1.1rem 0; background: var(--bg-2); }
+.callout::before { display:block; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: .35rem; font-weight: 700; }
+.callout p { margin: .3rem 0; font-size: .92rem; }
+.callout--flag { border-left-color: var(--yellow-1); background: #211d10; } .callout--flag::before { content: "flag"; color: var(--yellow-1); }
+.callout--warn { border-left-color: var(--red-1);    background: #221414; } .callout--warn::before { content: "warning"; color: var(--red-1); }
+.callout--note { border-left-color: var(--blue-1);   background: #10202b; } .callout--note::before { content: "note"; color: var(--blue-1); }
+.callout--ok   { border-left-color: var(--green-1);  background: #16210f; } .callout--ok::before { content: "ok"; color: var(--green-1); }
+
+/* steps */
+ol.steps { list-style: none; counter-reset: st; padding: 0; margin: 1rem 0; }
+ol.steps > li { counter-increment: st; position: relative; padding: .1rem 0 .9rem 2.4rem; border-left: 1px solid var(--border-2); margin-left: .7rem; }
+ol.steps > li::before { content: counter(st, decimal-leading-zero); position: absolute; left: -0.75rem; top: 0; width: 1.5rem; height: 1.5rem; background: var(--bg-4); border: 1px solid var(--border-warm); border-radius: 6px; color: var(--orange-1); font-family: var(--font-mono); font-size: .72rem; display: flex; align-items: center; justify-content: center; }
+ol.steps > li:last-child { border-left-color: transparent; }
+
+/* phase grid */
+.phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .8rem; margin: 1rem 0; }
+.phase { border: 1px solid var(--border-2); border-radius: 8px; padding: .9rem; background: var(--bg-2); }
+.phase .k { font-family: var(--font-mono); font-size: .78rem; color: var(--orange-1); }
+.phase .t { font-family: var(--font-mono); font-size: .72rem; color: var(--fg-4); text-transform: uppercase; letter-spacing: .06em; margin: .1rem 0 .4rem; }
+.phase p { margin: 0; font-size: .84rem; color: var(--fg-3); }
+
+/* tables */
+table.rb { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: .86rem; }
+table.rb th { text-align: left; font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-1); background: var(--bg-4); border-bottom: 1px solid var(--border-3); padding: .5rem .7rem; }
+table.rb td { padding: .5rem .7rem; border-bottom: 1px solid var(--border-2); color: var(--fg-3); vertical-align: top; }
+table.rb td:first-child { color: var(--orange-1); font-family: var(--font-mono); white-space: nowrap; }
+table.rb .num { color: var(--orange-3); font-family: var(--font-mono); }
+
+/* lab grid + cards */
+.labgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.labcard { border: 1px solid var(--border-2); border-radius: 10px; background: var(--bg-2); padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: .5rem; transition: border-color .16s, transform .16s; }
+.labcard:hover { border-color: var(--border-warm); transform: translateY(-3px); }
+.labcard .n { font-family: var(--font-mono); font-size: .72rem; color: var(--fg-5); letter-spacing: .1em; }
+.labcard .t { font-family: var(--font-mono); font-size: 1rem; color: var(--fg-1); font-weight: 700; }
+.labcard .d { font-size: .86rem; color: var(--fg-3); line-height: 1.5; flex: 1; }
+.labcard .meta { display: flex; flex-wrap: wrap; gap: .35rem; }
+.labcard .meta span { font-family: var(--font-mono); font-size: .68rem; color: var(--blue-1); border: 1px solid var(--border-2); background: var(--bg-3); border-radius: 6px; padding: .12rem .45rem; }
+
+/* tag row */
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; margin: .8rem 0; }
+.tags span { font-family: var(--font-mono); font-size: .72rem; color: var(--blue-1); border: 1px solid var(--border-2); background: var(--bg-3); border-radius: 6px; padding: .16rem .5rem; }
+
+/* toc */
+.toc { border: 1px solid var(--border-2); border-radius: 8px; background: var(--bg-2); padding: .9rem 1.1rem; margin: 1.2rem 0; }
+.toc .h { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--fg-5); margin-bottom: .5rem; }
+.toc ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .2rem .8rem; }
+.toc a { font-family: var(--font-mono); font-size: .82rem; color: var(--fg-3); }
+.toc a::before { content: "› "; color: var(--orange-1); }
+.toc a:hover { color: var(--orange-1); }
+
+/* ethics banner */
+.ethics { border: 1px solid var(--border-warm); border-left: 3px solid var(--orange-3); border-radius: 8px; background: linear-gradient(180deg, #1d1812, var(--bg-2)); padding: .9rem 1.1rem; margin: 1.4rem 0; }
+.ethics .h { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .14em; color: var(--orange-3); margin-bottom: .3rem; }
+.ethics p { margin: .2rem 0; font-size: .88rem; color: var(--fg-3); }
+
+/* footer */
+footer { margin-top: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--border-2); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; padding: 2rem 0 3rem; }
+footer .links { display: flex; flex-wrap: wrap; gap: 1.2rem; font-family: var(--font-mono); font-size: .8rem; }
+footer .links a { color: var(--fg-4); }
+footer .links a:hover { color: var(--orange-1); }
+footer .meta { margin-left: auto; font-family: var(--font-mono); font-size: .72rem; color: var(--fg-5); }
+
+/* prev/next */
+.pager { display: flex; justify-content: space-between; gap: 1rem; margin: 2rem 0 0; flex-wrap: wrap; }
+.pager a { font-family: var(--font-mono); font-size: .82rem; }
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap">
+  <a class="wordmark" href="/school/forensics/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ<span class="slash">/</span><span class="sub">forensics</span></a>
+  <nav><a href="/school/forensics/">syllabus</a><a href="/school/forensics/teachers-manual">teachers</a><a href="/school/forensics/students">students</a><a href="/school/forensics/methodology">methodology</a><a href="/school/forensics/acquisition">acquisition</a></nav>
+  <button class="hm-btn mono" onclick="toggleHM()">☰</button>
+</div></header>
+
+<div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+<div class="hm-overlay" id="hm-overlay">
+  <button class="hm-close" onclick="closeHM()">✕</button>
+  <div class="hm-head">school</div>
+  <a href="/school/forensics/" onclick="closeHM()">syllabus</a>
+  <a href="/school/forensics/teachers-manual" onclick="closeHM()">teacher's manual</a>
+  <a href="/school/forensics/students" onclick="closeHM()">student instructions</a>
+  <a href="/school/forensics/methodology" onclick="closeHM()">methodology</a>
+  <a href="/school/forensics/acquisition" onclick="closeHM()">live acquisition</a>
+  <div class="hm-head">labs</div>
+  <a class="sub" href="/school/forensics/lab-1">lab 1 · baseline &amp; authorized acquisition</a><a class="sub" href="/school/forensics/lab-2">lab 2 · persistence hunt</a><a class="sub" href="/school/forensics/lab-3">lab 3 · live artifact acquisition</a><a class="sub" href="/school/forensics/lab-4">lab 4 · boot-chain imaging &amp; verification</a><a class="sub" href="/school/forensics/lab-5">lab 5 · blind assessment · capstone</a>
+  <div class="hm-head">tools</div>
+  <a class="sub" href="/school/forensics/assets/apts.sh" onclick="closeHM()">apts.sh</a>
+  <a class="sub" href="/school/forensics/assets/apts_tui.py" onclick="closeHM()">apts_tui.py</a>
+  <a class="sub" href="/school/forensics/assets/acquire_artifacts.sh" onclick="closeHM()">acquire_artifacts.sh</a>
+  <div class="hm-head">studio</div>
+  <a href="/school/" onclick="closeHM()">↩ school overview</a>
+  <a href="/" onclick="closeHM()">↩ ragbaz.cc</a>
+</div>
+
+<main>
+
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">lab 02 · detection</div>
+  <h1>lab 2 · <span class="ember">persistence hunt</span></h1>
+  <p class="lede">Find a planted stalkerware-like app using evidence output alone, identify its persistence surface, and write your first mini-report.</p>
+  <div class="metabar"><span class="chip">90 min</span><span class="chip">beginner</span><span class="chip">triage</span><span class="chip">reporting</span></div>
+</div></section>
+<hr class="rule"/>
+<section class="sec"><div class="wrap">
+  <h2 class="sec-h">objective</h2>
+  <div class="prose"><p>Move from "the tool printed flags" to "here is the app, here is the surface, here is the evidence, here is my confidence." This is the first lab where you produce a defensible finding.</p></div>
+</div></section>
+<section class="sec"><div class="wrap">
+  <h2 class="sec-h">materials</h2>
+  <div class="prose"><ul><li>Lab 1 completed</li><li>A device pre-loaded by the instructor</li><li><code class="ic">apts.sh</code></li><li>The methodology reference open in a tab</li></ul></div>
+</div></section>
+<section class="sec"><div class="wrap">
+  <h2 class="sec-h">procedure</h2>
+  <ol class="steps">
+  <li>Your instructor has planted one benign, stalkerware-like app on the device (it requests accessibility and device-admin rights). You are <b>not</b> told which app.</li>
+  <li>Run triage and collect the evidence set:
+    <div class="term"><div class="term__bar">workstation</div><pre><span class="p">$</span> ./apts.sh</pre></div>
+  </li>
+  <li>Work the six persistence surfaces in the evidence output. Cross-reference the enabled accessibility services and active device admins against the third-party package list.</li>
+  <li>Check installer provenance — is the suspect app sideloaded (installer null / shell)?</li>
+  <li>Check whether the app hides its launcher icon (present in the third-party list but absent from launcher activities).</li>
+  <li>Line up the install timeline against when the "symptoms" supposedly began.</li>
+  <li>Name the app and the exact surface(s) it uses, with the evidence file and line that prove it.</li>
+</ol>
+</div></section>
+<section class="sec"><div class="wrap">
+  <h2 class="sec-h">deliverable</h2>
+  <div class="callout callout--ok"><p>One-page mini-report: the app package name, the persistence surface(s) it abused, the evidence file + line proving each, a stated confidence level, and a one-line remediation. Correlation across surfaces scores higher than a single lucky hit.</p></div>
+</div></section>
+<section class="sec"><div class="wrap"><h2 class="sec-h">hint</h2><div class="callout callout--flag"><p>Accessibility + device-admin + sideloaded install on the <em>same</em> package is a story, not a coincidence. One dangerous permission is normal; the combination is the signal.</p></div></div></section>
+
+<div class="wrap"><div class="pager"><a href="/school/forensics/lab-1">‹ lab 1</a><a href="/school/forensics/lab-3">lab 3 ›</a></div></div>
+</main>
+
+<footer><div class="wrap">
+  <a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+  <div class="links">
+    <a href="/school/forensics/">syllabus</a>
+    <a href="/school/forensics/teachers-manual">teachers</a>
+    <a href="/school/forensics/students">students</a>
+    <a href="/">studio</a>
+  </div>
+  <span class="meta mono">school · forensics · read-only · authorized use only</span>
+</div></footer>
+
+<script>
+function toggleHM(){var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim');o.classList.toggle('open');s.classList.toggle('open');}
+function closeHM(){document.getElementById('hm-overlay').classList.remove('open');document.getElementById('hm-scrim').classList.remove('open');}
+</script>
+</body>
+</html>

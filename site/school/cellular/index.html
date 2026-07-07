@@ -7,32 +7,29 @@
 <link rel="icon" href="../../assets/logo-mark.svg" />
 <link rel="stylesheet" href="../../colors_and_type.css?v=2" />
 <style>
-@font-face{font-family:"et-book";src:url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff");font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:"et-book";src:url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff");font-weight:400;font-style:italic;font-display:swap;}
-@font-face{font-family:"et-book";src:url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff");font-weight:700;font-style:normal;font-display:swap;}
-:root{--bg:#fffff8;--fg:#111;--accent:#a00000;--rule:#c9c9bd;--code:#f3f3ea;}
+:root{--bg:var(--bg-0,#0a0908);--fg:var(--fg-2,#d8c29d);--accent:var(--orange-3,#ff9900);--accent-soft:var(--orange-1,#f3c46c);--rule:var(--border-2,#2a2a2a);--code:var(--bg-2,#121212);--paper:#fffff8;}
 html{font-size:15px;}
 body{margin:0;background:var(--bg);color:var(--fg);}
 .school-article{width:87.5%;max-width:1500px;margin:0 auto;padding:2rem 0 6rem 12.5%;
- font-family:"et-book",Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+ font-family:var(--font-serif,"Spectral","Noto Serif",Georgia,serif);
  counter-reset:sidenote-counter;line-height:1.55;}
-h1{font-weight:400;margin-top:1.2rem;font-size:2.9rem;line-height:1.05;}
-h2{font-weight:400;font-style:italic;font-size:1.9rem;margin-top:3rem;}
-h3{font-weight:400;font-style:italic;font-size:1.35rem;margin-top:2rem;}
-.subtitle{font-style:italic;font-size:1.6rem;color:#333;margin-top:.4rem;display:block;}
+h1{font-weight:400;margin-top:1.2rem;font-size:2.9rem;line-height:1.05;color:var(--fg-1,#f6d7a7);}
+h2{font-weight:400;font-style:italic;font-size:1.9rem;margin-top:3rem;color:var(--fg-1,#f6d7a7);}
+h3{font-weight:400;font-style:italic;font-size:1.35rem;margin-top:2rem;color:var(--fg-1,#f6d7a7);}
+.subtitle{font-style:italic;font-size:1.6rem;color:var(--fg-3,#d4c19a);margin-top:.4rem;display:block;}
 p,ol,ul,table,.note{width:55%;}
 p,ol,ul{font-size:1.18rem;}
 li{margin-bottom:.4rem;}
 a{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 1.05em;}
 a:hover{color:var(--accent);}
 a.glink{background:none;border-bottom:1px dotted var(--accent);}
-blockquote{width:50%;font-style:italic;border-left:2px solid var(--rule);margin-left:0;padding-left:1.2rem;color:#333;}
+blockquote{width:50%;font-style:italic;border-left:2px solid var(--rule);margin-left:0;padding-left:1.2rem;color:var(--fg-3,#d4c19a);}
 blockquote p{width:100%;}
 hr{border:0;border-top:1px solid var(--rule);width:55%;margin:3rem 0;}
 /* sidenotes / margin notes */
 .marginnote,.sidenote{float:right;clear:right;margin-right:-58%;width:48%;margin-top:.3rem;margin-bottom:1rem;
- font-size:.95rem;line-height:1.4;vertical-align:baseline;position:relative;color:#3a3a34;}
-.marginnote strong,.sidenote strong{color:var(--accent);font-weight:700;}
+ font-size:.95rem;line-height:1.4;vertical-align:baseline;position:relative;color:var(--fg-4,#9f9f9f);}
+.marginnote strong,.sidenote strong{color:var(--accent-soft,#f3c46c);font-weight:700;}
 .sidenote-number{counter-increment:sidenote-counter;}
 .sidenote-number:after{content:counter(sidenote-counter);font-size:.7rem;top:-.5rem;left:.1rem;position:relative;vertical-align:baseline;}
 .sidenote:before{content:counter(sidenote-counter) " ";font-size:.7rem;top:-.5rem;position:relative;vertical-align:baseline;}
@@ -42,42 +39,42 @@ label.margin-toggle:not(.sidenote-number){display:none;color:var(--accent);curso
 /* figures */
 figure{margin:2.2rem 0;max-width:100%;}
 figure.fullwidth{width:88%;max-width:1150px;}
-figure.puml{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1rem 1rem .4rem;}
+figure.puml{background:var(--paper,#fffff8);border:1px solid var(--border-3,#2d2d2d);border-radius:4px;padding:1rem 1rem .4rem;}
 figure img{max-width:100%;height:auto;display:block;margin:0 auto;}
-figcaption{font-size:.98rem;font-style:italic;color:#444;margin-top:.6rem;width:100%;}
+figcaption{font-size:.98rem;font-style:italic;color:var(--fg-4,#9f9f9f);margin-top:.6rem;width:100%;}
 details{margin-top:.6rem;font-size:.9rem;}
 summary{cursor:pointer;color:var(--accent);}
 pre.code{background:var(--code);border:1px solid var(--rule);padding:.8rem;overflow:auto;font-size:.82rem;line-height:1.35;
- font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;white-space:pre;}
-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--code);padding:.05em .3em;border-radius:3px;}
+ font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);white-space:pre;color:var(--fg-3,#d4c19a);}
+code{font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);font-size:.9em;background:var(--code);color:var(--orange-2,#f2a77a);padding:.05em .3em;border-radius:3px;}
 /* widgets */
-.widget{width:82%;max-width:1000px;background:#fff;border:1px solid var(--rule);border-left:4px solid var(--accent);
- border-radius:4px;padding:1.1rem 1.3rem;margin:2rem 0;box-shadow:0 1px 3px rgba(0,0,0,.05);}
-.widget h4{margin:.1rem 0 .8rem;font-size:1.1rem;font-weight:700;font-style:normal;letter-spacing:.02em;}
-.widget .tag{display:inline-block;font-size:.72rem;background:var(--accent);color:#fff;padding:.1rem .5rem;border-radius:3px;
- vertical-align:middle;margin-left:.5rem;font-family:ui-monospace,monospace;letter-spacing:.05em;}
+.widget{width:82%;max-width:1000px;background:var(--bg-2,#121212);border:1px solid var(--rule);border-left:4px solid var(--accent);
+ border-radius:4px;padding:1.1rem 1.3rem;margin:2rem 0;box-shadow:var(--shadow-1,0 1px 0 rgba(0,0,0,.4));}
+.widget h4{margin:.1rem 0 .8rem;font-size:1.1rem;font-weight:700;font-style:normal;letter-spacing:.02em;color:var(--fg-1,#f6d7a7);}
+.widget .tag{display:inline-block;font-size:.72rem;background:var(--accent);color:var(--fg-on-warm,#1a1208);padding:.1rem .5rem;border-radius:3px;
+ vertical-align:middle;margin-left:.5rem;font-family:var(--font-mono,ui-monospace,monospace);letter-spacing:.05em;}
 .controls{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-bottom:.9rem;}
 .controls label{font-size:1rem;cursor:pointer;user-select:none;}
-.controls button{font:inherit;font-size:.95rem;background:#f6f6ee;border:1px solid var(--rule);border-radius:4px;
+.controls button{font:inherit;font-size:.95rem;background:var(--bg-4,#181818);color:var(--fg-2,#d8c29d);border:1px solid var(--rule);border-radius:4px;
  padding:.35rem .7rem;cursor:pointer;margin:.15rem .3rem .15rem 0;}
 .controls button:hover{border-color:var(--accent);color:var(--accent);}
-.controls button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-select{font:inherit;font-size:1rem;padding:.3rem;border:1px solid var(--rule);border-radius:4px;background:#fff;}
+.controls button.active{background:var(--accent);color:var(--fg-on-warm,#1a1208);border-color:var(--accent);}
+select{font:inherit;font-size:1rem;padding:.3rem;border:1px solid var(--rule);border-radius:4px;background:var(--bg-4,#181818);color:var(--fg-2,#d8c29d);}
 .readout{background:var(--code);border:1px solid var(--rule);border-radius:4px;padding:.8rem 1rem;font-size:1rem;line-height:1.5;min-height:2rem;}
-.readout .ok{color:#0a6b2d;font-weight:700;}
-.readout .bad{color:var(--accent);font-weight:700;}
-.readout .warn{color:#8a6d00;font-weight:700;}
+.readout .ok{color:var(--green-1,#b8bb26);font-weight:700;}
+.readout .bad{color:var(--red-1,#fb4934);font-weight:700;}
+.readout .warn{color:var(--yellow-1,#fabd2f);font-weight:700;}
 .readout ul{width:100%;margin:.4rem 0 0;padding-left:1.2rem;font-size:.98rem;}
 .timeline{width:55%;border-left:2px solid var(--rule);margin-left:.4rem;padding-left:1.2rem;}
 .timeline li{list-style:none;position:relative;margin-bottom:.7rem;}
 .timeline li:before{content:"";position:absolute;left:-1.55rem;top:.45rem;width:9px;height:9px;background:var(--accent);border-radius:50%;}
-.timeline .d{font-family:ui-monospace,monospace;font-size:.85rem;color:var(--accent);}
-.banner{width:82%;max-width:1000px;background:#fbf7e9;border:1px solid #e2d8b0;border-radius:4px;padding:.8rem 1.1rem;font-size:.98rem;color:#4a4326;margin:1.5rem 0;}
+.timeline .d{font-family:var(--font-mono,ui-monospace,monospace);font-size:.85rem;color:var(--accent-soft,#f3c46c);}
+.banner{width:82%;max-width:1000px;background:var(--bg-elev,#1d1812);border:1px solid var(--border-warm,#3a2a18);border-radius:4px;padding:.8rem 1.1rem;font-size:.98rem;color:var(--fg-2,#d8c29d);margin:1.5rem 0;}
 .glossary{width:82%;max-width:1000px;}
 .glossary dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1.2rem;font-size:1rem;}
-.glossary dt{font-weight:700;color:var(--accent);font-family:ui-monospace,monospace;font-size:.92rem;padding-top:.15rem;}
+.glossary dt{font-weight:700;color:var(--accent-soft,#f3c46c);font-family:var(--font-mono,ui-monospace,monospace);font-size:.92rem;padding-top:.15rem;}
 .glossary dd{margin:0;}
-footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.9rem;color:#555;font-style:italic;}
+footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.9rem;color:var(--fg-5,#737373);font-style:italic;}
 .site-wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem);}
 .site-bar{
  position:sticky;top:0;z-index:20;background:rgba(16,16,16,.92);backdrop-filter:blur(8px);
@@ -164,6 +161,7 @@ footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rul
 <nav class="school-menu">
 <a href="/school/">overview</a>
 <a href="/school/cellular/" class="active">cellular</a>
+<a href="/school/forensics/">forensics</a>
 </nav>
 </div>
 </section>
@@ -175,7 +173,7 @@ footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rul
 
 <p><label for="mt-epi" class="margin-toggle">&#8853;</label>
 <input type="checkbox" id="mt-epi" class="margin-toggle"/>
-<span class="marginnote"><strong>On the typography.</strong> This document keeps a narrow-measure <em>Tufte&nbsp;CSS</em> reference layout while being linked into the wider RAGBAZ school surface. Acronyms carry a brief margin gloss and link to the fuller <a class="glink" href="#glossary">glossary</a>.</span>
+<span class="marginnote"><strong>On the typography.</strong> This document keeps its central <em>Tufte&nbsp;CSS</em> conventions &mdash; a narrow measure, numbered sidenotes, and a wide right margin for glosses and asides &mdash; reflowed onto the RAGBAZ token sheet: warm-solarized-dark surfaces, Spectral for text, Intel One Mono for labels, orange ember for accents. Acronyms carry a brief margin gloss and link to the fuller <a class="glink" href="#glossary">glossary</a>.</span>
 This reference distils a working conversation about the attack surface of mobile subscriber identity: the physical <abbr>SIM</abbr>, the embedded <abbr>eUICC</abbr> and its remote provisioning, the (non-)verifiability of <abbr>SMS</abbr>/<abbr>MMS</abbr> origin, and the covert network paths that bypass an on-device VPN. It closes with an incident-response playbook for a suspected repeat compromise.</p>
 
 <blockquote><p>The secret key is engineered never to leave the secure element &mdash; so real-world key theft reduces to exploiting a weak legacy algorithm or physically attacking the chip. Every layer in this document is a variation on that one boundary.</p></blockquote>
@@ -571,7 +569,7 @@ stop
 </div>
 
 <footer>
-Generated locally as a self-contained HTML artifact. Diagrams are PlantUML, rendered via the public PlantUML server (source embedded under each figure for offline use). Typeset with Tufte-CSS conventions; et-book webfont via CDN with serif fallback. &mdash; Reference distilled from a working security conversation, July&nbsp;2026.
+Generated locally as a self-contained HTML artifact. Diagrams are PlantUML, rendered via the public PlantUML server (source embedded under each figure for offline use). Typeset with Tufte-CSS conventions on the RAGBAZ design tokens (Spectral serif, warm-solarized-dark). &mdash; Reference distilled from a working security conversation, July&nbsp;2026.
 </footer>
 </article>
 
