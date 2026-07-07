@@ -44,14 +44,14 @@
     .bar nav a:hover { color: var(--orange-1, #f3c46c); }
     .bar nav a.active { color: var(--orange-1, #f3c46c); }
 
-    @media (max-width: 560px) { .bar nav { display: none; } }
+    @media (max-width: 720px) { .bar nav { display: none; } }
 
     /* hamburger */
     .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; margin-left: .6rem; display: none; align-items: center; }
     .hm-btn:hover { color: var(--orange-1, #f3c46c); }
-    @media (max-width: 560px) { .hm-btn { display: flex; } }
+    @media (max-width: 720px) { .hm-btn { display: flex; } }
     .hm-overlay {
-      position: fixed; top: 0; right: 0; width: 260px; height: 100vh;
+      position: fixed; top: 0; right: 0; width: min(86vw, 320px); height: 100vh;
       background: #15120c; border-left: 1px solid var(--border-2, #2a2a2a);
       transform: translateX(100%); transition: transform .2s ease;
       z-index: 20; padding: 1.5rem; overflow-y: auto;
@@ -233,6 +233,60 @@
     /* ── COLOPHON ── */
     .colophon { font-family: "Intel One Mono", monospace; font-size: 8pt; color: var(--fg-5, #737373); line-height: 1.8; }
     .colophon .k { color: var(--orange-3, #ff9900); }
+    @media (max-width: 980px) {
+      .content { padding: 2rem clamp(1rem, 4vw, 2rem); }
+      .cover { min-height: 0; }
+      .cover .subtitle { max-width: 100%; }
+      .cover .meta-grid { grid-template-columns: 1fr; }
+      .cover .meta-grid .cell {
+        padding-right: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--border-2, #2a2a2a);
+      }
+      .cover .meta-grid .cell:last-child { border-bottom: 0; }
+      .runhead,
+      .divlabel,
+      .cardinal,
+      .prop,
+      .fcard .row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .runhead,
+      .divlabel { gap: .4rem; }
+      .cardinal,
+      .prop,
+      .fcard .row { gap: .7rem; }
+      .cardinal .num,
+      .prop .n,
+      .fcard .row .lbl {
+        min-width: 0;
+        text-align: left;
+        padding-top: 0;
+      }
+      .cardgrid,
+      .deflist .item {
+        grid-template-columns: 1fr;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 720px) {
+      .bar .wrap {
+        height: auto;
+        padding-top: .75rem;
+        padding-bottom: .85rem;
+      }
+      .cover h1.title { font-size: clamp(2.3rem, 8vw, 3.6rem); }
+      .cover h1.title .small { font-size: clamp(1.2rem, 4.6vw, 1.6rem); }
+      .cover .latin,
+      .cover .seal,
+      .runhead,
+      .colophon { font-size: .8rem; }
+    }
   </style>
 </head>
 <body>

@@ -134,8 +134,42 @@ footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rul
  .glossary dl{grid-template-columns:1fr;gap:.1rem;}
  .glossary dt{padding-top:.6rem;}
 }
+@media(max-width:720px){
+ .site-bar .site-wrap,
+ .school-nav .site-wrap,
+ .site-footer .site-wrap{
+  align-items:flex-start;
+ }
+ .site-bar .site-wrap{
+  height:auto;
+  flex-wrap:wrap;
+  padding-top:.75rem;
+  padding-bottom:.9rem;
+ }
+ .site-nav{
+  width:100%;
+  margin-left:0;
+  flex-wrap:wrap;
+  gap:.65rem 1rem;
+  font-size:.76rem;
+ }
+ .school-nav .site-wrap{
+  gap:.7rem 1rem;
+ }
+ .school-menu{
+  width:100%;
+ }
+ .site-footer .site-meta{
+  width:100%;
+  margin-left:0;
+ }
+ table{
+  display:block;
+  overflow-x:auto;
+  max-width:100%;
+ }
+}
 @media(max-width:560px){
- .site-nav{display:none;}
  .school-nav .site-wrap{align-items:flex-start;}
  .site-footer .site-meta{margin-left:0;}
 }
