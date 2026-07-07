@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.open-next/
+# generated from site/ by scripts/sync-public.mjs
+public/
+.wrangler/
+.env*
+
+# build-generated embedded gated content
+lib/accounts/gated-content.generated.mjs
