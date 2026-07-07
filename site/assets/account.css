@@ -1,0 +1,68 @@
+/* ragbaz.cc account menu + subscribe widget — layered on colors_and_type.css */
+
+/* ── floating head-icon account menu ─────────────────────────────── */
+.rb-acct { position: fixed; top: .7rem; right: .8rem; z-index: 30; font-family: "Intel One Mono", ui-monospace, monospace; }
+.rb-acct__btn {
+  width: 38px; height: 38px; border-radius: 999px; cursor: pointer;
+  display: grid; place-items: center;
+  background: var(--bg-4, #181818); border: 1px solid var(--border-warm, #3a2a18);
+  color: var(--fg-1, #f6d7a7); transition: border-color .15s, color .15s, background .15s;
+}
+.rb-acct__btn:hover { border-color: var(--orange-4, #d97742); color: var(--orange-1, #f3c46c); }
+.rb-acct__btn svg { width: 20px; height: 20px; display: block; }
+.rb-acct__btn.authed { border-color: var(--orange-3, #ff9900); color: var(--orange-1, #f3c46c); }
+.rb-acct__dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; border-radius: 999px; background: var(--green-1, #b8bb26); display: none; }
+.rb-acct__btn.authed .rb-acct__dot { display: block; }
+
+.rb-acct__menu {
+  position: absolute; top: calc(100% + .5rem); right: 0; width: 260px;
+  background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
+  border-radius: 10px; padding: 1rem; box-shadow: 0 4px 18px rgba(0,0,0,.45);
+  display: none;
+}
+.rb-acct__menu.open { display: block; }
+.rb-acct__menu h3 { margin: 0 0 .2rem; font-size: .82rem; color: var(--fg-1, #f6d7a7); letter-spacing: .02em; }
+.rb-acct__menu h3::before { content: "// "; color: var(--orange-1, #f3c46c); }
+.rb-acct__menu p { margin: .1rem 0 .6rem; font-size: .78rem; color: var(--fg-4, #9f9f9f); font-family: "Noto Sans", system-ui, sans-serif; }
+.rb-acct__tabs { display: flex; gap: .3rem; margin-bottom: .6rem; }
+.rb-acct__tab { flex: 1; padding: .35rem; font: inherit; font-size: .74rem; text-transform: uppercase; letter-spacing: .06em;
+  background: var(--bg-4, #181818); border: 1px solid var(--border-3, #2d2d2d); border-radius: 6px; color: var(--fg-4, #9f9f9f); cursor: pointer; }
+.rb-acct__tab.active { color: var(--orange-1, #f3c46c); border-color: var(--orange-4, #d97742); }
+.rb-acct label { display: block; font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-5, #737373); margin: .5rem 0 .2rem; }
+.rb-acct input { width: 100%; box-sizing: border-box; padding: .5rem .6rem; border-radius: 7px;
+  border: 1px solid var(--border-3, #2d2d2d); background: var(--bg-4, #181818); color: var(--fg-1, #f6d7a7); font: inherit; font-size: .86rem; }
+.rb-acct__go { margin-top: .7rem; width: 100%; padding: .5rem; font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+  border-radius: 7px; background: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); border: 1px solid var(--orange-3, #ff9900); }
+.rb-acct__go:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); }
+.rb-acct__link { display: block; width: 100%; text-align: left; margin-top: .5rem; padding: .4rem .1rem; font: inherit; font-size: .8rem;
+  background: none; border: 0; color: var(--orange-1, #f3c46c); cursor: pointer; }
+.rb-acct__msg { margin-top: .5rem; font-size: .76rem; font-family: "Noto Sans", system-ui, sans-serif; min-height: 1em; }
+.rb-acct__msg.err { color: var(--red-1, #fb4934); }
+.rb-acct__msg.ok { color: var(--green-1, #b8bb26); }
+.rb-acct__email { font-size: .82rem; color: var(--fg-2, #d8c29d); word-break: break-all; }
+
+/* ── subscribe band (homepage) ───────────────────────────────────── */
+.rb-subscribe-band { padding: clamp(2rem, 5vw, 3.2rem) 0; }
+.rb-subscribe {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.2rem 2rem; align-items: center;
+  border: 1px solid var(--border-warm, #3a2a18); border-radius: 12px;
+  background: linear-gradient(180deg, var(--bg-elev, #1d1812), var(--bg-2, #121212));
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+.rb-subscribe__kicker { font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; color: var(--orange-3, #ff9900); }
+.rb-subscribe__title { margin: .3rem 0 .4rem; font-family: "Intel One Mono", ui-monospace, monospace; font-size: clamp(1.2rem, 1rem + 1.4vw, 1.7rem); color: var(--fg-1, #f6d7a7); }
+.rb-subscribe__lede { margin: 0; max-width: 52ch; font-family: "Noto Serif", serif; color: var(--fg-3, #d4c19a); font-size: .96rem; line-height: 1.6; }
+.rb-subscribe__form { display: flex; gap: .5rem; flex-wrap: wrap; }
+.rb-subscribe__form input { flex: 1 1 12rem; min-width: 0; padding: .62rem .8rem; border-radius: 8px;
+  border: 1px solid var(--border-3, #2d2d2d); background: var(--bg-0, #0a0908); color: var(--fg-1, #f6d7a7); font: inherit; font-size: .95rem; }
+.rb-subscribe__form button { padding: .62rem 1.1rem; border-radius: 8px; font-size: .86rem; font-weight: 600; cursor: pointer;
+  background: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); border: 1px solid var(--orange-3, #ff9900); }
+.rb-subscribe__form button:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); }
+.rb-subscribe__form button:disabled { opacity: .55; cursor: not-allowed; }
+.rb-subscribe__msg { grid-column: 1 / -1; margin: 0; min-height: 1em; font-size: .82rem; }
+.rb-subscribe__msg.err { color: var(--red-1, #fb4934); }
+.rb-subscribe__msg.ok { color: var(--green-1, #b8bb26); }
+
+@media (max-width: 720px) {
+  .rb-subscribe { grid-template-columns: 1fr; }
+}

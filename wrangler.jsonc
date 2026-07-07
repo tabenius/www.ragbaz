@@ -11,4 +11,17 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
+  "vars": {
+    "APP_URL": "https://ragbaz.cc",
+    "RESEND_FROM": "ragbaz <no-reply@ragbaz.cc>",
+  },
+  // Secrets (set with `wrangler secret put`): RESEND_API_KEY, SESSION_SECRET
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ragbaz-cc-accounts",
+      "database_id": "af56c284-f4fa-41ec-bc71-c20dad456dbe",
+      "migrations_dir": "migrations",
+    },
+  ],
 }
