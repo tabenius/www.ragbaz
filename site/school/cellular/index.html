@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mobile Subscriber-Identity Security &mdash; SIM, eSIM/RSP, Messaging &amp; Covert Channels</title>
+<link rel="icon" href="../../assets/logo-mark.svg" />
+<link rel="stylesheet" href="../../colors_and_type.css?v=2" />
+<style>
+@font-face{font-family:"et-book";src:url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff");font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:"et-book";src:url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff");font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:"et-book";src:url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff");font-weight:700;font-style:normal;font-display:swap;}
+:root{--bg:#fffff8;--fg:#111;--accent:#a00000;--rule:#c9c9bd;--code:#f3f3ea;}
+html{font-size:15px;}
+body{margin:0;background:var(--bg);color:var(--fg);}
+.school-article{width:87.5%;max-width:1500px;margin:0 auto;padding:2rem 0 6rem 12.5%;
+ font-family:"et-book",Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+ counter-reset:sidenote-counter;line-height:1.55;}
+h1{font-weight:400;margin-top:1.2rem;font-size:2.9rem;line-height:1.05;}
+h2{font-weight:400;font-style:italic;font-size:1.9rem;margin-top:3rem;}
+h3{font-weight:400;font-style:italic;font-size:1.35rem;margin-top:2rem;}
+.subtitle{font-style:italic;font-size:1.6rem;color:#333;margin-top:.4rem;display:block;}
+p,ol,ul,table,.note{width:55%;}
+p,ol,ul{font-size:1.18rem;}
+li{margin-bottom:.4rem;}
+a{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 1.05em;}
+a:hover{color:var(--accent);}
+a.glink{background:none;border-bottom:1px dotted var(--accent);}
+blockquote{width:50%;font-style:italic;border-left:2px solid var(--rule);margin-left:0;padding-left:1.2rem;color:#333;}
+blockquote p{width:100%;}
+hr{border:0;border-top:1px solid var(--rule);width:55%;margin:3rem 0;}
+/* sidenotes / margin notes */
+.marginnote,.sidenote{float:right;clear:right;margin-right:-58%;width:48%;margin-top:.3rem;margin-bottom:1rem;
+ font-size:.95rem;line-height:1.4;vertical-align:baseline;position:relative;color:#3a3a34;}
+.marginnote strong,.sidenote strong{color:var(--accent);font-weight:700;}
+.sidenote-number{counter-increment:sidenote-counter;}
+.sidenote-number:after{content:counter(sidenote-counter);font-size:.7rem;top:-.5rem;left:.1rem;position:relative;vertical-align:baseline;}
+.sidenote:before{content:counter(sidenote-counter) " ";font-size:.7rem;top:-.5rem;position:relative;vertical-align:baseline;}
+input.margin-toggle{display:none;}
+label.sidenote-number{display:inline;}
+label.margin-toggle:not(.sidenote-number){display:none;color:var(--accent);cursor:pointer;}
+/* figures */
+figure{margin:2.2rem 0;max-width:100%;}
+figure.fullwidth{width:88%;max-width:1150px;}
+figure.puml{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1rem 1rem .4rem;}
+figure img{max-width:100%;height:auto;display:block;margin:0 auto;}
+figcaption{font-size:.98rem;font-style:italic;color:#444;margin-top:.6rem;width:100%;}
+details{margin-top:.6rem;font-size:.9rem;}
+summary{cursor:pointer;color:var(--accent);}
+pre.code{background:var(--code);border:1px solid var(--rule);padding:.8rem;overflow:auto;font-size:.82rem;line-height:1.35;
+ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;white-space:pre;}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--code);padding:.05em .3em;border-radius:3px;}
+/* widgets */
+.widget{width:82%;max-width:1000px;background:#fff;border:1px solid var(--rule);border-left:4px solid var(--accent);
+ border-radius:4px;padding:1.1rem 1.3rem;margin:2rem 0;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.widget h4{margin:.1rem 0 .8rem;font-size:1.1rem;font-weight:700;font-style:normal;letter-spacing:.02em;}
+.widget .tag{display:inline-block;font-size:.72rem;background:var(--accent);color:#fff;padding:.1rem .5rem;border-radius:3px;
+ vertical-align:middle;margin-left:.5rem;font-family:ui-monospace,monospace;letter-spacing:.05em;}
+.controls{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-bottom:.9rem;}
+.controls label{font-size:1rem;cursor:pointer;user-select:none;}
+.controls button{font:inherit;font-size:.95rem;background:#f6f6ee;border:1px solid var(--rule);border-radius:4px;
+ padding:.35rem .7rem;cursor:pointer;margin:.15rem .3rem .15rem 0;}
+.controls button:hover{border-color:var(--accent);color:var(--accent);}
+.controls button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+select{font:inherit;font-size:1rem;padding:.3rem;border:1px solid var(--rule);border-radius:4px;background:#fff;}
+.readout{background:var(--code);border:1px solid var(--rule);border-radius:4px;padding:.8rem 1rem;font-size:1rem;line-height:1.5;min-height:2rem;}
+.readout .ok{color:#0a6b2d;font-weight:700;}
+.readout .bad{color:var(--accent);font-weight:700;}
+.readout .warn{color:#8a6d00;font-weight:700;}
+.readout ul{width:100%;margin:.4rem 0 0;padding-left:1.2rem;font-size:.98rem;}
+.timeline{width:55%;border-left:2px solid var(--rule);margin-left:.4rem;padding-left:1.2rem;}
+.timeline li{list-style:none;position:relative;margin-bottom:.7rem;}
+.timeline li:before{content:"";position:absolute;left:-1.55rem;top:.45rem;width:9px;height:9px;background:var(--accent);border-radius:50%;}
+.timeline .d{font-family:ui-monospace,monospace;font-size:.85rem;color:var(--accent);}
+.banner{width:82%;max-width:1000px;background:#fbf7e9;border:1px solid #e2d8b0;border-radius:4px;padding:.8rem 1.1rem;font-size:.98rem;color:#4a4326;margin:1.5rem 0;}
+.glossary{width:82%;max-width:1000px;}
+.glossary dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1.2rem;font-size:1rem;}
+.glossary dt{font-weight:700;color:var(--accent);font-family:ui-monospace,monospace;font-size:.92rem;padding-top:.15rem;}
+.glossary dd{margin:0;}
+footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.9rem;color:#555;font-style:italic;}
+.site-wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem);}
+.site-bar{
+ position:sticky;top:0;z-index:20;background:rgba(16,16,16,.92);backdrop-filter:blur(8px);
+ border-bottom:1px solid var(--border-2,#2a2a2a);
+}
+.site-bar .site-wrap{display:flex;align-items:center;gap:1rem;height:56px;}
+.site-wordmark{
+ display:flex;align-items:center;gap:.6rem;font-family:"Intel One Mono",ui-monospace,monospace;font-weight:600;
+ letter-spacing:.14em;color:var(--fg-1,#f6d7a7);text-transform:uppercase;background:none;
+}
+.site-wordmark img{height:39px;width:auto;display:block;}
+.site-nav{margin-left:auto;display:flex;gap:1.4rem;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.82rem;}
+.site-nav a,.school-menu a,.site-footer a{background:none;text-decoration:none;}
+.site-nav a{color:var(--fg-4,#9f9f9f);}
+.site-nav a:hover,.site-nav a.active{color:var(--orange-1,#f3c46c);}
+.school-nav{
+ border-bottom:1px solid var(--border-2,#2a2a2a);
+ background:var(--bg-elev,#1d1812);
+}
+.school-nav .site-wrap{
+ display:flex;flex-wrap:wrap;align-items:center;gap:.9rem 1.2rem;padding-top:.75rem;padding-bottom:.75rem;
+}
+.school-label{
+ font-family:"Intel One Mono",ui-monospace,monospace;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--orange-3,#ff9900);
+}
+.school-menu{display:flex;flex-wrap:wrap;gap:.6rem;}
+.school-menu a{
+ padding:.3rem .65rem;border:1px solid var(--border-warm,#3a2a18);border-radius:999px;
+ font-family:"Intel One Mono",ui-monospace,monospace;font-size:.76rem;color:var(--fg-3,#d4c19a);
+ background:rgba(0,0,0,.12);
+}
+.school-menu a:hover,.school-menu a.active{color:var(--orange-1,#f3c46c);border-color:var(--orange-4,#d97742);}
+.site-footer{
+ margin-top:0;padding:0;border:0;width:100%;font-style:normal;color:inherit;
+ border-top:1px solid var(--border-2,#2a2a2a);background:var(--bg-0,#0a0908);
+}
+.site-footer .site-wrap{
+ display:flex;flex-wrap:wrap;gap:1.2rem 2rem;align-items:center;padding-top:2rem;padding-bottom:3rem;
+}
+.site-footer .site-wordmark img{height:22px;}
+.site-footer .site-links{
+ display:flex;flex-wrap:wrap;gap:1.4rem;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.82rem;
+}
+.site-footer .site-links a{color:var(--orange-1,#f3c46c);}
+.site-footer .site-meta{
+ margin-left:auto;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.74rem;color:var(--fg-5,#737373);
+}
+@media(max-width:820px){
+ .school-article{width:90%;padding:1.2rem 5% 4rem;}
+ p,ol,ul,table,.note,blockquote,hr,.timeline,footer{width:100%;}
+ figure.fullwidth,.widget,.banner,.glossary{width:100%;}
+ .marginnote,.sidenote{display:none;}
+ label.margin-toggle:not(.sidenote-number){display:inline;}
+ .margin-toggle:checked+.sidenote,.margin-toggle:checked+.marginnote{display:block;float:none;clear:both;width:95%;margin:1rem 0;
+  padding:.6rem .8rem;background:var(--code);border-left:3px solid var(--accent);}
+ .glossary dl{grid-template-columns:1fr;gap:.1rem;}
+ .glossary dt{padding-top:.6rem;}
+}
+@media(max-width:560px){
+ .site-nav{display:none;}
+ .school-nav .site-wrap{align-items:flex-start;}
+ .site-footer .site-meta{margin-left:0;}
+}
+</style>
+</head>
+<body>
+<header class="site-bar">
+<div class="site-wrap">
+<a class="site-wordmark" href="/"><img src="../../assets/logo-mark.svg" alt="RAGBAZ"/>RAGBAZ</a>
+<nav class="site-nav">
+<a href="/">home</a>
+<a href="/pricing">pricing</a>
+<a href="/#products">products</a>
+<a href="/school/" class="active">school</a>
+<a href="https://doc.ragbaz.cc">docs</a>
+<a href="/tractatus">tractatus</a>
+</nav>
+</div>
+</header>
+<section class="school-nav" aria-label="school sections">
+<div class="site-wrap">
+<div class="school-label">school</div>
+<nav class="school-menu">
+<a href="/school/">overview</a>
+<a href="/school/cellular/" class="active">cellular</a>
+</nav>
+</div>
+</section>
+<div class="school-article">
+<article>
+
+<h1>Mobile Subscriber-Identity Security</h1>
+<span class="subtitle">SIM, eSIM / RSP, messaging, and covert channels &mdash; a field reference with a DFIR playbook</span>
+
+<p><label for="mt-epi" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mt-epi" class="margin-toggle"/>
+<span class="marginnote"><strong>On the typography.</strong> This document keeps a narrow-measure <em>Tufte&nbsp;CSS</em> reference layout while being linked into the wider RAGBAZ school surface. Acronyms carry a brief margin gloss and link to the fuller <a class="glink" href="#glossary">glossary</a>.</span>
+This reference distils a working conversation about the attack surface of mobile subscriber identity: the physical <abbr>SIM</abbr>, the embedded <abbr>eUICC</abbr> and its remote provisioning, the (non-)verifiability of <abbr>SMS</abbr>/<abbr>MMS</abbr> origin, and the covert network paths that bypass an on-device VPN. It closes with an incident-response playbook for a suspected repeat compromise.</p>
+
+<blockquote><p>The secret key is engineered never to leave the secure element &mdash; so real-world key theft reduces to exploiting a weak legacy algorithm or physically attacking the chip. Every layer in this document is a variation on that one boundary.</p></blockquote>
+
+<div class="banner">&#9888; <strong>Scope &amp; ethics.</strong> Material here is for defensive analysis, authorised testing, and evidence-grade investigation. Offensive mechanisms are described at the level needed to <em>detect</em> and <em>attribute</em> them, not to operate them covertly.</div>
+
+<h2>1 &middot; The layered trust model</h2>
+<p><label for="mn-rsp" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-rsp" class="margin-toggle"/>
+<span class="marginnote"><strong>RSP</strong> &mdash; Remote SIM Provisioning; the GSMA framework for delivering operator profiles to an eUICC. <a class="glink" href="#gl-rsp">more</a></span>
+Everything reduces to one root of trust. The <abbr>GSMA</abbr> <abbr>CI</abbr> (Certificate Issuer) signs both the eUICC&rsquo;s per-chip certificate and each <abbr>SM-DP+</abbr>&rsquo;s certificate; profile delivery is a mutual authentication plus an ECKA key agreement. Break <em>either</em> half &mdash; steal an eUICC private key, or an SM-DP+ certificate &mdash; and the &ldquo;end-to-end encrypted profile&rdquo; guarantee collapses.</p>
+
+<figure class="puml fullwidth" id="fig-rsp_trust"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c6520525350202f206553494d205472757374204d6f64656c20285347502e323220636f6e73756d6572202b205347502e333220496f54290a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d2064656661756c74466f6e744e616d652048656c7665746963610a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a7061636b616765202244657669636522207b0a20205b4c50415c6e284c6f63616c2050726f66696c6520417373697374616e74295d206173204c50410a20205b65554943435c6e28656d6265646465642073656375726520656c656d656e74295d2061732045554943430a20205b4261736562616e645d2061732042420a7d0a636c6f7564202247534d4120504b4922207b0a20205b47534d412043495c6e28436572746966696361746520497373756572295d2061732043490a7d0a6e6f646520224f70657261746f72202f2050726f766973696f6e696e6722207b0a20205b534d2d44502b5d2061732044500a20205b534d2d44535c6e28446973636f76657279295d2061732044530a7d0a6e6f64652022496f54206d616e6167656d656e7422207b0a20205b65494d5d2061732045494d0a7d0a4349202e2e3e204555494343203a207369676e7320655549434320636572740a4349202e2e3e204450203a207369676e7320534d2d44502b20636572740a4c5041202d2d3e204450203a204553392b2028646f776e6c6f6164290a4c5041202d2d3e204555494343203a2045533130202841504455290a4c5041202d2d3e204453203a20455331312028646973636f76657279290a45494d202d2d3e204555494343203a205347502e33322072656d6f7465206d676d745c6e286e6f207573657220636f6e73656e74290a4555494343203c2d2d3e204450203a206d757475616c2061757468202845434b41295c6e656e642d746f2d656e6420656e637279707465642070726f66696c650a4242202d2d3e204555494343203a2049534f20373831362041504455206275730a6e6f746520626f74746f6d206f662043490a2020526f6f74206f662074727573742e0a2020537465616c20616e2065554943432070726976617465206b6579204f5220616e20534d2d44502b20636572740a20203d3e20696d706572736f6e617465206f6e652068616c66206f6620746865206d757475616c20617574682e0a656e64206e6f74650a40656e64756d6c0a" alt="Fig. 1 &amp;middot; RSP / eSIM trust model. The GSMA CI is the single root of trust; compromising either the eUICC private key or an SM-DP+ certificate defeats one half of the mutual authentication."/><figcaption>Fig. 1 &middot; RSP / eSIM trust model. The GSMA CI is the single root of trust; compromising either the eUICC private key or an SM-DP+ certificate defeats one half of the mutual authentication.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title RSP / eSIM Trust Model (SGP.22 consumer + SGP.32 IoT)
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam backgroundColor transparent
+package &quot;Device&quot; {
+  [LPA\n(Local Profile Assistant)] as LPA
+  [eUICC\n(embedded secure element)] as EUICC
+  [Baseband] as BB
+}
+cloud &quot;GSMA PKI&quot; {
+  [GSMA CI\n(Certificate Issuer)] as CI
+}
+node &quot;Operator / Provisioning&quot; {
+  [SM-DP+] as DP
+  [SM-DS\n(Discovery)] as DS
+}
+node &quot;IoT management&quot; {
+  [eIM] as EIM
+}
+CI ..&gt; EUICC : signs eUICC cert
+CI ..&gt; DP : signs SM-DP+ cert
+LPA --&gt; DP : ES9+ (download)
+LPA --&gt; EUICC : ES10 (APDU)
+LPA --&gt; DS : ES11 (discovery)
+EIM --&gt; EUICC : SGP.32 remote mgmt\n(no user consent)
+EUICC &lt;--&gt; DP : mutual auth (ECKA)\nend-to-end encrypted profile
+BB --&gt; EUICC : ISO 7816 APDU bus
+note bottom of CI
+  Root of trust.
+  Steal an eUICC private key OR an SM-DP+ cert
+  =&gt; impersonate one half of the mutual auth.
+end note
+@enduml
+</pre></details></figure>
+
+<div class="widget" id="w-trust">
+ <h4>Trust-anchor explorer <span class="tag">what-if</span></h4>
+ <div class="controls" id="w-trust-btns">
+  <button data-k="euicc">eUICC private key stolen</button>
+  <button data-k="dp">SM-DP+ cert stolen</button>
+  <button data-k="ts48">TS.48 test profile &le; v6.0 present</button>
+  <button data-k="lpa">Hostile SM-DP+ / QR spoof</button>
+ </div>
+ <div class="readout" id="w-trust-out">Select a compromise to see the consequence.</div>
+</div>
+
+<h2>2 &middot; The physical SIM (UICC)</h2>
+<p><label for="mn-ki" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-ki" class="margin-toggle"/>
+<span class="marginnote"><strong>Ki</strong> &mdash; the per-subscriber authentication master key. Stored in the card; never transmitted. <a class="glink" href="#gl-ki">more</a></span>
+Authentication runs <em>on-card</em>: the baseband sends a challenge, the card computes the response and session keys internally, and returns only the result. On the <abbr>APDU</abbr> bus you therefore see <abbr>IMSI</abbr>, the challenge/response pair, and the derived <abbr>CK</abbr>/<abbr>IK</abbr> session keys &mdash; never Ki.</p>
+
+<figure class="puml fullwidth" id="fig-apdu_auth"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c6520415044552061757468656e7469636174696f6e20e28094204b69206e657665722063726f7373657320746865206275730a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a7061727469636970616e7420224261736562616e645c6e287465726d696e616c202f206d617374657229222061732042420a7061727469636970616e74202255494343202f205553494d5c6e2873656375726520656c656d656e7429222061732053494d0a4242202d3e2053494d203a2041555448454e5449434154452852414e442c204155544e290a6e6f7465207269676874206f662053494d0a20204d696c656e616765202f20434f4d503132382072756e73206f6e2d636172640a20207573696e67204b6920286e65766572206578706f72746564290a656e64206e6f74650a53494d202d2d3e204242203a205245532c20434b2c20494b202028646572697665642073657373696f6e206b657973290a6e6f7465206f7665722042422c2053494d0a20204f4e2074686520776972653a2052414e442c205245532c20434b2f494b2c20494d53492c2053544b2c204f54412d534d532e0a20204e4f54206f6e2074686520776972653a204b692c204f5441206b6579732e0a202041207368696d2f53494d747261636520736565732074686520666f726d65722c206e6576657220746865206c61747465722e0a656e64206e6f74650a40656e64756d6c0a" alt="Fig. 2 &amp;middot; On-card authentication over the ISO&amp;nbsp;7816 APDU bus. Session keys travel; the master key Ki never does."/><figcaption>Fig. 2 &middot; On-card authentication over the ISO&nbsp;7816 APDU bus. Session keys travel; the master key Ki never does.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title APDU authentication — Ki never crosses the bus
+skinparam shadowing false
+skinparam backgroundColor transparent
+participant &quot;Baseband\n(terminal / master)&quot; as BB
+participant &quot;UICC / USIM\n(secure element)&quot; as SIM
+BB -&gt; SIM : AUTHENTICATE(RAND, AUTN)
+note right of SIM
+  Milenage / COMP128 runs on-card
+  using Ki (never exported)
+end note
+SIM --&gt; BB : RES, CK, IK  (derived session keys)
+note over BB, SIM
+  ON the wire: RAND, RES, CK/IK, IMSI, STK, OTA-SMS.
+  NOT on the wire: Ki, OTA keys.
+  A shim/SIMtrace sees the former, never the latter.
+end note
+@enduml
+</pre></details></figure>
+
+<p>What a lost card actually leaks depends almost entirely on whether a <abbr>SIM</abbr> PIN is set. With it enabled the card is inert on power-up; without it, stored identifiers and &mdash; more dangerously &mdash; the ability to receive the subscriber&rsquo;s calls and SMS one-time codes pass to whoever holds it.</p>
+
+<div class="widget" id="w-sim">
+ <h4>Lost-SIM leak explorer <span class="tag">interactive</span></h4>
+ <div class="controls">
+  <label><input type="checkbox" id="s-pin"/> SIM&nbsp;PIN enabled</label>
+  <label><input type="checkbox" id="s-mil" checked/> Modern USIM (Milenage)</label>
+  <label><input type="checkbox" id="s-2g"/> 2G fallback enabled</label>
+  <label><input type="checkbox" id="s-rep"/> Reported to carrier</label>
+ </div>
+ <div class="readout" id="w-sim-out"></div>
+</div>
+
+<h2>3 &middot; eSIM and Remote SIM Provisioning</h2>
+<p><label for="mn-lpa" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-lpa" class="margin-toggle"/>
+<span class="marginnote"><strong>LPA</strong> &mdash; Local Profile Assistant; the on-device agent that drives profile download. A conduit, <em>not</em> a keyholder. <a class="glink" href="#gl-lpa">more</a></span>
+The <abbr>eUICC</abbr> is a soldered secure element provisioned over the air. The <abbr>LPA</abbr> parses an activation code and relays an encrypted <abbr>BPP</abbr> that only the target eUICC can decrypt &mdash; which is why you cannot extract your own profile through the LPA, and why the interesting attacks target the chip or the provisioning server instead.</p>
+
+<figure class="puml fullwidth" id="fig-esim_download"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c65205347502e32322070726f66696c6520646f776e6c6f6164202873696d706c6966696564290a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a6163746f7220557365720a7061727469636970616e74204c50410a7061727469636970616e742065554943430a7061727469636970616e742022534d2d44502b222061732044500a55736572202d3e204c5041203a207363616e20515220204c50413a312464702e6578616d706c65244d41544348494e472d49440a4c5041202d3e206555494343203a206765742065554943432063657274202b206368616c6c656e6765202845533130290a4c5041202d3e204450203a20496e69746961746541757468656e7469636174696f6e20284553392b290a4450202d2d3e204c5041203a20534d2d44502b2063657274202b207369676e6564206368616c6c656e67650a4c5041202d3e206555494343203a2076657269667920534d2d44502b206365727420616761696e73742047534d412043490a6555494343202d2d3e204c5041203a206555494343207369676e656420726573706f6e73650a4c5041202d3e204450203a206d757475616c2061757468204f4b202d3e20726571756573742070726f66696c650a4450202d2d3e204c5041203a20426f756e6450726f66696c655061636b6167652028656e6372797074656420746f2054484953206555494343290a4c5041202d3e206555494343203a20696e7374616c6c204250500a6e6f7465207269676874206f66206555494343203a20494d5349202b204b69202b204f5441206b657973206c616e6420696e73696465207468652053450a6e6f7465206f766572204c5041203a204c5041206f6e6c792072656c617973206369706865727465787420e28094206974206973206e6f742061206b6579686f6c6465720a40656e64756d6c0a" alt="Fig. 3 &amp;middot; SGP.22 consumer profile download. The LPA relays only ciphertext; secrets land inside the secure element."/><figcaption>Fig. 3 &middot; SGP.22 consumer profile download. The LPA relays only ciphertext; secrets land inside the secure element.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title SGP.22 profile download (simplified)
+skinparam shadowing false
+skinparam backgroundColor transparent
+actor User
+participant LPA
+participant eUICC
+participant &quot;SM-DP+&quot; as DP
+User -&gt; LPA : scan QR  LPA:1$dp.example$MATCHING-ID
+LPA -&gt; eUICC : get eUICC cert + challenge (ES10)
+LPA -&gt; DP : InitiateAuthentication (ES9+)
+DP --&gt; LPA : SM-DP+ cert + signed challenge
+LPA -&gt; eUICC : verify SM-DP+ cert against GSMA CI
+eUICC --&gt; LPA : eUICC signed response
+LPA -&gt; DP : mutual auth OK -&gt; request profile
+DP --&gt; LPA : BoundProfilePackage (encrypted to THIS eUICC)
+LPA -&gt; eUICC : install BPP
+note right of eUICC : IMSI + Ki + OTA keys land inside the SE
+note over LPA : LPA only relays ciphertext — it is not a keyholder
+@enduml
+</pre></details></figure>
+
+<p><label for="mn-euicc" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-euicc" class="margin-toggle"/>
+<span class="marginnote"><strong>eUICC</strong> &mdash; embedded UICC; the eSIM secure element. Identified by its <abbr>EID</abbr>. <a class="glink" href="#gl-euicc">more</a></span>
+The 2025 <strong>Kigen eUICC</strong> disclosure showed the systemic risk: a publicly-keyed <abbr>GSMA</abbr> <abbr>TS.48</abbr> test profile let researchers load an applet, an incomplete on-card Java Card bytecode verifier let it escape the firewall, and the eUICC&rsquo;s private key plus GSMA certificate were extracted &mdash; enough to download real profiles in cleartext and clone eSIMs.</p>
+
+<ul class="timeline">
+ <li><span class="d">2019</span> &mdash; Simjacker / WIBattack (S@T &amp; WIB applet abuse) and prior Java&nbsp;Card research surface.</li>
+ <li><span class="d">Mar 2025</span> &mdash; Security Explorations extracts an eUICC private ECC key; proof delivered to Kigen.</li>
+ <li><span class="d">Jul 2025</span> &mdash; Public disclosure; GSMA <abbr>TS.48</abbr> v7.0 restricts test-profile capability; vendor OS patch hardens the verifier.</li>
+ <li><span class="d">2025&rarr;</span> &mdash; Residual exposure concentrated in un-updated <abbr>IoT</abbr>/M2M eUICCs and <abbr>SGP.32</abbr> management (an <abbr>eIM</abbr> with no user-consent gate).</li>
+</ul>
+
+<h2>4 &middot; STK / OTA &mdash; the Simjacker family</h2>
+<p><label for="mn-stk" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-stk" class="margin-toggle"/>
+<span class="marginnote"><strong>STK / OTA</strong> &mdash; SIM Application Toolkit driven by Over-The-Air binary SMS (<code>ENVELOPE</code>&nbsp;SMS-PP). The card can proactively command the handset. <a class="glink" href="#gl-stk">more</a></span>
+Because the card cannot speak first on the master-driven bus, it raises a status word and the handset <code>FETCH</code>es a proactive command. A silent binary OTA SMS delivered via <code>ENVELOPE</code> reaches a vulnerable applet, which can request location and send an SMS &mdash; the Simjacker mechanism. It is largely mitigated by removing S@T/WIB applets and filtering binary OTA SMS at the network.</p>
+
+<figure class="puml fullwidth" id="fig-simjacker"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c652053696d6a61636b6572202f2057494261747461636b20286c656761637920534054202f20574942206170706c6574290a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a6163746f722041747461636b65720a7061727469636970616e742022534d5343202f5c6e4f54412073656e6465722220617320534d53430a7061727469636970616e7420224261736562616e64222061732042420a7061727469636970616e74202253494d206170706c65745c6e28534054202f205749422922206173204150500a41747461636b6572202d3e20534d5343203a2062696e617279204f544120534d532028547970652d302c2073696c656e742c206e6f205549290a534d5343202d3e204242203a2064656c697665720a4242202d3e20415050203a20454e56454c4f50452028534d532d5050206461746120646f776e6c6f6164290a415050202d3e204242203a2070726f6163746976653a2050524f56494445204c4f43414c20494e464f524d4154494f4e0a4242202d2d3e20415050203a206c6f636174696f6e2061726561202f20494d45490a415050202d3e204242203a2070726f6163746976653a2053454e442053484f5254204d4553534147450a4242202d3e20534d5343203a20657866696c20534d53202d3e2061747461636b65720a6e6f746520626f74746f6d0a20204d69746967617465642062792072656d6f76696e6720534054202f20574942206170706c657473202b0a20206e6574776f726b2066696c746572696e67206f662062696e617279204f544120534d53202847534d412067756964616e6365292e0a656e64206e6f74650a40656e64756d6c0a" alt="Fig. 4 &amp;middot; Simjacker / WIBattack via a legacy S@T/WIB applet, driven by a silent binary OTA SMS."/><figcaption>Fig. 4 &middot; Simjacker / WIBattack via a legacy S@T/WIB applet, driven by a silent binary OTA SMS.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title Simjacker / WIBattack (legacy S@T / WIB applet)
+skinparam shadowing false
+skinparam backgroundColor transparent
+actor Attacker
+participant &quot;SMSC /\nOTA sender&quot; as SMSC
+participant &quot;Baseband&quot; as BB
+participant &quot;SIM applet\n(S@T / WIB)&quot; as APP
+Attacker -&gt; SMSC : binary OTA SMS (Type-0, silent, no UI)
+SMSC -&gt; BB : deliver
+BB -&gt; APP : ENVELOPE (SMS-PP data download)
+APP -&gt; BB : proactive: PROVIDE LOCAL INFORMATION
+BB --&gt; APP : location area / IMEI
+APP -&gt; BB : proactive: SEND SHORT MESSAGE
+BB -&gt; SMSC : exfil SMS -&gt; attacker
+note bottom
+  Mitigated by removing S@T / WIB applets +
+  network filtering of binary OTA SMS (GSMA guidance).
+end note
+@enduml
+</pre></details></figure>
+
+<h2>5 &middot; SMS / MMS origin: nothing the handset can verify</h2>
+<p><label for="mn-mm4" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-mm4" class="margin-toggle"/>
+<span class="marginnote"><strong>MM4</strong> &mdash; the inter-MMSC interface, which <em>is</em> SMTP/MIME over the operator GRX/IPX. The originator is a header. <a class="glink" href="#gl-mm4">more</a></span>
+An inbound <abbr>SMS</abbr> hands the app a spoofable sender string (<code>TP-OA</code>), an unreliable <abbr>SMSC</abbr> address, and a timestamp &mdash; no origin-network attestation, no signature. <abbr>MMS</abbr> is no better: across carriers it travels as email (<abbr>MM4</abbr>), the <code>From:</code> is a header written by the sender side, and no DKIM/SPF/DMARC is enforced across the inter-operator mesh.</p>
+
+<figure class="puml fullwidth" id="fig-mm4"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c6520496e7465722d63617272696572204d4d53206f766572204d4d342028534d5450202f204d494d45290a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a7061727469636970616e7420224f726967696e6174696e675c6e4d4d5343202841292220617320410a7061727469636970616e7420225465726d696e6174696e675c6e4d4d5343202842292220617320420a7061727469636970616e742022526563697069656e745c6e68616e647365742220617320520a41202d3e2042203a20534d545020204d41494c2046524f4d3a3c2b31353535303030302f545950453d504c4d4e406d6d73632e613e0a41202d3e2042203a205243505420544f3a3c2b31353535343332312f545950453d504c4d4e406d6d73632e623e0a41202d3e2042203a20444154415c6e582d4d6d732d4d6573736167652d547970653a204d4d345f666f72776172642e5245515c6e46726f6d3a202b31353535303030302f545950453d504c4d4e406d6d73632e615c6e286d756c7469706172742f72656c617465643b20747970653d6170706c69636174696f6e2f736d696c290a42202d2d3e2041203a204d4d345f666f72776172642e5245530a42202d3e2052203a204d4d31204d2d52657472696576652e636f6e66202846726f6d203d206173736572746564206f726967696e61746f72290a6e6f7465206f76657220412c420a202046726f6d206973206120686561646572207772697474656e206279207468652073656e64657220736964652e0a20204e6f20444b494d2f5350462f444d41524320656e666f72636564206163726f7373204752582f4950582e0a20203d3e20656d61696c2d67726164652073706f6f6661626c652e0a656e64206e6f74650a40656e64756d6c0a" alt="Fig. 5 &amp;middot; Inter-carrier MMS is SMTP/MIME (MM4). The originator is a header — email-grade spoofable across GRX/IPX."/><figcaption>Fig. 5 &middot; Inter-carrier MMS is SMTP/MIME (MM4). The originator is a header — email-grade spoofable across GRX/IPX.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title Inter-carrier MMS over MM4 (SMTP / MIME)
+skinparam shadowing false
+skinparam backgroundColor transparent
+participant &quot;Originating\nMMSC (A)&quot; as A
+participant &quot;Terminating\nMMSC (B)&quot; as B
+participant &quot;Recipient\nhandset&quot; as R
+A -&gt; B : SMTP  MAIL FROM:&lt;+15550000/TYPE=PLMN@mmsc.a&gt;
+A -&gt; B : RCPT TO:&lt;+15554321/TYPE=PLMN@mmsc.b&gt;
+A -&gt; B : DATA\nX-Mms-Message-Type: MM4_forward.REQ\nFrom: +15550000/TYPE=PLMN@mmsc.a\n(multipart/related; type=application/smil)
+B --&gt; A : MM4_forward.RES
+B -&gt; R : MM1 M-Retrieve.conf (From = asserted originator)
+note over A,B
+  From is a header written by the sender side.
+  No DKIM/SPF/DMARC enforced across GRX/IPX.
+  =&gt; email-grade spoofable.
+end note
+@enduml
+</pre></details></figure>
+
+<div class="widget" id="w-verify">
+ <h4>Sender-verification comparator <span class="tag">interactive</span></h4>
+ <div class="controls">
+  <label>Channel:
+   <select id="v-ch">
+    <option value="sms">SMS</option>
+    <option value="mms">MMS (inter-carrier / MM4)</option>
+    <option value="rcs">RCS verified sender (RBM)</option>
+   </select>
+  </label>
+ </div>
+ <div class="readout" id="w-verify-out"></div>
+</div>
+
+<h2>6 &middot; Covert bearers that bypass an on-device VPN</h2>
+<p><label for="mn-pdn" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-pdn" class="margin-toggle"/>
+<span class="marginnote"><strong>PDN / APN</strong> &mdash; a Packet Data Network context on an Access Point Name. The MMS APN is a second bearer distinct from the default route. <a class="glink" href="#gl-pdn">more</a></span>
+Android&rsquo;s <abbr>VPN</abbr> is an L3 capture of the <em>default</em> network. A socket explicitly bound to a specific network &mdash; e.g. the MMS <abbr>PDN</abbr> via <code>NET_CAPABILITY_MMS</code> and <code>bindProcessToNetwork</code> &mdash; pins to that interface and escapes the tunnel, even under &ldquo;always-on + block without VPN&rdquo;. The forensic backstop is that the carrier still logs the <abbr>PDN</abbr> activation and bytes in its <abbr>CDR</abbr>s, regardless of on-device state.</p>
+
+<figure class="puml fullwidth" id="fig-vpn_bypass"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c65205365636f6e646172792d6265617265722065677265737320627970617373696e6720616e206f6e2d6465766963652056504e0a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a7061636b6167652022416e64726f69642064657669636522207b0a20205b41707020736f636b65745c6e2864656661756c742c20756e626f756e64295d2061732053310a20205b41707020736f636b657420626f756e6420746f5c6e4e45545f4341504142494c4954595f4d4d535d2061732053320a20205b74756e3020202856706e53657276696365295d2061732054554e0a20205b726d6e65742020284d4d532041504e202f2050444e295d20617320524d4e45540a7d0a636c6f7564202256504e2074756e6e656c222061732056504e0a636c6f756420224361727269657220636f72655c6e282b20434452202f2050444e206c6f6767696e67292220617320434f52450a5331202d2d3e2054554e203a2064656661756c7420726f75746520286361707475726564290a54554e202d2d3e2056504e0a5332202d2d3e20524d4e4554203a2062696e64536f636b6574202f2062696e6450726f63657373546f4e6574776f726b0a524d4e4554202d2d3e20434f5245203a2045534341504553207468652056504e0a6e6f7465207269676874206f6620524d4e45540a2020426f756e6420736f636b6574732070696e20746f2074686520696e746572666163652c206e6f742074756e302c0a2020736f206576656e2022616c776179732d6f6e202b20626c6f636b20776974686f75742056504e22206d6973736573207468656d2e0a20204361727269657220434452207374696c6c207265636f726473207468652050444e202b206279746573202d3e20666f72656e736963206261636b73746f702e0a656e64206e6f74650a40656e64756d6c0a" alt="Fig. 6 &amp;middot; A socket bound to the MMS PDN escapes an on-device VPN. Carrier CDRs remain the forensic backstop."/><figcaption>Fig. 6 &middot; A socket bound to the MMS PDN escapes an on-device VPN. Carrier CDRs remain the forensic backstop.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title Secondary-bearer egress bypassing an on-device VPN
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam backgroundColor transparent
+package &quot;Android device&quot; {
+  [App socket\n(default, unbound)] as S1
+  [App socket bound to\nNET_CAPABILITY_MMS] as S2
+  [tun0  (VpnService)] as TUN
+  [rmnet  (MMS APN / PDN)] as RMNET
+}
+cloud &quot;VPN tunnel&quot; as VPN
+cloud &quot;Carrier core\n(+ CDR / PDN logging)&quot; as CORE
+S1 --&gt; TUN : default route (captured)
+TUN --&gt; VPN
+S2 --&gt; RMNET : bindSocket / bindProcessToNetwork
+RMNET --&gt; CORE : ESCAPES the VPN
+note right of RMNET
+  Bound sockets pin to the interface, not tun0,
+  so even &quot;always-on + block without VPN&quot; misses them.
+  Carrier CDR still records the PDN + bytes -&gt; forensic backstop.
+end note
+@enduml
+</pre></details></figure>
+
+<div class="widget" id="w-vpn">
+ <h4>VPN-bypass &amp; evidence locator <span class="tag">interactive</span></h4>
+ <div class="controls">
+  <label><input type="checkbox" id="v-bind"/> App binds to MMS network</label>
+  <label><input type="checkbox" id="v-lock" checked/> Always-on lockdown VPN</label>
+  <label><input type="checkbox" id="v-off"/> MMSC reachable off-net</label>
+ </div>
+ <div class="readout" id="w-vpn-out"></div>
+</div>
+
+<h2>7 &middot; Obtaining carrier records: routes and provenance</h2>
+<p><label for="mn-rec" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-rec" class="margin-toggle"/>
+<span class="marginnote"><strong>DSAR</strong> &mdash; Data Subject Access Request. Under GDPR Art.&nbsp;15 (and CCPA/analogues) the subscriber can compel the carrier to disclose the personal data it holds &mdash; which includes itemised usage. <a class="glink" href="#gl-dsar">more</a></span>
+Every preceding section leans on the same backstop: the carrier holds records the handset cannot reach or forge. But &ldquo;the CDR proves it&rdquo; is only useful if you can <em>lawfully obtain</em> the CDR. There are three access routes, and which records you can get depends entirely on <em>who you are</em> and <em>what authority you hold</em> &mdash; not on what the network technically logs.</p>
+
+<figure class="puml fullwidth" id="fig-carrier_records"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c652057686572652063617272696572207265636f726473206f726967696e6174652c20616e6420746865206c617766756c20726f7574657320746f206f627461696e207468656d0a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a7061636b61676520224d6f62696c6520636f726520287265636f72642070726f6475636572732922207b0a20205b4d5343202f20494d535c6e28766f6963652c20534d53295d20617320564f4943450a20205b5347534e202f204747534e20202d2d20203447204d4d45202f20532d4757202f20502d47575c6e354720534d46202f205550465d2061732050530a20205b484c52202f20485353202f2055444d5c6e28737562736372696265722c20494d53492f494d45492062696e64696e67295d20617320484c520a20205b4f4353202f204f4643532020286368617267696e67295d206173204348470a20205b534d2d44502b202f2065494d5c6e286553494d2070726f766973696f6e696e67206c6f67295d206173205253500a7d0a5b4d6564696174696f6e202f2062696c6c696e675c6e54532033322e3239382041534e2e3120434452735d206173204d45440a5b4c617766756c2d696e7465726365707420676174657761795c6e45545349204c49202f2043414c45415d206173204c490a5b537562736372696265722044534152202f206974656d697365642062696c6c5d206173205355420a5b4c6567616c2070726f636573735d206173204c41570a564f494345202d2d3e204d4544203a20766f6963652d4344522c20534d532d4344520a5053202d2d3e204d4544203a20472d434452202f205047572d4344522c20495044520a434847202d2d3e204d4544203a205266202f20526f20284469616d65746572290a484c52202d2d3e204d4544203a2070726f766973696f6e696e67202b206c6f636174696f6e206576656e74730a525350202d2d3e204d4544203a20454944203c2d3e2070726f66696c652062696e640a4d4544202d2d3e20535542203a206974656d69736564207573616765202873656c662c20474450522044534152290a4d4544202d2d3e204c4157203a20737562706f656e61202f20636f757274206f72646572202f2077617272616e740a4c49202d2d3e204c4157203a206c69766520696e74657263657074202877617272616e74206f6e6c79290a6e6f746520626f74746f6d206f66204c41570a2020507265736572766174696f6e206c657474657220667265657a6573207265636f7264732066697273743b0a20204d4c4154202f204d4c4120627269646765732063726f73732d626f726465722063617272696572732e0a656e64206e6f74650a40656e64756d6c0a" alt="Fig. 7 &amp;middot; Record provenance and access routes. Each core network function emits a charging record; mediation normalises them to TS&amp;nbsp;32.298 CDRs, which reach you either as a subscriber DSAR/bill or through legal process, with live intercept gated behind a warrant."/><figcaption>Fig. 7 &middot; Record provenance and access routes. Each core network function emits a charging record; mediation normalises them to TS&nbsp;32.298 CDRs, which reach you either as a subscriber DSAR/bill or through legal process, with live intercept gated behind a warrant.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title Where carrier records originate, and the lawful routes to obtain them
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam backgroundColor transparent
+package &quot;Mobile core (record producers)&quot; {
+  [MSC / IMS\n(voice, SMS)] as VOICE
+  [SGSN / GGSN  --  4G MME / S-GW / P-GW\n5G SMF / UPF] as PS
+  [HLR / HSS / UDM\n(subscriber, IMSI/IMEI binding)] as HLR
+  [OCS / OFCS  (charging)] as CHG
+  [SM-DP+ / eIM\n(eSIM provisioning log)] as RSP
+}
+[Mediation / billing\nTS 32.298 ASN.1 CDRs] as MED
+[Lawful-intercept gateway\nETSI LI / CALEA] as LI
+[Subscriber DSAR / itemised bill] as SUB
+[Legal process] as LAW
+VOICE --&gt; MED : voice-CDR, SMS-CDR
+PS --&gt; MED : G-CDR / PGW-CDR, IPDR
+CHG --&gt; MED : Rf / Ro (Diameter)
+HLR --&gt; MED : provisioning + location events
+RSP --&gt; MED : EID &lt;-&gt; profile bind
+MED --&gt; SUB : itemised usage (self, GDPR DSAR)
+MED --&gt; LAW : subpoena / court order / warrant
+LI --&gt; LAW : live intercept (warrant only)
+note bottom of LAW
+  Preservation letter freezes records first;
+  MLAT / MLA bridges cross-border carriers.
+end note
+@enduml
+</pre></details></figure>
+
+<h3>7.1 &middot; The three lawful routes</h3>
+<p><strong>As the subscriber</strong> you already own most of the low-resolution data: an <em>itemised bill</em> lists calls, SMS counts and per-session data volume, and a <abbr>DSAR</abbr> compels the fuller personal-data set the operator retains &mdash; usage records, provisioning history, and often coarse cell/location associated with billing. This is self-service and needs no court. <strong>As an enterprise or plan owner</strong> (a business account, an <abbr>MDM</abbr>/EMM fleet, a family plan admin) you can request the records for numbers on the account through the carrier&rsquo;s business portal or account team. <strong>As law enforcement</strong> the resolution rises with the legal instrument: a <em>preservation letter</em> first freezes the data before it ages out; a <em>subpoena</em> reaches subscriber and toll (CDR) records; a <em>court order</em> reaches transactional/PDN and historical cell-site; a <em>warrant</em> is required for content and for real-time <abbr>lawful intercept</abbr>. Cross-border, an <abbr>MLAT</abbr> / mutual-legal-assistance request bridges to the foreign operator.</p>
+
+<div class="banner">&#9888; <strong>Authority gates resolution.</strong> A subscriber DSAR and a warrant can target the same switch, but return very different granularity. Nothing here is a technique for obtaining <em>another person&rsquo;s</em> records without their consent or due process &mdash; that is the line between an investigation and an offence.</div>
+
+<h3>7.2 &middot; What each record actually is, and where it is born</h3>
+<p><label for="mn-cdrtype" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-cdrtype" class="margin-toggle"/>
+<span class="marginnote"><strong>Charging arch.</strong> 3GPP <a class="glink" href="https://www.3gpp.org/DynaReport/32240.htm">TS&nbsp;32.240</a> defines the charging framework; <a class="glink" href="https://www.3gpp.org/DynaReport/32298.htm">TS&nbsp;32.298</a> the ASN.1 CDR encoding. Each node emits its own record type. <a class="glink" href="#gl-cdrtypes">more</a></span>
+A &ldquo;CDR&rdquo; is not one thing. Each network function emits its own charging record, which a <strong>mediation</strong> system normalises, correlates and hands to billing, retention or a warrant return:</p>
+<ul>
+ <li><strong>Voice / SMS CDR</strong> &mdash; from the <abbr>MSC</abbr>/IMS: A- and B-number, <abbr>IMSI</abbr>, <abbr>IMEI</abbr>(SV), start/duration, and the serving cell (Cell-ID / <abbr>ECGI</abbr>) at setup.</li>
+ <li><strong>Packet / PDN records</strong> &mdash; the <abbr>PDN</abbr> backstop from &sect;6. In 3G these are <strong>S-CDR</strong> (SGSN) and <strong>G-CDR</strong> (GGSN); in 4G/EPC the <strong>PGW-CDR</strong> (with SGW-CDR); in 5G the <strong>SMF/UPF</strong> charging records. They log APN, PDN activation/deactivation times, byte counts up/down, and the allocated (often <abbr>CGNAT</abbr>ed) IP &mdash; this is what betrays a covert bearer.</li>
+ <li><strong>IPDR</strong> &mdash; IP Detail Records: finer-grained flow/session logs (5-tuples, timestamps) some operators keep beyond the volume totals in the PGW-CDR.</li>
+ <li><strong>Charging events</strong> &mdash; the <abbr>OCS</abbr> (online, prepaid) and <abbr>OFCS</abbr> (offline, postpaid) systems carry Diameter <code>Ro</code>/<code>Rf</code> event streams that predate and cross-check the billed CDR.</li>
+ <li><strong>Subscriber &amp; identity</strong> &mdash; the <abbr>HLR</abbr>/HSS/UDM holds the IMSI&harr;MSISDN&harr;IMEI bindings, current <abbr>VLR</abbr>/serving-node, and provisioning history; an <abbr>SM-DP+</abbr>/eIM holds the EID&harr;profile download log for eSIMs.</li>
+ <li><strong>Location</strong> &mdash; from coarse to fine: the serving cell stamped on every CDR; a historical <em>cell-site</em> list; a <em>tower dump</em> (all IMSIs on a cell in a window); per-measurement timing-advance / <abbr>RTT</abbr> or operator RF-fingerprint (e.g. NELOS) for sub-cell fixes.</li>
+</ul>
+
+<h3>7.3 &middot; Retention, format, and the practical ask</h3>
+<p>Records do not live forever. Retention is set by national law and operator policy &mdash; commonly months to a couple of years for CDRs, often much shorter for fine IPDR/flow data &mdash; which is why the <em>preservation request goes first</em>, before the subpoena that eventually compels production. What you receive is typically a mediation export (CSV/PDF for a bill or DSAR; native <abbr>TS&nbsp;32.298</abbr> ASN.1&nbsp;BER, or a vendor CSV, for a warrant return). For an investigation the high-value, concrete ask is: <em>the PGW/SMF PDN-session records and voice/SMS CDRs for this IMSI/MSISDN over this window, with serving-cell and byte counts, plus the IMEI binding history and any eSIM provisioning events</em> &mdash; then correlate those against on-device <code>netstats</code> exactly as in the playbook below.</p>
+
+<div class="widget" id="w-rec">
+ <h4>Record-access route planner <span class="tag">interactive</span></h4>
+ <div class="controls">
+  <label>Who is asking:
+   <select id="r-who">
+    <option value="sub">Subscriber (self)</option>
+    <option value="ent">Enterprise / plan owner</option>
+    <option value="le">Law enforcement</option>
+    <option value="def">Defender w/ written consent</option>
+   </select>
+  </label>
+  <label>Record wanted:
+   <select id="r-what">
+    <option value="bill">Itemised usage / bill</option>
+    <option value="pdn">PDN / data-session (PGW/SMF)</option>
+    <option value="loc">Historical cell-site / location</option>
+    <option value="content">Message/call content or live intercept</option>
+   </select>
+  </label>
+ </div>
+ <div class="readout" id="w-rec-out"></div>
+</div>
+
+<h2>8 &middot; DFIR playbook for a suspected repeat compromise</h2>
+<p><label for="mn-dfir" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-dfir" class="margin-toggle"/>
+<span class="marginnote"><strong>DFIR</strong> &mdash; Digital Forensics &amp; Incident Response. Preserve before you remediate; correlate device egress against carrier records. <a class="glink" href="#gl-dfir">more</a></span>
+When prior defences have already failed, assume a persistent, adaptive adversary at a layer those defences never covered. Preserve evidence and operate over a clean out-of-band channel <em>before</em> touching anything; audit device egress and carrier records <em>in parallel</em>; cross-correlate on-device <code>netstats</code> against carrier <abbr>CDR</abbr>s to reveal covert bearers; and stage hardening so you do not tip the adversary.</p>
+
+<figure class="puml fullwidth" id="fig-dfir"><img loading="lazy" src="https://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7469746c65204446495220706c6179626f6f6b20666f7220612073757370656374656420726570656174206d6f62696c6520636f6d70726f6d6973650a736b696e706172616d20736861646f77696e672066616c73650a736b696e706172616d206261636b67726f756e64436f6c6f72207472616e73706172656e740a73746172740a3a50686173652030202d204f70536563202b2065766964656e636520696e746567726974793b0a6e6f74652072696768743a20636c65616e206f75742d6f662d62616e64206368616e6e656c2c20636861696e206f6620637573746f64792c207772697474656e20617574686f72697a6174696f6e0a3a50686173652031202d2053636f7065202620746872656174206d6f64656c3b0a3a50686173652032202d205072657365727665202620616371756972655c6e284d56542c2064756d707379732c206261636b7570732c2065554943432f454944293b0a3a50686173652033202d20417564697420696e636f6d696e67202b206f7574676f696e6720747261666669633b0a666f726b0a20203a4f66662d64657669636520676174657761795c6e285a65656b202f205375726963617461202f2070636170202f20444e53293b0a666f726b20616761696e0a20203a4361727269657220434452202f2050444e207265636f7264733b0a656e6420666f726b0a3a43726f73732d636f7272656c617465206e65747374617473207673204344523b0a69662028636f7665727420626561726572206f7220433220666f756e643f29207468656e2028796573290a20203a50686173652035202d206174747269627574696f6e202b2065766964656e6365207061636b6167653b0a656c736520286e6f290a20203a636f6e74696e7565206d6f6e69746f72696e673b0a656e6469660a3a48617264656e696e6720287374616765642c206e6f207469702d6f6666293b0a73746f700a40656e64756d6c0a" alt="Fig. 8 &amp;middot; DFIR playbook: preserve first, audit device egress and carrier records in parallel, cross-correlate, then harden without tipping the adversary."/><figcaption>Fig. 8 &middot; DFIR playbook: preserve first, audit device egress and carrier records in parallel, cross-correlate, then harden without tipping the adversary.</figcaption><details><summary>PlantUML source</summary><pre class="code">@startuml
+title DFIR playbook for a suspected repeat mobile compromise
+skinparam shadowing false
+skinparam backgroundColor transparent
+start
+:Phase 0 - OpSec + evidence integrity;
+note right: clean out-of-band channel, chain of custody, written authorization
+:Phase 1 - Scope &amp; threat model;
+:Phase 2 - Preserve &amp; acquire\n(MVT, dumpsys, backups, eUICC/EID);
+:Phase 3 - Audit incoming + outgoing traffic;
+fork
+  :Off-device gateway\n(Zeek / Suricata / pcap / DNS);
+fork again
+  :Carrier CDR / PDN records;
+end fork
+:Cross-correlate netstats vs CDR;
+if (covert bearer or C2 found?) then (yes)
+  :Phase 5 - attribution + evidence package;
+else (no)
+  :continue monitoring;
+endif
+:Hardening (staged, no tip-off);
+stop
+@enduml
+</pre></details></figure>
+
+<p>The single highest-signal cross-check is <strong>on-device per-UID/per-interface byte counts versus carrier-reported usage</strong>: any excess the operator recorded that the device does not account for points at a covert bearer or tampering. Because carrier records are outside the device, complete on-device concealment is not achievable &mdash; which is exactly what makes an evidence-grade investigation possible.</p>
+
+<hr/>
+
+<h2 id="glossary">Glossary</h2>
+<div class="glossary">
+<dl>
+<dt id="gl-sim">SIM / UICC</dt><dd>Subscriber Identity Module; the smartcard (Universal Integrated Circuit Card) holding subscriber credentials and running the USIM application. See <a class="glink" href="https://www.gsma.com/" >GSMA</a>.</dd>
+<dt id="gl-ki">Ki</dt><dd>Per-subscriber 128-bit authentication master key shared with the operator&rsquo;s HLR/HSS. Used on-card by COMP128 (legacy) or Milenage/TUAK (modern) to answer challenges; never leaves the card.</dd>
+<dt id="gl-euicc">eUICC / eSIM</dt><dd>Embedded UICC: a soldered secure element provisioned remotely per <a class="glink" href="https://www.gsma.com/esim/">GSMA eSIM</a>. Identified by a 32-digit EID whose prefix encodes the manufacturer (EUM).</dd>
+<dt id="gl-rsp">RSP</dt><dd>Remote SIM Provisioning. Consumer variant <a class="glink" href="https://www.gsma.com/esim/wp-content/uploads/2020/07/SGP.22-v2.2.2.pdf">SGP.22</a> (pull, user consent); IoT variant SGP.32 (managed by an eIM, no consent gate).</dd>
+<dt id="gl-lpa">LPA</dt><dd>Local Profile Assistant: parses activation codes (<code>LPA:1$dp$matchingID</code>), talks ES9+ to the SM-DP+ and ES10 to the eUICC. Relays ciphertext only.</dd>
+<dt id="gl-dp">SM-DP+ / SM-DS</dt><dd>Subscription Manager Data Preparation (prepares/delivers profiles) and Discovery Server (points a device at its SM-DP+). Both hold GSMA-CI-signed certificates.</dd>
+<dt id="gl-bpp">BPP</dt><dd>Bound Profile Package: the profile encrypted end-to-end to one specific eUICC, so intercepting it yields chip-bound ciphertext.</dd>
+<dt id="gl-stk">STK / OTA</dt><dd>SIM Application Toolkit; proactive commands fetched by the handset. OTA = Over-The-Air management via binary SMS (<code>ENVELOPE</code> SMS-PP data download) &mdash; the Simjacker delivery path.</dd>
+<dt id="gl-imsi">IMSI</dt><dd>International Mobile Subscriber Identity: the permanent subscriber ID stored in clear on the card (concealed over-air in 5G via SUCI).</dd>
+<dt id="gl-apdu">APDU</dt><dd>Application Protocol Data Unit: the ISO&nbsp;7816 command/response format on the SIM&harr;baseband line. Carries RAND/RES, CK/IK, IMSI, STK &mdash; never Ki.</dd>
+<dt id="gl-mm4">MM4</dt><dd>Inter-MMSC interface defined by <a class="glink" href="https://www.3gpp.org/DynaReport/23140.htm">3GPP TS 23.140</a>: SMTP/MIME with <code>X-Mms-*</code> headers, MSISDNs as <code>+E164/TYPE=PLMN@mmsc</code> addresses, over private GRX/IPX.</dd>
+<dt id="gl-mmsc">MMSC / MMS</dt><dd>Multimedia Messaging Service Centre; MMS payload is an HTTP POST to the MMSC, notified via WAP-push SMS. Sender field is not handset-verifiable.</dd>
+<dt id="gl-pdn">PDN / APN</dt><dd>Packet Data Network context bound to an Access Point Name. A device can hold several concurrently (default, MMS, IMS) subject to baseband multi-PDN support.</dd>
+<dt id="gl-cdr">CDR</dt><dd>Call Detail Record: carrier-side log of calls, messages, PDN activations and data volume &mdash; the forensic backstop that on-device tampering cannot reach.</dd>
+<dt id="gl-cdrtypes">CDR types</dt><dd>Per-node charging records under 3GPP <a class="glink" href="https://www.3gpp.org/DynaReport/32240.htm">TS&nbsp;32.240</a>, encoded per <a class="glink" href="https://www.3gpp.org/DynaReport/32298.htm">TS&nbsp;32.298</a> (ASN.1&nbsp;BER): voice/SMS-CDR (MSC/IMS); S-CDR/G-CDR (3G SGSN/GGSN); SGW-CDR/PGW-CDR (4G EPC); SMF/UPF records (5G). Mediation normalises them for billing, retention and warrant returns.</dd>
+<dt id="gl-ipdr">IPDR</dt><dd>IP Detail Record: finer-grained flow/session log (5-tuples, timestamps) some operators keep beyond the volume totals in the PGW/SMF CDR. Shorter retention than billed CDRs.</dd>
+<dt id="gl-chg">OCS / OFCS</dt><dd>Online (prepaid, real-time credit) and Offline (postpaid) Charging Systems. Carry Diameter <code>Ro</code>/<code>Rf</code> event streams that predate and cross-check the billed CDR.</dd>
+<dt id="gl-dsar">DSAR</dt><dd>Data Subject Access Request: under GDPR Art.&nbsp;15 (and CCPA/analogues) the subscriber compels disclosure of the personal data an operator holds &mdash; usage, provisioning and coarse location. Self-service, no court order.</dd>
+<dt id="gl-li">Lawful intercept</dt><dd>Standardised real-time interception at the operator (<a class="glink" href="https://www.etsi.org/technologies/lawful-interception">ETSI&nbsp;LI</a> in Europe, CALEA in the US). Warrant-gated; delivers content and live signalling, unlike after-the-fact CDR production.</dd>
+<dt id="gl-mlat">MLAT / MLA</dt><dd>Mutual Legal Assistance Treaty/request: the cross-border channel by which one state&rsquo;s authorities obtain records held by a foreign operator, bridging jurisdictions when the subscriber and carrier differ.</dd>
+<dt id="gl-dfir">DFIR</dt><dd>Digital Forensics &amp; Incident Response. Mobile toolset includes <a class="glink" href="https://github.com/mvt-project/mvt">MVT</a>, <code>dumpsys</code>/<code>bugreport</code>, Zeek/Suricata, and carrier-record correlation.</dd>
+<dt id="gl-rcs">RCS / RBM</dt><dd>Rich Communication Services; RCS Business Messaging adds a <em>verified sender</em> (brand name, logo, checkmark) authenticated by the carrier/Google backend &mdash; the only channel here the handset can meaningfully trust.</dd>
+</dl>
+</div>
+
+<footer>
+Generated locally as a self-contained HTML artifact. Diagrams are PlantUML, rendered via the public PlantUML server (source embedded under each figure for offline use). Typeset with Tufte-CSS conventions; et-book webfont via CDN with serif fallback. &mdash; Reference distilled from a working security conversation, July&nbsp;2026.
+</footer>
+</article>
+
+<script>
+// ---- W: trust-anchor explorer ----
+var TRUST = {
+ euicc:"<span class='bad'>Client-side impersonation.</span> A stolen eUICC private key + GSMA cert lets an attacker authenticate to real SM-DP+ servers as a genuine eUICC and pull operator profiles in cleartext &mdash; enabling eSIM cloning. This is the Kigen result.",
+ dp:"<span class='bad'>Server-side impersonation.</span> A rogue/stolen SM-DP+ certificate completes mutual auth and can push an attacker-chosen profile to a real eUICC &mdash; hijacking the device network identity. Mitigated only by fast certificate revocation.",
+ ts48:"<span class='warn'>Foothold.</span> A TS.48 generic test profile &le; v6.0 ships publicly-known keys, allowing an applet load &mdash; step one of the Kigen chain. TS.48 v7.0 restricts this; the risk persists on un-updated IoT eUICCs.",
+ lpa:"<span class='warn'>Depends on a valid cert.</span> Without a GSMA-signed cert the eUICC rejects a hostile SM-DP+ at authentication (residual risk = phishing/LPA-parsing bugs). With a stolen cert it becomes the server-side impersonation above."
+};
+document.querySelectorAll('#w-trust-btns button').forEach(function(b){
+ b.addEventListener('click',function(){
+  document.querySelectorAll('#w-trust-btns button').forEach(function(x){x.classList.remove('active');});
+  b.classList.add('active');
+  document.getElementById('w-trust-out').innerHTML=TRUST[b.dataset.k];
+ });
+});
+
+// ---- W: lost-SIM leak explorer ----
+function simUpd(){
+ var pin=document.getElementById('s-pin').checked,
+     mil=document.getElementById('s-mil').checked,
+     g2=document.getElementById('s-2g').checked,
+     rep=document.getElementById('s-rep').checked;
+ var out=[];
+ if(pin){
+  out.push("<span class='ok'>Card inert on power-up.</span> After a reboot, stored data and network use are blocked without the PIN. Loss &asymp; just the plastic.");
+ }else{
+  out.push("<span class='bad'>Unlocked card.</span> A reader dumps IMSI, ICCID, last location area and cached session keys; contacts/SMS if any are stored on-card.");
+  if(rep){
+   out.push("<span class='ok'>Reported:</span> carrier deactivation/reissue collapses the insert-in-another-phone attack.");
+  }else{
+   out.push("<span class='bad'>Not reported:</span> inserted in another phone the number receives the victim&rsquo;s calls and <strong>SMS one-time codes</strong> &rarr; account takeover; SMS relay + sender-ID spoofing can even mask the theft.");
+  }
+ }
+ out.push(mil?"<span class='ok'>Ki safe:</span> Milenage resists chosen-challenge cloning &mdash; the SIM cannot be duplicated.":"<span class='bad'>Clonable:</span> COMP128-1 permits Ki recovery via chosen-challenge cryptanalysis (classic SIM cloning).");
+ if(g2)out.push("<span class='warn'>2G fallback:</span> A5/1 downgrade enables captured-session decryption.");
+ document.getElementById('w-sim-out').innerHTML="<ul><li>"+out.join("</li><li>")+"</li></ul>";
+}
+['s-pin','s-mil','s-2g','s-rep'].forEach(function(id){document.getElementById(id).addEventListener('change',simUpd);});
+simUpd();
+
+// ---- W: sender-verification comparator ----
+var VER={
+ sms:"<span class='bad'>No handset-verifiable origin.</span> TP-OA is a spoofable string; the SMSC address is an unreliable delivery hint; no signature, no origin-network attestation.",
+ mms:"<span class='bad'>No better than email.</span> Intra-carrier the MMSC may insert the originator, but across MM4 the <code>From:</code> is an SMTP/MIME header with no DKIM/SPF/DMARC enforced &mdash; email-grade spoofable.",
+ rcs:"<span class='ok'>Verified sender.</span> RBM brand/agent verification (carrier + Google backend) authenticates a registered business; the handset renders a trust-anchored name, logo and checkmark."
+};
+function verUpd(){document.getElementById('w-verify-out').innerHTML=VER[document.getElementById('v-ch').value];}
+document.getElementById('v-ch').addEventListener('change',verUpd);verUpd();
+
+// ---- W: VPN-bypass & evidence locator ----
+function vpnUpd(){
+ var bind=document.getElementById('v-bind').checked,
+     lock=document.getElementById('v-lock').checked,
+     off=document.getElementById('v-off').checked;
+ var out=[];
+ if(bind){
+  out.push("<span class='bad'>Escapes the VPN.</span> The socket is pinned to the MMS PDN (rmnet); "+(lock?"even always-on lockdown":"the tunnel")+" does not capture it.");
+  out.push("Reaches the carrier MMSC over the dedicated bearer regardless of MMSC off-net status.");
+ }else{
+  if(lock){
+   out.push("<span class='ok'>Captured by the VPN.</span> Unbound traffic follows the default route into the tunnel.");
+   out.push(off?"MMSC reachable off-net &rarr; the POST completes through the tunnel.":"<span class='warn'>APN-gated MMSC unreachable over the tunnel &rarr; the send fails.</span>");
+  }else{
+   out.push("Unbound traffic uses the current default network (WiFi/cellular).");
+  }
+ }
+ out.push("<span class='warn'>Evidence:</span> the carrier CDR logs the PDN activation and byte counts either way &mdash; cross-check against on-device netstats.");
+ document.getElementById('w-vpn-out').innerHTML="<ul><li>"+out.join("</li><li>")+"</li></ul>";
+}
+['v-bind','v-lock','v-off'].forEach(function(id){document.getElementById(id).addEventListener('change',vpnUpd);});
+vpnUpd();
+
+// ---- W: record-access route planner ----
+var REC_ROUTE={
+ sub:{
+  bill:"<span class='ok'>Self-service.</span> Your itemised bill and online usage portal already list calls, SMS and per-session data volume. No court needed.",
+  pdn:"<span class='warn'>DSAR.</span> A GDPR Art.&nbsp;15 request compels the operator&rsquo;s retained personal data, which typically includes PDN/data-session usage &mdash; granularity varies by carrier and law.",
+  loc:"<span class='warn'>DSAR, coarse only.</span> A DSAR may return billing-grade cell associations, but fine historical cell-site is generally released to the account holder only in summary form.",
+  content:"<span class='bad'>Not available.</span> Message/call <em>content</em> and live intercept are never a self-service product &mdash; only lawful process can compel them, and not to you."
+ },
+ ent:{
+  bill:"<span class='ok'>Business portal.</span> For numbers on your account (MDM/EMM fleet, business or family plan) itemised usage is available through the account team.",
+  pdn:"<span class='ok'>On-account only.</span> PDN/data records for account-owned lines via the business portal; you cannot reach lines you do not own.",
+  loc:"<span class='warn'>Limited.</span> Enterprise access rarely includes fine location; coarse serving-cell may appear in usage exports.",
+  content:"<span class='bad'>No.</span> Ownership of the plan does not grant access to a user&rsquo;s message/call content."
+ },
+ le:{
+  bill:"<span class='ok'>Subpoena.</span> Subscriber and toll (CDR) records reachable with a subpoena; send a <strong>preservation letter first</strong> to freeze them.",
+  pdn:"<span class='warn'>Court order.</span> PGW/SMF PDN-session records &mdash; APN, activation times, byte counts, allocated IP &mdash; typically require a court order (transactional records).",
+  loc:"<span class='warn'>Court order / warrant.</span> Historical cell-site and tower dumps generally need a court order or, per jurisdiction, a warrant; precise/real-time location trends toward a warrant.",
+  content:"<span class='bad'>Warrant.</span> Content and real-time lawful intercept (ETSI&nbsp;LI / CALEA) require a warrant. Cross-border, route via MLAT."
+ },
+ def:{
+  bill:"<span class='ok'>Act as the subscriber.</span> With the subscriber&rsquo;s written consent you file their DSAR / pull their bill on their behalf &mdash; the cleanest evidence path in an authorised investigation.",
+  pdn:"<span class='warn'>Consent-scoped DSAR.</span> The subject&rsquo;s DSAR can surface PDN usage; anything beyond what they can lawfully obtain requires escalation to law enforcement.",
+  loc:"<span class='warn'>Limited to subject&rsquo;s own rights.</span> You inherit only what the subscriber could themselves request; fine location usually needs legal process you cannot invoke.",
+  content:"<span class='bad'>Escalate.</span> Content/intercept is outside a consent-based engagement &mdash; refer to law enforcement with a warrant."
+ }
+};
+function recUpd(){
+ var who=document.getElementById('r-who').value,
+     what=document.getElementById('r-what').value;
+ document.getElementById('w-rec-out').innerHTML=REC_ROUTE[who][what];
+}
+['r-who','r-what'].forEach(function(id){document.getElementById(id).addEventListener('change',recUpd);});
+recUpd();
+</script>
+</div>
+<footer class="site-footer">
+<div class="site-wrap">
+<a class="site-wordmark" href="/"><img src="../../assets/logo-mark.svg" alt="RAGBAZ"/>RAGBAZ</a>
+<div class="site-links">
+<a href="/">home</a>
+<a href="/school/">school</a>
+<a href="https://doc.ragbaz.cc">docs</a>
+<a href="/tractatus">tractatus</a>
+</div>
+<span class="site-meta">studio · oslo + stockholm · warm-solarized-dark</span>
+</div>
+</footer>
+</body>
+</html>

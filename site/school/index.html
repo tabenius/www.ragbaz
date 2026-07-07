@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ragbaz — school</title>
+  <meta name="description" content="ragbaz school — reference material, field notes, and operating texts collected under the school surface." />
+  <link rel="icon" href="../assets/logo-mark.svg" />
+  <link rel="stylesheet" href="../colors_and_type.css?v=2" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
+    .bar .wordmark img { height: 39px; width: auto; display: block; }
+    footer .wordmark img { height: 22px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+    .bar nav a.active { color: var(--orange-1, #f3c46c); }
+
+    .page-head {
+      padding: clamp(2.5rem, 6vw, 4rem) 0 1.5rem;
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .page-head h1 { margin: 0; font-family: "Intel One Mono", monospace; font-size: 1.6rem; color: var(--fg-1, #f6d7a7); }
+    .page-head p { max-width: 62ch; margin: .7rem 0 0; color: var(--fg-3, #d4c19a); }
+
+    .school-menu {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      padding: 1rem 0 0;
+    }
+    .school-menu a {
+      padding: .38rem .7rem;
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 999px;
+      font-family: "Intel One Mono", monospace;
+      font-size: .78rem;
+      color: var(--fg-3, #d4c19a);
+      background: var(--bg-elev, #1d1812);
+    }
+    .school-menu a.active,
+    .school-menu a:hover {
+      color: var(--orange-1, #f3c46c);
+      border-color: var(--orange-4, #d97742);
+    }
+
+    section.modules { padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(3rem, 7vw, 5rem); }
+    .section-kicker { font-family: "Intel One Mono", monospace; font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; color: var(--orange-3, #ff9900); }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+    .module-card {
+      display: flex; flex-direction: column; gap: .8rem;
+      padding: 1.2rem;
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(29, 24, 18, .94), rgba(18, 18, 18, .98));
+    }
+    .module-card h2 { margin: 0; font-family: "Intel One Mono", monospace; font-size: 1rem; color: var(--fg-1, #f6d7a7); }
+    .module-card p { margin: 0; color: var(--fg-3, #d4c19a); font-size: .92rem; }
+    .module-meta { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .module-meta span {
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 999px;
+      padding: .2rem .5rem;
+      font-family: "Intel One Mono", monospace;
+      font-size: .72rem;
+      color: var(--fg-4, #9f9f9f);
+      background: rgba(0, 0, 0, .18);
+    }
+    .module-card .link {
+      font-family: "Intel One Mono", monospace;
+      font-size: .82rem;
+      color: var(--orange-1, #f3c46c);
+    }
+
+    footer { border-top: 1px solid var(--border-2, #2a2a2a); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
+
+    @media (max-width: 560px) {
+      .bar nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <span class="wordmark"><img src="../assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <nav>
+        <a href="/">home</a>
+        <a href="/pricing">pricing</a>
+        <a href="/#products">products</a>
+        <a href="/school/" class="active">school</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/tractatus">tractatus</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <div class="wrap">
+        <h1 class="mono">// school</h1>
+        <p>Reference modules, field documents, and working texts exposed under the RAGBAZ school surface. The menu below tracks every current page under <code>/school</code>.</p>
+        <nav class="school-menu" aria-label="school sections">
+          <a href="/school/" class="active">overview</a>
+          <a href="/school/cellular/">cellular</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="modules">
+      <div class="wrap">
+        <div class="section-kicker">current module</div>
+        <div class="module-grid">
+          <article class="module-card">
+            <div class="module-meta">
+              <span>mobile identity</span>
+              <span>eSIM / RSP</span>
+              <span>dfir</span>
+            </div>
+            <h2>cellular</h2>
+            <p>A field reference on SIM and eUICC trust, sender provenance limits in SMS and MMS, covert transport channels, and incident-response paths for suspected compromise.</p>
+            <a class="link" href="/school/cellular/">open module</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark"><img src="../assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <div class="links">
+        <a href="/">home</a>
+        <a href="/school/">school</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/tractatus">tractatus</a>
+      </div>
+      <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
+    </div>
+  </footer>
+</body>
+</html>
