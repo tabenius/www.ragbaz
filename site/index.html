@@ -638,7 +638,7 @@
           <div class="comps">
             <div class="comp"><h4>map</h4><p>leaflet-based interactive map of the swedish coast. clustered wreck markers with depth contours, exclusion zones, and maritime navigation layers.</p></div>
             <div class="comp"><h4>archive</h4><p>curated registry with per-wreck provenance. coordinates, depth, cargo, sinking date, discovery story. photos, sonar scans, and diver reports.</p></div>
-            <div class="comp"><h4>backend</h4><p>fastapi data server with sqlite. geo queries (radius, bounding-box), full-text search, image serving. admin interface for curators.</p></div>
+            <div class="comp"><h4>backend</h4><p>node/express api server with postgresql. geo queries, full-text search, image serving. stripe subscription billing, user auth, admin interface for curators.</p></div>
           </div>
           <div class="flow mono"><span class="f-node">map</span><span class="f-arr">↔</span><span class="f-node">backend</span><span class="f-arr">↔</span><span class="f-node">archive</span></div>
         </article>
