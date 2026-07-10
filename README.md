@@ -1,7 +1,7 @@
 # ragbaz.cc — Cloudflare Worker (default)
 
 Served from the Cloudflare edge via Next.js 15 + `@opennextjs/cloudflare`.
-Custom domain (`ragbaz.cc`, `www.ragbaz.cc`) routes to the deployed Worker.
+Cloudflare routes (`ragbaz.cc`, `www.ragbaz.cc`) point at the deployed Worker.
 
 ## How it works
 
@@ -24,8 +24,8 @@ npm run deploy
 ```
 
 This runs `cf:build` (sync-public + next build + opennext build) then deploys
-to Cloudflare. The Worker is routed via `ragbaz.cc` and `www.ragbaz.cc` custom
-domains (configured in `wrangler.jsonc`).
+to Cloudflare. The Worker is routed via `ragbaz.cc/*` and `www.ragbaz.cc/*`
+for the `ragbaz.cc` zone (configured in `wrangler.jsonc`).
 
 Secrets that must be set before deploy:
 
@@ -37,14 +37,16 @@ Apply D1 migrations after deploy:
 
     npx wrangler d1 migrations apply ragbaz-cc-accounts --remote
 
-## Deploy (staging)
+## Staging preview
 
 ```sh
-npm run deploy:staging
+npm run staging:env
+npm run staging:serve
 ```
 
-Deploys to a separate Worker on `staging.ragbaz.cc` / `dev.ragbaz.cc` (CNAME alias).
-Requires a separate D1 database — see `wrangler.jsonc` `env.staging.d1_databases`.
+Runs the local OpenNext preview origin with the staging D1 binding. This origin
+is for `staging.ragbaz.cc`; production remains `ragbaz.cc` and `www.ragbaz.cc`
+on the Cloudflare Worker only.
 
 ## Local dev (Docker / workerd)
 

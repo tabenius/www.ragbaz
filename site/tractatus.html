@@ -280,12 +280,31 @@
         padding-top: .75rem;
         padding-bottom: .85rem;
       }
+      .wip {
+        padding: .5rem .85rem;
+        font-size: .66rem;
+        line-height: 1.5;
+        letter-spacing: .08em;
+      }
+      .content { padding: 1.25rem 1rem 2rem; }
+      .cover { padding: 0; gap: 1rem; }
       .cover h1.title { font-size: clamp(2.3rem, 8vw, 3.6rem); }
       .cover h1.title .small { font-size: clamp(1.2rem, 4.6vw, 1.6rem); }
       .cover .latin,
       .cover .seal,
       .runhead,
       .colophon { font-size: .8rem; }
+    }
+    @media (max-width: 540px) {
+      body { font-size: 10pt; }
+      .content { padding: 1rem .85rem 1.75rem; }
+      .cover .subtitle { font-size: 10.5pt; }
+      .cover .meta-grid .cell { padding: .75rem 0; }
+      .fcard,
+      .callout,
+      pre { padding: .85rem .9rem; }
+      table { font-size: 7.7pt; }
+      th, td { padding-left: .65rem; padding-right: .65rem; }
     }
   </style>
 </head>

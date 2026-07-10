@@ -1,13 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   async headers() {
     return [
       {
-        // Fingerprint-free static assets; the token sheet is cache-busted with ?v=
         source: "/assets/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=86400" },
+          { key: "Cache-Control", value: "public, max-age=2592000, immutable" },
+        ],
+      },
+      {
+        source: "/((?!api|_next/static|healthz).*)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" },
         ],
       },
     ];

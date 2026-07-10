@@ -65,4 +65,26 @@
 
 @media (max-width: 720px) {
   .rb-subscribe { grid-template-columns: 1fr; }
+  .rb-acct {
+    top: .55rem;
+    right: 3.8rem;
+  }
+  .rb-acct__menu {
+    right: -3rem;
+    width: min(calc(100vw - 1rem), 320px);
+  }
+}
+@media (max-width: 540px) {
+  .rb-acct {
+    right: 3.55rem;
+  }
+  .rb-subscribe {
+    padding: 1rem;
+  }
+  .rb-subscribe__form {
+    flex-direction: column;
+  }
+  .rb-subscribe__form button {
+    width: 100%;
+  }
 }

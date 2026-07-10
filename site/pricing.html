@@ -138,10 +138,44 @@
     footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
     @media (max-width: 720px) {
       .bar nav { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .sticky-bar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .sticky-bar .btn { width: 100%; }
+      .modal {
+        width: min(calc(100% - 1.5rem), 420px);
+        padding: 1.1rem;
+      }
       footer .wrap { align-items: flex-start; }
       footer .meta {
         margin-left: 0;
         width: 100%;
+      }
+    }
+    @media (max-width: 540px) {
+      .plan {
+        padding: 1.15rem 1rem 1rem;
+      }
+      .plan .price {
+        font-size: 1.55rem;
+      }
+      .page-head h1 {
+        font-size: 1.35rem;
+      }
+    }
+    @media (max-width: 420px) {
+      .sticky-bar {
+        padding: .75rem 1rem;
+        font-size: .72rem;
+      }
+      .plan li {
+        font-size: .78rem;
+      }
+      .modal h3 {
+        padding-right: 1.5rem;
       }
     }
 

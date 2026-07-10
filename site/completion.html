@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ragbaz — product value</title>
+  <meta name="description" content="ragbaz product value summary — all studio products with value propositions and pricing." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ragbaz — product value" />
+  <meta property="og:description" content="A summary of every product ragbaz builds and the value it delivers." />
+  <meta property="og:url" content="https://ragbaz.cc/completion" />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="icon" href="./assets/logo-mark.svg" />
+  <link rel="stylesheet" href="./colors_and_type.css?v=2" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+    .rule { border: 0; border-top: 1px solid var(--border-2, #2a2a2a); margin: 0; }
+
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
+    .bar .wordmark img { height: 39px; width: auto; display: block; }
+    footer .wordmark img { height: 22px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+    .bar nav a.active { color: var(--orange-1, #f3c46c); }
+    .hm-btn { display: none; background: none; border: 1px solid var(--border-2, #2a2a2a); color: var(--fg-2); font-size: 1.2rem; cursor: pointer; padding: 4px 10px; border-radius: 4px; margin-left: auto; }
+    .hm-overlay { position: fixed; top: 0; right: 0; width: min(86vw, 320px); height: 100%; background: var(--bg-1, #0f0f10); border-left: 1px solid var(--border-2, #2a2a2a); z-index: 20; padding: 1.2rem; display: flex; flex-direction: column; gap: .6rem; transform: translateX(100%); transition: transform .2s ease; overflow-y: auto; }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-overlay .hm-head { font-family: "Intel One Mono", monospace; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-5, #737373); margin-top: .8rem; }
+    .hm-overlay a { font-family: "Intel One Mono", monospace; font-size: .88rem; padding: .2rem 0; }
+    .hm-overlay a.sub { padding-left: 1rem; font-size: .8rem; color: var(--fg-4, #9f9f9f); }
+    .hm-close { align-self: flex-end; background: none; border: none; color: var(--fg-2); font-size: 1.4rem; cursor: pointer; padding: 0 0 .4rem; }
+    .hm-scrim { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 19; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
+
+    @media (max-width: 720px) {
+      .bar .wrap { height: auto; padding-top: .75rem; padding-bottom: .9rem; }
+      .bar nav { display: none; }
+      .hm-btn { display: flex; }
+    }
+
+    footer { margin-top: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--border-2, #2a2a2a); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
+    @media (max-width: 720px) { footer .wrap { align-items: flex-start; } footer .meta { margin-left: 0; } }
+
+    .page-head { padding: clamp(2.5rem, 6vw, 4rem) 0 1.5rem; }
+    .page-head h1 { font-family: "Intel One Mono", monospace; font-size: 1.6rem; color: var(--fg-1, #f6d7a7); margin: 0; }
+    .page-head p { max-width: 60ch; margin: .6rem 0 0; color: var(--fg-3, #d4c19a); }
+
+    .product-grid { display: flex; flex-direction: column; gap: .6rem; padding-bottom: clamp(2rem, 5vw, 3rem); }
+    .product-row {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px; padding: 1rem 1.2rem;
+      align-items: baseline;
+    }
+    .product-row:hover { border-color: var(--border-warm, #3a2a18); }
+    .product-name { font-family: "Intel One Mono", monospace; font-weight: 700; color: var(--orange-1, #f3c46c); min-width: 14ch; }
+    .product-tag { font-family: "Intel One Mono", monospace; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; padding: 2px 8px; border-radius: 4px; }
+    .tag-live { background: #16241a; color: var(--green-1, #b8bb26); border: 1px solid #4a6a3a; }
+    .tag-beta { background: #1d2416; color: var(--yellow-1, #fabd2f); border: 1px solid #5a5a2a; }
+    .tag-building { background: #241816; color: var(--orange-3, #ff9900); border: 1px solid #5a3a1a; }
+    .tag-research { background: #16202a; color: var(--blue-1, #7ab8ff); border: 1px solid #2a4a6a; }
+    .tag-embryo { background: #1a1624; color: var(--purple-1, #d3869b); border: 1px solid #3a2a5a; }
+    .product-value { flex: 1; min-width: 24ch; color: var(--fg-2, #d8c29d); font-size: .9rem; overflow-wrap: anywhere; }
+    .product-price { font-family: "Intel One Mono", monospace; color: var(--fg-4, #9f9f9f); font-size: .82rem; white-space: nowrap; margin-left: auto; }
+    .product-price strong { color: var(--orange-3, #ff9900); }
+
+    @media (max-width: 760px) {
+      .product-row { flex-direction: column; gap: .4rem; }
+      .product-name { min-width: auto; }
+      .product-value { min-width: auto; }
+      .product-price { margin-left: 0; }
+    }
+    @media (max-width: 720px) { footer .wrap { align-items: flex-start; } footer .meta { margin-left: 0; width: 100%; } }
+    @media (max-width: 540px) {
+      .page-head h1 { font-size: 1.35rem; }
+      .product-row { padding: .95rem 1rem; }
+      .product-tag,
+      .product-price { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <nav>
+        <a href="/">home</a>
+        <a href="/pricing">pricing</a>
+        <a href="/completion" class="active">completion</a>
+        <a href="/school/">school</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/tractatus">tractatus</a>
+      </nav>
+      <button class="hm-btn mono" onclick="toggleHM()">☰</button>
+    </div>
+  </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay" id="hm-overlay">
+    <button class="hm-close" onclick="closeHM()">✕</button>
+    <div class="hm-head">navigate</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <a href="/completion" class="active" onclick="closeHM()">completion</a>
+    <a href="/school/" onclick="closeHM()">school</a>
+    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/tractatus" onclick="closeHM()">tractatus</a>
+    <div class="hm-head">product lines</div>
+    <a class="sub" href="/#p-governance" onclick="closeHM()">ai governance</a>
+    <a class="sub" href="/#p-articulate" onclick="closeHM()">articulate</a>
+    <a class="sub" href="/#p-mailroute" onclick="closeHM()">mailroute</a>
+    <a class="sub" href="/#p-detcordon" onclick="closeHM()">detcordon</a>
+    <a class="sub" href="/#p-baz" onclick="closeHM()">baz signal stack</a>
+    <a class="sub" href="/#p-matches" onclick="closeHM()">matches</a>
+    <a class="sub" href="/#p-scipub" onclick="closeHM()">scipub</a>
+    <a class="sub" href="/#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
+    <a class="sub" href="/#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
+  </div>
+
+  <main>
+    <section class="page-head">
+      <div class="wrap">
+        <h1 class="mono">// product value</h1>
+        <p>A summary of every product in the studio, the value it delivers, and where it sits in the lifecycle. Canonical data from <span class="mono" style="color:var(--fg-4)">/products.json</span>.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="product-grid">
+          <div class="product-row">
+            <span class="product-name">Konsonans AI Governance</span>
+            <span class="product-tag tag-building">building</span>
+            <span class="product-value">Policy-as-code control plane for AI agents — typed policy gate, tamper-evident SHA-256 audit chain, human-in-the-loop approvals with SLA timeouts, Ed25519 manifest signing.</span>
+            <span class="product-price"><strong>€25–250/mo per agent</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">Articulate</span>
+            <span class="product-tag tag-live">live</span>
+            <span class="product-value">Hardened headless WordPress — Rust gateway, WASM image hardening, private origin, Next.js storefront, multi-tenant provisioning, DNS automation, GraphQL edge federation.</span>
+            <span class="product-price"><strong>€0–499/mo per tenant</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">MailRoute</span>
+            <span class="product-tag tag-beta">beta</span>
+            <span class="product-value">IMAP mail-stream guard — hot-reloadable rule pipeline, quarantine buckets, audited rule edits (propose / apply / revert), webhook relays, SMTP intercept.</span>
+            <span class="product-price"><strong>€49–199/mo per domain</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">DetCordon</span>
+            <span class="product-tag tag-research">research</span>
+            <span class="product-value">Containment-first malware observation — disposable browser and headless runtime sandboxes, network-isolated, I/O recording (DOM, network, filesystem) into structured indicators.</span>
+            <span class="product-price"><strong>€99–399/mo per node</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">BAZ Signal Stack</span>
+            <span class="product-tag tag-embryo">active embryo</span>
+            <span class="product-value">Systematic trading toolkit — glither.hft compiler dialect compiles strategies to WASM with Ed25519 audit receipts, Palantir Rust orchestration server enriches tick data, Luna Vite browser notebook for live inspection.</span>
+            <span class="product-price"><strong>—</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">Matches</span>
+            <span class="product-tag tag-live">live</span>
+            <span class="product-value">Autonomous cinematic battle simulation — agents fight in real-time with recorded replays and visual output. Grounded locomotion, tactical AI, procedural choreography.</span>
+            <span class="product-price"><strong>free</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">Scipub</span>
+            <span class="product-tag tag-building">building</span>
+            <span class="product-value">Academic publishing pipeline — multi-source literature retrieval (PubMed, arXiv, Crossref), structured assessment with claim extraction, evidence grading, citation-network analysis. SQLite FTS5 database, GraphQL + REST API.</span>
+            <span class="product-price"><strong>€0–99/article processing fee</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">Shipwrecks.se</span>
+            <span class="product-tag tag-building">building</span>
+            <span class="product-value">Baltic shipwreck explorer — Leaflet interactive map of the Swedish coast with clustered wreck markers, depth contours, maritime layers. Curated registry with per-wreck provenance, photos, sonar scans.</span>
+            <span class="product-price"><strong>free</strong></span>
+          </div>
+
+          <div class="product-row">
+            <span class="product-name">ESP32Tolk</span>
+            <span class="product-tag tag-building">building</span>
+            <span class="product-value">ESP32 speech-translator firmware — I2S digital microphone or Bluetooth A2DP capture, on-device speech-to-text via ESP-SR or Whisper.cpp (Q4 quantized), local NLLB or tiny-LLM translation, serial/UART/BLE/GATT output.</span>
+            <span class="product-price"><strong>—</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <div class="links">
+        <a href="/">home</a>
+        <a href="/school/">school</a>
+        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/pricing">pricing</a>
+        <a href="/completion">completion</a>
+        <a href="/tractatus">tractatus</a>
+      </div>
+      <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
+    </div>
+  </footer>
+  <div class="wrap last-updated" style="margin-top:2em;text-align:right;color:var(--fg-5);font-family:mono,monospace;font-size:.74rem"><time datetime="2026-07-10">2026-07-10</time></div>
+
+<script>
+function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
+function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
+</script>
+</body>
+</html>

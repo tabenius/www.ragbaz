@@ -113,6 +113,13 @@
       padding: .12rem .5rem;
       background: rgba(255, 153, 0, .07);
     }
+    .featured-kicker .progress {
+      color: var(--blue-1, #7ab8ff);
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 999px;
+      padding: .12rem .5rem;
+      background: rgba(122, 184, 255, .08);
+    }
     .featured-slide h2 {
       margin: 0;
       font-family: "Noto Sans", sans-serif;
@@ -289,6 +296,53 @@
         width: 100%;
       }
     }
+    @media (max-width: 540px) {
+      .hero { padding-top: 3rem; }
+      .cta .btn,
+      .featured-panel .link {
+        width: 100%;
+        justify-content: center;
+      }
+      .featured-slide {
+        padding: 1rem;
+      }
+      .featured-panel {
+        min-height: 0;
+        padding: .9rem;
+      }
+      .featured-controls {
+        padding: .75rem;
+      }
+      .featured-arrow,
+      .featured-dot {
+        min-height: 2rem;
+      }
+      .prod {
+        padding: 1rem;
+      }
+      .prod .comps {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 420px) {
+      .featured-controls {
+        gap: .75rem;
+      }
+      .featured-arrows {
+        width: 100%;
+      }
+      .featured-arrow {
+        flex: 1 1 0;
+      }
+      .featured-dots {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .featured-dot {
+        flex: 1 1 calc(25% - .35rem);
+        width: auto;
+      }
+    }
 
     /* hamburger menu */
     .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; margin-left: auto; display: none; align-items: center; }
@@ -358,11 +412,11 @@
     <section class="hero">
       <div class="wrap">
         <div class="eyebrow mono">studio · product lines</div>
-        <div class="featured-showcase" aria-label="featured RAGBAZ products">
+        <div class="featured-showcase" aria-label="featured RAGBAZ projects">
           <div class="featured-frame">
             <article class="featured-slide active" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">building</span><span>01 / governance</span></div>
+                <div class="featured-kicker mono"><span class="status">building</span><span class="progress">61% complete</span><span>01 / governance</span></div>
                 <h2>EU AI Act<br />Governance <span>Platform</span></h2>
                 <p class="featured-desc">Konsonans AI Governance — a policy-as-code control plane that governs AI agents for EU AI Act compliance: every action passes a typed policy gate, lands in a tamper-evident audit chain, and can be held for human approval.</p>
                 <div class="featured-tags"><span>policy gate</span><span>audit chain</span><span>human oversight</span></div>
@@ -380,7 +434,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">flagship</span><span>02 / matches</span></div>
+                <div class="featured-kicker mono"><span class="status">flagship</span><span class="progress">78% complete</span><span>02 / matches</span></div>
                 <h2>autonomous cinematic<br />battle <span>runtime</span></h2>
                 <p class="featured-desc">Grounded locomotion, tactical AI, procedural choreography, and per-bone keyframe timelines in a deterministic in-browser studio.</p>
                 <div class="featured-tags"><span>3d viewport</span><span>dsl editor</span><span>blender export</span></div>
@@ -398,7 +452,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span>03 / articulate</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">86% complete</span><span>03 / articulate</span></div>
                 <h2>headless commerce<br />and <span>cms</span></h2>
                 <p class="featured-desc">WordPress is the most targeted CMS — every plugin and theme is an unpatched attack surface. Articulate wraps it in a Rust gateway with filesystem immutability, WASM image hardening, and a private origin, then adds a Next.js storefront, multi-tenant provisioning, DNS automation, and GraphQL edge.</p>
                 <div class="featured-tags"><span>gatekeeper</span><span>storefront</span><span>tenant provisioner</span></div>
@@ -416,7 +470,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">beta</span><span>04 / mailroute</span></div>
+                <div class="featured-kicker mono"><span class="status">beta</span><span class="progress">74% complete</span><span>04 / mailroute</span></div>
                 <h2>mail stream<br /><span>guard</span></h2>
                 <p class="featured-desc">Rule-driven IMAP and SMTP inspection with quarantine buckets, audited rule edits, event hooks, and operator review.</p>
                 <div class="featured-tags"><span>mail security</span><span>quarantine</span><span>audit trail</span></div>
@@ -434,7 +488,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">research</span><span>05 / detcordon</span></div>
+                <div class="featured-kicker mono"><span class="status">research</span><span class="progress">42% complete</span><span>05 / detcordon</span></div>
                 <h2>containment-first<br /><span>observation</span></h2>
                 <p class="featured-desc">Unknown payloads can't safely detonate on your workstation — but ignoring them leaves blind spots. DetCordon runs hostile web content in disposable, network-isolated sandboxes, recording every I/O into structured indicators without exposing your surface.</p>
                 <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
@@ -452,7 +506,25 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span>06 / atlas + docs</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">58% complete</span><span>06 / school</span></div>
+                <h2>field school<br />and <span>manuals</span></h2>
+                <p class="featured-desc">RAGBAZ School collects operational teaching material, field notes, and guided tracks like cellular analysis and forensics, structured for repeat use rather than one-off reading.</p>
+                <div class="featured-tags"><span>cellular</span><span>forensics</span><span>course tracks</span></div>
+              </div>
+              <div class="featured-panel">
+                <div class="label mono">what it does</div>
+                <ul>
+                  <li>gathers instructional material under one coherent school surface</li>
+                  <li>links practical tracks like cellular analysis and forensic labs</li>
+                  <li>keeps field reference material close to the product and research work</li>
+                </ul>
+                <a class="link" href="/school/">open school</a>
+              </div>
+            </article>
+
+            <article class="featured-slide" data-featured-slide>
+              <div class="featured-copy">
+                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">81% complete</span><span>07 / atlas + docs</span></div>
                 <h2>product atlas<br />and <span>status</span></h2>
                 <p class="featured-desc">The documentation and operations surface for RAGBAZ products, specs, status checks, deployment notes, and design-system references.</p>
                 <div class="featured-tags"><span>doc.ragbaz.cc</span><span>status</span><span>design system</span></div>
@@ -461,7 +533,7 @@
                 <div class="label mono">what it does</div>
                 <ul>
                   <li>publishes product specs and implementation notes</li>
-                  <li>keeps infrastructure and uptime information discoverable</li>
+                  <li>keeps product status, deployment notes, and uptime information discoverable</li>
                   <li>anchors every surface to the RAGBAZ visual system</li>
                 </ul>
                 <a class="link" href="https://doc.ragbaz.cc">open docs</a>
@@ -470,7 +542,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">active embryo</span><span>07 / baz signal stack</span></div>
+                <div class="featured-kicker mono"><span class="status">active embryo</span><span class="progress">47% complete</span><span>08 / baz signal stack</span></div>
                 <h2>systematic<br />trading <span>toolkit</span></h2>
                 <p class="featured-desc">Three-tier HFT suite: glither.hft compiler dialect produces WASM strategies with signed Ed25519 audit receipts; Palantir orchestrates enrichment and streaming; Luna is the browser notebook.</p>
                 <div class="featured-tags"><span>compiler</span><span>orchestration</span><span>candlestick charts</span></div>
@@ -500,6 +572,7 @@
               <button class="featured-dot" type="button" onclick="showFeatured(4)">05</button>
               <button class="featured-dot" type="button" onclick="showFeatured(5)">06</button>
               <button class="featured-dot" type="button" onclick="showFeatured(6)">07</button>
+              <button class="featured-dot" type="button" onclick="showFeatured(7)">08</button>
             </div>
           </div>
         </div>

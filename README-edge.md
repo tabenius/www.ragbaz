@@ -33,6 +33,7 @@ bundled with the Worker.
     npm run build       # sync-public + next build
     npm run preview     # + opennext build + local workerd (wrangler dev)
     npm run deploy      # + opennext build + deploy to Cloudflare
+    npm run staging:env
     npm run staging:serve
     npm run graphql:push
     npm run hooks:install
@@ -77,7 +78,12 @@ The sidecar payload is timeline-shaped:
 These values are included in the GraphQL snapshot and rendered by the Worker at
 `/stats`.
 
-`wrangler.jsonc` declares the public custom domains (`ragbaz.cc`, `www.ragbaz.cc`)
-for the Worker. The local Docker/compose runtime is no longer the old nginx site:
+`wrangler.jsonc` declares the public `ragbaz.cc/*` and `www.ragbaz.cc/*`
+Cloudflare routes for the Worker. The local Docker/compose runtime is no longer
+the old nginx site:
 it runs `opennextjs-cloudflare preview` with a persistent local D1 state and is
 intended to sit behind `staging.ragbaz.cc`.
+
+Create `.env.staging.local` once with `npm run staging:env`; it generates
+`SESSION_SECRET` via `xkcd-password` and is consumed by both `npm run staging:serve`
+and `docker compose up`.

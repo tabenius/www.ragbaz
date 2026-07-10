@@ -17,26 +17,17 @@
   },
   "routes": [
     {
-      "pattern": "ragbaz.cc",
-      "custom_domain": true,
+      "pattern": "ragbaz.cc/*",
+      "zone_name": "ragbaz.cc",
     },
     {
-      "pattern": "www.ragbaz.cc",
-      "custom_domain": true,
+      "pattern": "www.ragbaz.cc/*",
+      "zone_name": "ragbaz.cc",
     },
   ],
   "env": {
     "staging": {
-      "routes": [
-        {
-          "pattern": "staging.ragbaz.cc",
-          "custom_domain": true,
-        },
-        {
-          "pattern": "dev.ragbaz.cc",
-          "custom_domain": true,
-        },
-      ],
+      "routes": [],
       "vars": {
         "APP_URL": "https://staging.ragbaz.cc",
         "RESEND_FROM": "ragbaz <no-reply@ragbaz.cc>",

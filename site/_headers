@@ -1,0 +1,8 @@
+# Cloudflare edge caching for static assets served from the ASSETS binding.
+# Page-level Cache-Control is set by next.config.mjs headers().
+/assets/*
+  Cache-Control: public, max-age=2592000, immutable
+  X-Robots-Tag: all
+
+/*.css
+  Cache-Control: public, max-age=2592000, immutable

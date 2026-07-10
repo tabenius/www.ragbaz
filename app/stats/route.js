@@ -93,8 +93,8 @@ export async function GET() {
     <link rel="icon" href="/assets/logo-mark.svg"/>
     <link rel="stylesheet" href="/colors_and_type.css?v=2"/>
     <style>
-      body{margin:0;background:var(--bg-0,#0a0908);color:var(--fg-2,#d8c29d);font-family:"Noto Sans",system-ui,sans-serif}
-      main{max-width:1100px;margin:0 auto;padding:1.25rem 1rem 3rem}
+      body{margin:0;background:var(--bg-0,#0a0908);color:var(--fg-2,#d8c29d);font-family:"Noto Sans",system-ui,sans-serif;line-height:1.6}
+      main{max-width:1100px;margin:0 auto;padding:1.25rem clamp(.9rem,4vw,1.25rem) 3rem}
       h1,h2{font-family:"Intel One Mono",monospace;letter-spacing:0}
       h1{font-size:1.5rem;margin:0}
       p{line-height:1.6}
@@ -111,15 +111,27 @@ export async function GET() {
       .metrics div{padding:.75rem;border:1px solid var(--border-3,#2d2d2d);border-radius:8px;background:var(--bg-3,#161616)}
       .eyebrow,.path,.meta{margin:0}
       .path,.meta{font-size:.7rem}
+      .path{overflow-wrap:anywhere}
       h2{font-size:1rem;margin:.2rem 0 .25rem;color:var(--fg-1,#f6d7a7)}
-      .history-wrap{overflow:auto}
-      table{width:100%;border-collapse:collapse;margin-top:.9rem}
+      .history-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
+      table{width:100%;border-collapse:collapse;margin-top:.9rem;min-width:36rem}
       th,td{text-align:left;padding:.55rem 0;border-top:1px solid var(--border-3,#2d2d2d);vertical-align:top}
       td{font-size:.92rem}
       .empty{padding:1rem;border:1px solid var(--border-2,#2a2a2a);border-radius:8px;background:var(--bg-2,#121212)}
       @media (min-width:760px){
         .hero{grid-template-columns:minmax(0,1.3fr) minmax(320px,1fr);align-items:end}
         .project-head{grid-template-columns:minmax(0,1fr) minmax(320px,1fr)}
+      }
+      @media (max-width:640px){
+        h1{font-size:1.3rem}
+        .summary,.metrics{grid-template-columns:1fr}
+        .project{padding:.9rem}
+        table{min-width:30rem}
+      }
+      @media (max-width:420px){
+        .summary strong,.metrics strong{font-size:1rem}
+        th,td{padding:.5rem 0}
+        table{min-width:26rem}
       }
     </style>
   </head>
