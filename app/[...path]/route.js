@@ -1,4 +1,4 @@
-import { readPage, htmlResponse, pageParams } from "../../lib/site-pages.mjs";
+import { docsNotFoundPage, htmlResponse, pageParams, resolvePage } from "../../lib/site-pages.mjs";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -18,7 +18,13 @@ export async function GET(request, { params }) {
     redirectUrl.pathname = "/konsonans-ai-governance";
     return Response.redirect(redirectUrl.toString(), 308);
   }
-  const html = readPage(segments ?? []);
-  if (html === null) notFound();
-  return htmlResponse(html);
+  const page = resolvePage(segments ?? []);
+  if (page === null) {
+    if (Array.isArray(segments) && segments[0] === "doc") {
+      const docs404 = docsNotFoundPage();
+      return docs404 ? htmlResponse(docs404, 404) : new Response("Not found", { status: 404 });
+    }
+    notFound();
+  }
+  return htmlResponse(page);
 }

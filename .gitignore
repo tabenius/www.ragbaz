@@ -3,6 +3,7 @@ node_modules/
 .open-next/
 # generated from site/ by scripts/sync-public.mjs
 public/
+embedded-docs/
 .wrangler/
 .env*
 !.env.example

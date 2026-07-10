@@ -7,12 +7,13 @@
 // bytes are embedded into a generated module so the gated route can serve them
 // from the Worker after a session check — Next's file tracing doesn't bundle
 // files read via runtime readFileSync, so embedding is required.
-import { cpSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const site = path.join(root, "..", "site");
+const embeddedDocs = path.join(root, "..", "embedded-docs");
 const pub = path.join(root, "..", "public");
 
 // Paths under site/ that must NOT be public — they are served only by the
@@ -58,6 +59,27 @@ function collectGated(rel) {
 walk(".");
 collectGated(".");
 
+let embeddedDocsFiles = 0;
+if (existsSync(embeddedDocs)) {
+  const stack = [""];
+  while (stack.length) {
+    const rel = stack.pop();
+    for (const entry of readdirSync(path.join(embeddedDocs, rel), { withFileTypes: true })) {
+      const relPath = rel ? path.join(rel, entry.name) : entry.name;
+      const sourcePath = path.join(embeddedDocs, relPath);
+      if (entry.isDirectory()) {
+        stack.push(relPath);
+        continue;
+      }
+      if (entry.name.endsWith(".html")) continue;
+      const targetPath = path.join(pub, "doc", relPath);
+      mkdirSync(path.dirname(targetPath), { recursive: true });
+      cpSync(sourcePath, targetPath);
+      embeddedDocsFiles += 1;
+    }
+  }
+}
+
 // Emit the embedded-content module (base64 keyed by posix relative path).
 const entries = gatedFiles
   .sort()
@@ -75,5 +97,5 @@ writeFileSync(
 );
 
 console.log(
-  `sync-public: copied ${copied} non-HTML files to public/; embedded ${gatedFiles.length} gated file(s)`,
+  `sync-public: copied ${copied} site asset(s) + ${embeddedDocsFiles} embedded doc file(s) to public/; embedded ${gatedFiles.length} gated file(s)`,
 );

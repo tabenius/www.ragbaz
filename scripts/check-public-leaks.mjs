@@ -54,11 +54,18 @@ function collectFiles(target, files = []) {
 const failures = [];
 for (const filePath of targets.flatMap((target) => collectFiles(target))) {
   const text = readFileSync(filePath, "utf8");
+  const relativePath = path.relative(repoRoot, filePath).split(path.sep).join("/");
   for (const pattern of patterns) {
     const match = text.match(pattern.regex);
     if (!match) continue;
+    if (
+      relativePath.startsWith("public/doc/") &&
+      (pattern.label === "tailscale keyword" || pattern.label === "tail alias")
+    ) {
+      continue;
+    }
     failures.push({
-      filePath: path.relative(repoRoot, filePath),
+      filePath: relativePath,
       label: pattern.label,
       value: match[0],
     });

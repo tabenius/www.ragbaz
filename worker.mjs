@@ -14,58 +14,42 @@ async function syncWorkspaceSnapshot(env) {
   });
 }
 
-// The RAGBAZ Atlas (Docusaurus, baseUrl /doc/) is served by its own origin,
-// which only exposes the /doc/ prefix; the worker fronts it so the docs live
-// under ragbaz.cc/doc/ instead of a subdomain. Public ragbaz.cc routes strip
-// the upstream docs mount segment, so /doc/products/x maps to
-// doc.ragbaz.cc/doc/docs/products/x.
-const DOCS_ORIGIN = "https://doc.ragbaz.cc";
-
 function canonicalDocsPath(pathname) {
   if (pathname === "/doc/docs" || pathname === "/doc/docs/") return "/doc/";
   if (!pathname.startsWith("/doc/docs/")) return null;
   return `/doc/${pathname.slice("/doc/docs/".length)}`;
 }
 
-async function proxyDocs(request) {
+function canonicalDocHostRedirect(request) {
   const url = new URL(request.url);
-  if (url.pathname === "/doc") {
-    url.pathname = "/doc/";
-    return Response.redirect(url.toString(), 301);
+  const host = url.hostname.toLowerCase();
+
+  if (host === "doc.ragbaz.cc" || host === "www.doc.ragbaz.cc") {
+    const redirectUrl = new URL(url.toString());
+    redirectUrl.hostname = "ragbaz.cc";
+    if (redirectUrl.pathname === "/") redirectUrl.pathname = "/doc/";
+    else if (!redirectUrl.pathname.startsWith("/doc/") && redirectUrl.pathname !== "/doc") {
+      redirectUrl.pathname = `/doc${redirectUrl.pathname}`;
+    }
+    const canonical = canonicalDocsPath(redirectUrl.pathname);
+    if (canonical) redirectUrl.pathname = canonical;
+    return Response.redirect(redirectUrl.toString(), 308);
   }
+
   const canonical = canonicalDocsPath(url.pathname);
   if (canonical) {
     url.pathname = canonical;
     return Response.redirect(url.toString(), 301);
   }
-  if (!url.pathname.startsWith("/doc/")) return null;
 
-  const upstream = new URL(url.pathname + url.search, DOCS_ORIGIN);
-  const response = await fetch(new Request(upstream, request));
-  if (response.status !== 404) return response;
-
-  const publicPath = url.pathname.slice("/doc/".length);
-  if (
-    !publicPath ||
-    publicPath.startsWith("assets/") ||
-    publicPath.startsWith("img/") ||
-    publicPath.startsWith("drafts/") ||
-    publicPath.startsWith("blog/") ||
-    publicPath.startsWith("_")
-  ) {
-    return response;
-  }
-
-  const fallback = new URL(`/doc/docs/${publicPath}${url.search}`, DOCS_ORIGIN);
-  const fallbackResponse = await fetch(new Request(fallback, request));
-  return fallbackResponse.status === 404 ? response : fallbackResponse;
+  return null;
 }
 
 export default {
   async fetch(request, env, ctx) {
     if (env?.DB) ctx.waitUntil(recordSiteHit(request, env.DB));
-    const docs = await proxyDocs(request);
-    if (docs) return docs;
+    const redirect = canonicalDocHostRedirect(request);
+    if (redirect) return redirect;
     return handler.fetch(request, env, ctx);
   },
 
