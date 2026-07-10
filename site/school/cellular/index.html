@@ -181,6 +181,7 @@ footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rul
  pre.code{font-size:.78rem;}
 }
 </style>
+  <script src="../../assets/local-mode.js" defer></script>
 </head>
 <body>
 <header class="site-bar">
@@ -190,8 +191,8 @@ footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rul
 <a href="/">home</a>
 <a href="/pricing">pricing</a>
 <a href="/#products">products</a>
-<a href="/school/" class="active">school</a>
-<a href="https://doc.ragbaz.cc">docs</a>
+<a href="/school" class="active">school</a>
+<a href="/doc/">docs</a>
 <a href="/tractatus">tractatus</a>
 </nav>
 <button class="hm-btn mono" onclick="toggleHM()">☰</button>
@@ -204,21 +205,21 @@ footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rul
 <a href="/" onclick="closeHM()">home</a>
 <a href="/pricing" onclick="closeHM()">pricing</a>
 <a href="/#products" onclick="closeHM()">products</a>
-<a href="/school/" class="active" onclick="closeHM()">school</a>
-<a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+<a href="/school" class="active" onclick="closeHM()">school</a>
+<a href="/doc/" onclick="closeHM()">docs</a>
 <a href="/tractatus" onclick="closeHM()">tractatus</a>
 <div class="hm-head">modules</div>
-<a href="/school/" onclick="closeHM()">overview</a>
-<a href="/school/cellular/" class="active" onclick="closeHM()">cellular</a>
-<a href="/school/forensics/" onclick="closeHM()">forensics</a>
+<a href="/school" onclick="closeHM()">overview</a>
+<a href="/school/cellular" class="active" onclick="closeHM()">cellular</a>
+<a href="/school/forensics" onclick="closeHM()">forensics</a>
 </div>
 <section class="school-nav" aria-label="school sections">
 <div class="site-wrap">
 <div class="school-label">school</div>
 <nav class="school-menu">
-<a href="/school/">overview</a>
-<a href="/school/cellular/" class="active">cellular</a>
-<a href="/school/forensics/">forensics</a>
+<a href="/school">overview</a>
+<a href="/school/cellular" class="active">cellular</a>
+<a href="/school/forensics">forensics</a>
 </nav>
 </div>
 </section>
@@ -747,9 +748,9 @@ recUpd();
 <a class="site-wordmark" href="/"><img src="../../assets/logo-mark.svg" alt="RAGBAZ"/>RAGBAZ</a>
 <div class="site-links">
 <a href="/">home</a>
-<a href="/school/">school</a>
+<a href="/school">school</a>
 <a href="/pricing">pricing</a>
-<a href="https://doc.ragbaz.cc">docs</a>
+<a href="/doc/">docs</a>
 <a href="/tractatus">tractatus</a>
 </div>
 <span class="site-meta">studio · oslo + stockholm · warm-solarized-dark</span>

@@ -307,6 +307,7 @@
       th, td { padding-left: .65rem; padding-right: .65rem; }
     }
   </style>
+  <script src="./assets/local-mode.js" defer></script>
 </head>
 <body>
 
@@ -318,8 +319,8 @@
         <a href="/">home</a>
         <a href="/pricing">pricing</a>
         <a href="/#products">products</a>
-        <a href="/school/">school</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
         <a href="/tractatus" class="active">tractatus</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
@@ -333,12 +334,12 @@
     <a href="/" onclick="closeHM()">home</a>
     <a href="/pricing" onclick="closeHM()">pricing</a>
     <a href="/#products" onclick="closeHM()">products</a>
-    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
     <a href="/tractatus" class="active" onclick="closeHM()">tractatus</a>
   </div>
 
   <!-- ── WiP banner ── -->
-  <div class="wip">work in progress · non-normative design draft · not legal advice · <a href="https://doc.ragbaz.cc/docs/products/ai-governance" style="color:inherit;text-decoration:underline">live status &amp; breakdown ↗</a></div>
+  <div class="wip">work in progress · non-normative design draft · not legal advice · <a href="/doc/docs/products/ai-governance" style="color:inherit;text-decoration:underline">live status &amp; breakdown ↗</a></div>
   <div class="wip" style="opacity:.85">status legend · 🟢 complete · 🔵 near finish · 🟡 in progress · ⚪ planned</div>
 
   <!-- ── content: increased margins ── -->
@@ -680,7 +681,7 @@
       </div>
       <div class="colophon" style="margin-top:8mm; border-top:1px solid var(--border-2,#2a2a2a); padding-top:4mm;">
         <span class="k">colophon</span> · set in Intel One Mono, Noto Sans, and Noto Serif on the RAGBAZ warm solarized-dark palette. structure after Wittgenstein's <em>Tractatus Logico-Philosophicus</em> (1921).<br>
-        <span class="k">status</span> · design draft, non-normative · not legal advice · compliance core in active implementation (<a href="https://doc.ragbaz.cc/docs/products/ai-governance" style="color:inherit">live status ↗</a>) · a conformity argument to be ratified with a notified body.<br>
+        <span class="k">status</span> · design draft, non-normative · not legal advice · compliance core in active implementation (<a href="/doc/docs/products/ai-governance" style="color:inherit">live status ↗</a>) · a conformity argument to be ratified with a notified body.<br>
         <span class="k">substrate</span> · glither.* (roux/tangle/glither-wit/glither-host) · wasm32-wasip2 · rust agent-proxy (mcp) · postgresql 16 · pharo 12 (optional) · cosign<br>
         <span class="k">author</span> · RAGBAZ — Tobias Abenius · <span class="k">regulation</span> · EU 2024/1689 · <span class="k">applies from</span> 2026-08-02
       </div>

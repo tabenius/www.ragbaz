@@ -154,15 +154,40 @@
       border: 1px solid var(--border-2, #2a2a2a);
       border-radius: 8px;
       background: var(--bg-0, #0a0908);
-      padding: 1rem;
+      padding: clamp(1.15rem, 3vw, 1.45rem);
       display: grid;
       align-content: space-between;
-      gap: 1rem;
-      min-height: 250px;
+      gap: clamp(1rem, 2.8vw, 1.45rem);
+      min-height: 290px;
+    }
+    .featured-panel-head {
+      display: grid;
+      gap: .95rem;
+      align-content: start;
+    }
+    .featured-panel-icon {
+      width: 4.15rem;
+      height: 4.15rem;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      border: 1px solid var(--border-warm, #3a2a18);
+      background: linear-gradient(180deg, rgba(255, 153, 0, .12), rgba(18, 18, 18, .92));
+      color: var(--orange-1, #f3c46c);
+    }
+    .featured-panel-icon svg {
+      width: 2.35rem;
+      height: 2.35rem;
+      display: block;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
     .featured-panel .label {
       font-family: "Intel One Mono", monospace;
-      font-size: .72rem;
+      font-size: .78rem;
       color: var(--fg-5, #737373);
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -172,12 +197,13 @@
       padding: 0;
       margin: 0;
       display: grid;
-      gap: .55rem;
+      gap: .95rem;
+      padding-top: .2rem;
     }
     .featured-panel li {
       color: var(--fg-3, #d4c19a);
-      font-size: .86rem;
-      line-height: 1.45;
+      font-size: clamp(.98rem, .92rem + .18vw, 1.08rem);
+      line-height: 1.65;
     }
     .featured-panel li::before {
       content: "> ";
@@ -187,8 +213,17 @@
     .featured-panel .link {
       justify-self: start;
       font-family: "Intel One Mono", monospace;
-      font-size: .8rem;
+      font-size: .9rem;
       color: var(--orange-1, #f3c46c);
+    }
+    .featured-panel .link.muted {
+      color: var(--fg-5, #737373);
+      pointer-events: none;
+    }
+    .featured-panel .links {
+      display: grid;
+      gap: .45rem;
+      justify-items: start;
     }
     .featured-controls {
       display: flex;
@@ -310,6 +345,17 @@
         min-height: 0;
         padding: .9rem;
       }
+      .featured-panel-head {
+        gap: .75rem;
+      }
+      .featured-panel-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+      .featured-panel-icon svg {
+        width: 2rem;
+        height: 2rem;
+      }
       .featured-controls {
         padding: .75rem;
       }
@@ -368,6 +414,7 @@
     }
     .hm-scrim.open { opacity: 1; pointer-events: auto; }
   </style>
+  <script src="./assets/local-mode.js" defer></script>
 </head>
 <body>
   <header class="bar">
@@ -377,8 +424,8 @@
         <a href="/" class="active">home</a>
         <a href="/pricing">pricing</a>
         <a href="/#products">products</a>
-        <a href="/school/">school</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
         <a href="/tractatus">tractatus</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
@@ -393,8 +440,8 @@
     <a href="#ethos" onclick="closeHM()">ethos</a>
     <a href="#products" onclick="closeHM()">products</a>
     <a href="/pricing" onclick="closeHM()">pricing</a>
-    <a href="/school/" onclick="closeHM()">school</a>
-    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/school" onclick="closeHM()">school</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
     <a href="/tractatus" onclick="closeHM()">tractatus</a>
     <div class="hm-head">product lines</div>
     <a class="sub" href="#p-governance" onclick="closeHM()">ai governance (kagp)</a>
@@ -422,13 +469,18 @@
                 <div class="featured-tags"><span>policy gate</span><span>audit chain</span><span>human oversight</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M32 6l20 8v17c0 13-8.7 24.5-20 30-11.3-5.5-20-17-20-30V14z"/><path d="M23 32l6 6 12-14"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>routes every agent tool-call through a risk-tiered policy gate (allow / hold / deny)</li>
                   <li>writes a hash-chained, signable audit trail (art 9 / art 12)</li>
                   <li>holds high-risk actions for human approval with safe-default timeouts (art 14)</li>
                 </ul>
-                <a class="link" href="https://doc.ragbaz.cc/docs/products/ai-governance">read the full breakdown</a>
+                <a class="link" href="/prospects/ai-governance">open prospectus →</a>
               </div>
             </article>
 
@@ -440,13 +492,18 @@
                 <div class="featured-tags"><span>3d viewport</span><span>dsl editor</span><span>blender export</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M20 16l24 24"/><path d="M44 16L20 40"/><path d="M18 18l6-6"/><path d="M40 40l6 6"/><path d="M18 46l8-8"/><path d="M38 26l8-8"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>turns fighter intent into reproducible cinematic combat clips</li>
                   <li>exports timeline, camera, and semantic contact data</li>
                   <li>runs in browser, headless node, and offline render pipelines</li>
                 </ul>
-                <a class="link" href="#p-matches">open product line</a>
+                <a class="link" href="/prospects/matches">open prospectus →</a>
               </div>
             </article>
 
@@ -458,13 +515,18 @@
                 <div class="featured-tags"><span>gatekeeper</span><span>storefront</span><span>tenant provisioner</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><rect x="10" y="12" width="44" height="40" rx="8"/><path d="M10 24h44"/><path d="M22 36h10"/><path d="M38 36h8"/><path d="M22 44h22"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>provisions WordPress tenants with public ragbaz.cc routes</li>
                   <li>keeps authoring private while serving cached storefronts</li>
                   <li>connects billing, DNS, mail, and deployment workflow</li>
                 </ul>
-                <a class="link" href="#p-articulate">open product line</a>
+                <a class="link" href="/prospects/articulate">open prospectus →</a>
               </div>
             </article>
 
@@ -476,13 +538,18 @@
                 <div class="featured-tags"><span>mail security</span><span>quarantine</span><span>audit trail</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M10 18h44v28H10z"/><path d="M10 20l22 16 22-16"/><path d="M44 38l6 8"/><path d="M47 46l6-14"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>filters hostile or unwanted mail before inbox delivery</li>
                   <li>records rule changes through propose, apply, revert cycles</li>
                   <li>emits signed events for downstream automation</li>
                 </ul>
-                <a class="link" href="#p-mailroute">open product line</a>
+                <a class="link" href="/prospects/mailroute">open prospectus →</a>
               </div>
             </article>
 
@@ -494,31 +561,45 @@
                 <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M16 18h32l8 10v18H8V28z"/><path d="M24 32h16"/><path d="M24 40h10"/><path d="M22 18l4-8h12l4 8"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>captures network, DOM, storage, and file-system behavior</li>
                   <li>keeps payload execution isolated from workstation state</li>
                   <li>turns observations into structured indicators and reports</li>
                 </ul>
-                <a class="link" href="#p-detcordon">open product line</a>
+                <a class="link" href="/prospects/detcordon">open prospectus →</a>
               </div>
             </article>
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">58% complete</span><span>06 / school</span></div>
-                <h2>field school<br />and <span>manuals</span></h2>
-                <p class="featured-desc">RAGBAZ School collects operational teaching material, field notes, and guided tracks like cellular analysis and forensics, structured for repeat use rather than one-off reading.</p>
-                <div class="featured-tags"><span>cellular</span><span>forensics</span><span>course tracks</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">58% complete</span><span>06 / school topics</span></div>
+                <h2>cellular +<br /><span>forensics</span> school</h2>
+                <p class="featured-desc">The RAGBAZ school runs two field modules: cellular — SIM and eUICC trust, sender provenance limits, covert transport channels — and forensics, a hands-on Android compromise-assessment course with five labs, a teacher&rsquo;s manual, and read-only acquisition tools.</p>
+                <div class="featured-tags"><span>cellular</span><span>forensics</span><span>five labs</span><span>teacher&rsquo;s manual</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M12 18c8-4 16-4 24 0v28c-8-4-16-4-24 0z"/><path d="M52 18c-8-4-16-4-24 0v28c8-4 16-4 24 0z"/><path d="M32 18v28"/></svg>
+                  </div>
+                  <div class="label mono">current modules</div>
+                </div>
                 <ul>
-                  <li>gathers instructional material under one coherent school surface</li>
-                  <li>links practical tracks like cellular analysis and forensic labs</li>
-                  <li>keeps field reference material close to the product and research work</li>
+                  <li>cellular — SIM / eUICC trust, SMS and MMS provenance, incident-response paths</li>
+                  <li>forensics — rootkit, RAT, stalkerware, and backdoor hunting on hardware you own</li>
+                  <li>field reference material kept close to the product and research work</li>
                 </ul>
-                <a class="link" href="/school/">open school</a>
+                <div class="links">
+                  <a class="link" href="/prospects/school-topics">open school prospectus →</a>
+                  <a class="link" href="/school/cellular">open cellular →</a>
+                  <a class="link" href="/school/forensics">open forensics →</a>
+                </div>
               </div>
             </article>
 
@@ -527,16 +608,21 @@
                 <div class="featured-kicker mono"><span class="status">live</span><span class="progress">81% complete</span><span>07 / atlas + docs</span></div>
                 <h2>product atlas<br />and <span>status</span></h2>
                 <p class="featured-desc">The documentation and operations surface for RAGBAZ products, specs, status checks, deployment notes, and design-system references.</p>
-                <div class="featured-tags"><span>doc.ragbaz.cc</span><span>status</span><span>design system</span></div>
+                <div class="featured-tags"><span>ragbaz.cc/doc</span><span>status</span><span>design system</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M12 18h18l6 6h16v22H12z"/><path d="M36 18v8"/><path d="M24 34h16"/><path d="M24 42h12"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>publishes product specs and implementation notes</li>
                   <li>keeps product status, deployment notes, and uptime information discoverable</li>
                   <li>anchors every surface to the RAGBAZ visual system</li>
                 </ul>
-                <a class="link" href="https://doc.ragbaz.cc">open docs</a>
+                <span class="link muted">atlas already lives in the main site</span>
               </div>
             </article>
 
@@ -548,21 +634,26 @@
                 <div class="featured-tags"><span>compiler</span><span>orchestration</span><span>candlestick charts</span></div>
               </div>
               <div class="featured-panel">
-                <div class="label mono">what it does</div>
+                <div class="featured-panel-head">
+                  <div class="featured-panel-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64"><path d="M12 48h40"/><path d="M20 44V24"/><path d="M32 44V14"/><path d="M44 44V28"/><path d="M16 24h8"/><path d="M28 14h8"/><path d="M40 28h8"/></svg>
+                  </div>
+                  <div class="label mono">what it does</div>
+                </div>
                 <ul>
                   <li>compiles glither.hft trading strategies to WASM, signing every execution with Ed25519 monetary audit receipts</li>
                   <li>enriches live tick data with SMA/EMA/RSI/Bollinger indicators and streams signals over WebSocket</li>
                   <li>renders strategy execution in a CodeMirror 6 notebook with lightweight-charts candlestick view</li>
                 </ul>
-                <a class="link" href="https://doc.ragbaz.cc/docs/experiments/baz-architecture">platform architecture →</a>
+                <a class="link" href="/prospects/baz-signal-stack">open prospectus →</a>
               </div>
             </article>
           </div>
 
           <div class="featured-controls">
             <div class="featured-arrows">
-              <button class="featured-arrow" type="button" aria-label="Previous featured product" onclick="moveFeatured(-1)">‹</button>
-              <button class="featured-arrow" type="button" aria-label="Next featured product" onclick="moveFeatured(1)">›</button>
+              <button class="featured-arrow" type="button" aria-label="Previous featured product" onclick="moveFeatured(-1)">← prev</button>
+              <button class="featured-arrow" type="button" aria-label="Next featured product" onclick="moveFeatured(1)">next →</button>
             </div>
             <div class="featured-dots" aria-label="Featured product slides">
               <button class="featured-dot active" type="button" onclick="showFeatured(0)">01</button>
@@ -579,7 +670,7 @@
         <div class="cta">
           <a class="btn primary mono" href="/pricing">pricing & signup</a>
           <a class="btn mono" href="#products">product lines</a>
-          <a class="btn mono" href="https://doc.ragbaz.cc">read the docs</a>
+          <a class="btn mono" href="/doc/">read the docs</a>
           <a class="btn mono" href="/assets/ragbaz-prospectus.pdf?v=20260614aa" download>prospectus · pdf</a>
         </div>
       </div>
@@ -627,7 +718,7 @@
 
         <article class="prod flagship" id="p-governance">
           <div class="hd"><h3>ai governance</h3><span class="st mono">building</span></div>
-          <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="https://doc.ragbaz.cc/docs/products/ai-governance">full breakdown →</a></div>
+          <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="/doc/docs/products/ai-governance">full breakdown →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>mcp ingress</h4><p>model-context-protocol gateway. every agent tool-call is intercepted and routed through the policy gate before it reaches the upstream tool. identity + rbac enforced at entry.</p></div>
@@ -656,7 +747,7 @@
 
         <article class="prod" id="p-articulate">
           <div class="hd"><h3>articulate</h3><span class="st mono">live</span></div>
-          <div class="desc">WordPress powers 43% of the web — and is the single most targeted CMS. Every plugin, theme, and zero-day is an attack surface you didn't write. Articulate wraps your WordPress in a Rust gateway with filesystem immutability, WASM image hardening, GraphQL depth/pagination guardrails, and a private origin invisible from the internet — then adds a Next.js storefront, multi-tenant provisioning, and GraphQL edge federation. <a class="link" href="https://doc.ragbaz.cc">read the docs →</a>  <a class="link" href="/pricing">pricing →</a></div>
+          <div class="desc">WordPress powers 43% of the web — and is the single most targeted CMS. Every plugin, theme, and zero-day is an attack surface you didn't write. Articulate wraps your WordPress in a Rust gateway with filesystem immutability, WASM image hardening, GraphQL depth/pagination guardrails, and a private origin invisible from the internet — then adds a Next.js storefront, multi-tenant provisioning, and GraphQL edge federation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/pricing">pricing →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>gatekeeper</h4><p>secure ingress proxy. authenticates and routes requests to tenant wordpress instances. handles custom domain ssl, rate limiting, waf rules.</p></div>
@@ -670,7 +761,7 @@
 
         <article class="prod" id="p-mailroute">
           <div class="hd"><h3>mailroute</h3><span class="st mono">beta</span></div>
-          <div class="desc">Hostile mail bypasses every perimeter filter eventually — phishing, malware, data exfiltration, and spoofing land in inboxes before signatures catch up. MailRoute sits between the MTA and the mailbox, inspecting every message against hot-reloadable rules with quarantine buckets, audited rule edits (propose → apply → revert), and webhook relays for downstream automation. <a class="link" href="https://doc.ragbaz.cc">read the docs →</a>  <a class="link" href="/school/cellular/">cellular school →</a></div>
+          <div class="desc">Hostile mail bypasses every perimeter filter eventually — phishing, malware, data exfiltration, and spoofing land in inboxes before signatures catch up. MailRoute sits between the MTA and the mailbox, inspecting every message against hot-reloadable rules with quarantine buckets, audited rule edits (propose → apply → revert), and webhook relays for downstream automation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/school/cellular">cellular school →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>rule engine</h4><p>pattern-match pipeline. header, body, attachment analysis. allow/block/reject actions, scoring, tag injection. hot-reloadable rule sets.</p></div>
@@ -684,7 +775,7 @@
 
         <article class="prod" id="p-detcordon">
           <div class="hd"><h3>detcordon</h3><span class="st mono">research</span></div>
-          <div class="desc">Unknown payloads are the most dangerous — you can't safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators without exposing your operator surface. <a class="link" href="https://doc.ragbaz.cc">read the docs →</a>  <a class="link" href="/school/forensics/">forensics school →</a></div>
+          <div class="desc">Unknown payloads are the most dangerous — you can't safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators without exposing your operator surface. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/school/forensics">forensics school →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>sandbox</h4><p>hardened browser or headless runtime in a disposable container. no network egress except to capture sinks. memory and filesystem snapshots.</p></div>
@@ -735,7 +826,7 @@
 
         <article class="prod" id="p-baz">
           <div class="hd"><h3>baz signal stack</h3><span class="st mono">active embryo</span></div>
-          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, a bug in the signal chain appears first as a loss. The BAZ stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="https://doc.ragbaz.cc/docs/experiments/baz-architecture">platform architecture →</a></div>
+          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, a bug in the signal chain appears first as a loss. The BAZ stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="/doc/docs/experiments/baz-architecture">platform architecture →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>baz.hft</h4><p>glither.hft compiler dialect and no_std wasm host embryo. compiles trading strategies via baz-hft-roux. signed ed25519 monetary audit receipts, deterministic market-policy evaluation.</p></div>
@@ -755,8 +846,8 @@
       <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
       <div class="links">
         <a href="/pricing">pricing</a>
-        <a href="/school/">school</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
         <a href="/tractatus">tractatus</a>
         <a href="https://github.com/tabenius/matches">matches · github</a>
         <a href="/assets/ragbaz-prospectus.pdf?v=20260614aa" download>prospectus · pdf</a>

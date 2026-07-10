@@ -145,8 +145,8 @@ export function generateCompletionHtml(registry, updatedDate) {
         <a href="/">home</a>
         <a href="/pricing">pricing</a>
         <a href="/completion" class="active">completion</a>
-        <a href="/school/">school</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
         <a href="/tractatus">tractatus</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
@@ -160,8 +160,8 @@ export function generateCompletionHtml(registry, updatedDate) {
     <a href="/" onclick="closeHM()">home</a>
     <a href="/pricing" onclick="closeHM()">pricing</a>
     <a href="/completion" class="active" onclick="closeHM()">completion</a>
-    <a href="/school/" onclick="closeHM()">school</a>
-    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/school" onclick="closeHM()">school</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
     <a href="/tractatus" onclick="closeHM()">tractatus</a>
     <div class="hm-head">product lines</div>
     <a class="sub" href="/#p-governance" onclick="closeHM()">ai governance</a>
@@ -196,8 +196,8 @@ export function generateCompletionHtml(registry, updatedDate) {
       <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
       <div class="links">
         <a href="/">home</a>
-        <a href="/school/">school</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
         <a href="/pricing">pricing</a>
         <a href="/completion">completion</a>
         <a href="/tractatus">tractatus</a>

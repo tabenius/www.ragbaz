@@ -41,6 +41,9 @@
     if (!path) return raw;
 
     if (path.startsWith("/")) {
+      if (path === "/doc" || path.startsWith("/doc/")) {
+        return "https://ragbaz.cc" + path + query + hash;
+      }
       if (path === "/") return prefix + "index.html" + query + hash;
       if (path === "/pricing") return prefix + "pricing.html" + query + hash;
       if (path === "/tractatus") return prefix + "tractatus.html" + query + hash;

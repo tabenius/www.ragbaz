@@ -136,6 +136,7 @@
       .module-card { padding: 1rem; }
     }
   </style>
+  <script src="../assets/local-mode.js" defer></script>
 </head>
 <body>
   <header class="bar">
@@ -145,8 +146,8 @@
         <a href="/">home</a>
         <a href="/pricing">pricing</a>
         <a href="/#products">products</a>
-        <a href="/school/" class="active">school</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/school" class="active">school</a>
+        <a href="/doc/">docs</a>
         <a href="/tractatus">tractatus</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
@@ -160,13 +161,13 @@
     <a href="/" onclick="closeHM()">home</a>
     <a href="/pricing" onclick="closeHM()">pricing</a>
     <a href="/#products" onclick="closeHM()">products</a>
-    <a href="/school/" class="active" onclick="closeHM()">school</a>
-    <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
+    <a href="/school" class="active" onclick="closeHM()">school</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
     <a href="/tractatus" onclick="closeHM()">tractatus</a>
     <div class="hm-head">modules</div>
-    <a href="/school/" onclick="closeHM()">overview</a>
-    <a href="/school/cellular/" onclick="closeHM()">cellular</a>
-    <a href="/school/forensics/" onclick="closeHM()">forensics</a>
+    <a href="/school" onclick="closeHM()">overview</a>
+    <a href="/school/cellular" onclick="closeHM()">cellular</a>
+    <a href="/school/forensics" onclick="closeHM()">forensics</a>
   </div>
 
   <main>
@@ -175,9 +176,9 @@
         <h1 class="mono">// school</h1>
         <p>Reference modules, field documents, and working texts exposed under the RAGBAZ school surface. The menu below tracks every current page under <code>/school</code>.</p>
         <nav class="school-menu" aria-label="school sections">
-          <a href="/school/" class="active">overview</a>
-          <a href="/school/cellular/">cellular</a>
-          <a href="/school/forensics/">forensics</a>
+          <a href="/school" class="active">overview</a>
+          <a href="/school/cellular">cellular</a>
+          <a href="/school/forensics">forensics</a>
         </nav>
       </div>
     </section>
@@ -194,7 +195,7 @@
             </div>
             <h2>cellular</h2>
             <p>A field reference on SIM and eUICC trust, sender provenance limits in SMS and MMS, covert transport channels, and incident-response paths for suspected compromise.</p>
-            <a class="link" href="/school/cellular/">open module</a>
+            <a class="link" href="/school/cellular">open module</a>
           </article>
           <article class="module-card">
             <div class="module-meta">
@@ -204,7 +205,7 @@
             </div>
             <h2>forensics</h2>
             <p>A hands-on Android compromise-assessment field course: five labs, a teacher&rsquo;s manual, and three read-only acquisition tools for hunting rootkits, RATs, stalkerware, and backdoors on hardware you own.</p>
-            <a class="link" href="/school/forensics/">open module</a>
+            <a class="link" href="/school/forensics">open module</a>
           </article>
         </div>
       </div>
@@ -216,9 +217,9 @@
       <span class="wordmark"><img src="../assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
       <div class="links">
         <a href="/">home</a>
-        <a href="/school/">school</a>
+        <a href="/school">school</a>
         <a href="/pricing">pricing</a>
-        <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/doc/">docs</a>
         <a href="/tractatus">tractatus</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
