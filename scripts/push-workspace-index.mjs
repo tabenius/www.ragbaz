@@ -9,6 +9,7 @@ const args = new Set(process.argv.slice(2));
 const quiet = args.has("--quiet");
 const dryRun = args.has("--dry-run");
 const force = args.has("--force");
+const postCommit = args.has("--post-commit");
 
 function log(message) {
   if (!quiet) console.log(message);
@@ -55,6 +56,32 @@ function writeState(filePath, state) {
 
 function snapshotHash(snapshot) {
   return createHash("sha256").update(JSON.stringify(snapshot)).digest("hex");
+}
+
+function networkErrorCode(error) {
+  return error?.cause?.code || error?.code || error?.cause?.errno || "";
+}
+
+function isTransientNetworkError(error) {
+  if (error?.name === "AbortError") return true;
+  return new Set([
+    "EAI_AGAIN",
+    "ECONNREFUSED",
+    "ECONNRESET",
+    "EHOSTUNREACH",
+    "ENETUNREACH",
+    "ENOTFOUND",
+    "ETIMEDOUT",
+    "UND_ERR_CONNECT_TIMEOUT",
+    "UND_ERR_HEADERS_TIMEOUT",
+    "UND_ERR_SOCKET",
+  ]).has(networkErrorCode(error));
+}
+
+function skipPostCommitNetworkFailure(error) {
+  const code = networkErrorCode(error) || error?.name || "network error";
+  log(`workspace GraphQL sync: skipped (${code})`);
+  process.exit(0);
 }
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -107,21 +134,29 @@ const mutation = `
   }
 `;
 
-const response = await fetch(endpoint, {
-  method: "POST",
-  headers: {
-    authorization: `Bearer ${key}`,
-    "content-type": "application/json",
-  },
-  body: JSON.stringify({
-    query: mutation,
-    variables: {
-      snapshot,
-      sourceRevision: snapshot.sourceRevision,
-      digest: snapshot.digest,
+let response;
+try {
+  response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${key}`,
+      "content-type": "application/json",
     },
-  }),
-});
+    body: JSON.stringify({
+      query: mutation,
+      variables: {
+        snapshot,
+        sourceRevision: snapshot.sourceRevision,
+        digest: snapshot.digest,
+      },
+    }),
+  });
+} catch (error) {
+  if (postCommit && isTransientNetworkError(error)) {
+    skipPostCommitNetworkFailure(error);
+  }
+  throw error;
+}
 
 let payload;
 try {

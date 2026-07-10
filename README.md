@@ -68,6 +68,10 @@ can accept an authenticated mutation to update the snapshot in D1:
 
     npm run graphql:push
 
+The tracked post-commit hook runs the same script after each commit once
+installed via `npm run hooks:install`; transient DNS/connectivity failures are
+skipped there so offline commits remain clean.
+
 ## Manifest-linked stats
 
 Manifests may point at a sidecar stats file (`ragbaz.statsFile` / `ragbaz.stats.toml`).

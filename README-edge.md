@@ -52,7 +52,8 @@ The deployed Worker can also accept an authenticated mutation that replaces the
 stored snapshot in D1. Configure it with the Worker secret
 `GRAPHQL_SYNC_KEY`, then run `npm run graphql:push` locally to push a fresh
 workspace snapshot to Cloudflare. The tracked post-commit hook calls the same
-script once installed via `npm run hooks:install`.
+script once installed via `npm run hooks:install`; transient DNS/connectivity
+failures are skipped there so offline commits do not end in a noisy hook error.
 
 ## Manifest-linked stats
 
