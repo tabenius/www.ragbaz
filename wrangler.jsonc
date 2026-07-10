@@ -1,9 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ragbaz-cc",
-  "main": ".open-next/worker.js",
+  "main": "worker.mjs",
   "compatibility_date": "2025-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  "triggers": {
+    "crons": ["*/10 * * * *"],
+  },
   "observability": {
     "enabled": true,
   },
@@ -13,6 +16,7 @@
   },
   "vars": {
     "APP_URL": "https://ragbaz.cc",
+    "WORKSPACE_GRAPHQL_UPSTREAM_URL": "",
     "RESEND_FROM": "ragbaz <no-reply@ragbaz.cc>",
   },
   "routes": [
@@ -30,6 +34,7 @@
       "routes": [],
       "vars": {
         "APP_URL": "https://staging.ragbaz.cc",
+        "WORKSPACE_GRAPHQL_UPSTREAM_URL": "",
         "RESEND_FROM": "ragbaz <no-reply@ragbaz.cc>",
       },
       "d1_databases": [
@@ -43,7 +48,7 @@
     },
   },
   // Secrets (set with `wrangler secret put`): RESEND_API_KEY, SESSION_SECRET,
-  // GRAPHQL_SYNC_KEY
+  // GRAPHQL_SYNC_KEY, WORKSPACE_GRAPHQL_UPSTREAM_KEY
   "d1_databases": [
     {
       "binding": "DB",

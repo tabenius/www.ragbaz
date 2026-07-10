@@ -1,5 +1,9 @@
-import { graphql } from "graphql";
+import { getOperationAST, graphql, parse } from "graphql";
 import { htmlPage } from "../../../lib/accounts/http.mjs";
+import {
+  workspaceGraphqlUpstreamKey,
+  workspaceGraphqlUpstreamUrl,
+} from "../../../lib/accounts/env.mjs";
 import { currentWorkspaceSnapshot } from "../../../lib/workspace-store.mjs";
 import {
   graphqlSyncConfigured,
@@ -8,6 +12,9 @@ import {
 import { workspaceSchema } from "../../../lib/workspace-graphql.mjs";
 
 export const dynamic = "force-dynamic";
+
+const MAX_QUERY_BYTES = 64 * 1024;
+const MAX_BODY_BYTES = 1024 * 1024;
 
 function corsHeaders() {
   return {
@@ -50,10 +57,42 @@ function parseJsonParam(value, label) {
   }
 }
 
+function byteLength(value) {
+  return new TextEncoder().encode(String(value || "")).length;
+}
+
+function assertWithinByteLimit(value, maxBytes, label) {
+  if (byteLength(value) <= maxBytes) return;
+  const error = new Error(`${label} exceeds the maximum size`);
+  error.statusCode = 413;
+  throw error;
+}
+
+function errorResponse(message, status = 400, headers = {}) {
+  return jsonResponse({ errors: [{ message }] }, { status, headers });
+}
+
+function statusForGraphqlResult(result) {
+  if (!result?.errors?.length) return 200;
+  return result.errors.reduce((status, error) => {
+    const explicit = Number(error?.extensions?.http?.status);
+    if (Number.isInteger(explicit) && explicit >= 400) return Math.max(status, explicit);
+    return Math.max(status, error?.path?.length ? 500 : 400);
+  }, 400);
+}
+
+function operationType(query, operationName) {
+  const document = parse(query);
+  const operation = getOperationAST(document, operationName);
+  if (!operation) throw new Error("query does not include an executable operation");
+  return operation.operation;
+}
+
 async function executeGraphQL({ query, variables, operationName, request }) {
   if (!query || typeof query !== "string") {
-    return jsonResponse({ errors: [{ message: "query must be a non-empty string" }] }, { status: 400 });
+    return errorResponse("query must be a non-empty string");
   }
+  assertWithinByteLimit(query, MAX_QUERY_BYTES, "query");
 
   const snapshot = await currentWorkspaceSnapshot();
   const result = await graphql({
@@ -65,10 +104,12 @@ async function executeGraphQL({ query, variables, operationName, request }) {
       snapshot,
       isSyncAuthorized: requestGraphqlSyncAuthorized(request),
       syncKeyConfigured: graphqlSyncConfigured(),
+      workspaceUpstreamUrl: workspaceGraphqlUpstreamUrl(),
+      workspaceUpstreamKey: workspaceGraphqlUpstreamKey(),
     },
   });
 
-  return jsonResponse(result, { status: result.errors?.length ? 400 : 200 });
+  return jsonResponse(result, { status: statusForGraphqlResult(result) });
 }
 
 export async function OPTIONS() {
@@ -82,12 +123,17 @@ export async function GET(request) {
     return htmlResponse(`
 <h1>Workspace GraphQL</h1>
 <p>Public queries expose ragbaz page metadata and manifest/package metadata discovered under <code>/data/src</code>.</p>
-<p>Authenticated updates use <code>Authorization: Bearer &lt;GRAPHQL_SYNC_KEY&gt;</code> or <code>x-ragbaz-auth-key</code> and call <code>pushWorkspaceSnapshot</code>.</p>
+<p>Authenticated updates use <code>Authorization: Bearer &lt;GRAPHQL_SYNC_KEY&gt;</code> or <code>x-ragbaz-auth-key</code> and call <code>pushWorkspaceSnapshot</code> or <code>refreshWorkspaceSnapshot</code>.</p>
 <p><a href="/api/graphql?query=%7Bstats%7BtotalManifests%20totalSitePages%7D%7D">Example stats query</a></p>
 <pre>{ manifests(kind: COMPONENT, limit: 5) { path name componentId owner } }</pre>`);
   }
 
   try {
+    assertWithinByteLimit(query, MAX_QUERY_BYTES, "query");
+    const parsedOperation = operationType(query, searchParams.get("operationName") || undefined);
+    if (parsedOperation !== "query") {
+      return errorResponse("only query operations are allowed over GET", 405, { allow: "GET,POST,OPTIONS" });
+    }
     return await executeGraphQL({
       query,
       variables: parseJsonParam(searchParams.get("variables"), "variables"),
@@ -95,16 +141,32 @@ export async function GET(request) {
       request,
     });
   } catch (error) {
-    return jsonResponse({ errors: [{ message: error.message }] }, { status: 400 });
+    return errorResponse(error.message, error.statusCode || 400);
   }
 }
 
 export async function POST(request) {
+  const contentLength = Number(request.headers.get("content-length") || "0");
+  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) {
+    return errorResponse("request body exceeds the maximum size", 413);
+  }
+
+  let bodyText;
+  try {
+    bodyText = await request.text();
+  } catch {
+    return errorResponse("body must be valid JSON");
+  }
+
+  if (byteLength(bodyText) > MAX_BODY_BYTES) {
+    return errorResponse("request body exceeds the maximum size", 413);
+  }
+
   let body;
   try {
-    body = await request.json();
+    body = JSON.parse(bodyText);
   } catch {
-    return jsonResponse({ errors: [{ message: "body must be valid JSON" }] }, { status: 400 });
+    return errorResponse("body must be valid JSON");
   }
 
   return executeGraphQL({

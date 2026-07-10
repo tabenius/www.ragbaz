@@ -59,7 +59,7 @@ function snapshotHash(snapshot) {
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fileEnv = readEnvFile(path.join(repoRoot, ".env.graphql-sync.local"));
-const env = { ...fileEnv, ...process.env };
+const env = { ...process.env, ...fileEnv };
 const workspaceRoot = env.GRAPHQL_SYNC_WORKSPACE_ROOT || "/data/src";
 const sourceRevision = gitHead(repoRoot);
 const snapshot = buildWorkspaceSnapshot({ workspaceRoot, sourceRevision });
@@ -83,7 +83,7 @@ if (dryRun) {
   process.exit(0);
 }
 
-const endpoint = env.GRAPHQL_SYNC_ENDPOINT || "";
+const endpoint = env.GRAPHQL_SYNC_ENDPOINT || "https://ragbaz.cc/api/graphql";
 const key = env.GRAPHQL_SYNC_KEY || "";
 
 if (!endpoint || !key) {

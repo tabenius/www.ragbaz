@@ -127,7 +127,7 @@ function parseHtmlMeta(text, name) {
 
 function pagePathFromHtml(relPath) {
   if (relPath === "index.html") return "/";
-  if (relPath.endsWith("/index.html")) return `/${relPath.slice(0, -"/index.html".length)}/`;
+  if (relPath.endsWith("/index.html")) return `/${relPath.slice(0, -"/index.html".length)}`;
   return `/${relPath.slice(0, -".html".length)}`;
 }
 

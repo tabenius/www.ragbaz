@@ -11,7 +11,7 @@ fi
 
 umask 077
 {
-  printf 'GRAPHQL_SYNC_ENDPOINT=https://ragbaz-cc.ragbaz.workers.dev/api/graphql\n'
+  printf 'GRAPHQL_SYNC_ENDPOINT=https://ragbaz.cc/api/graphql\n'
   printf 'GRAPHQL_SYNC_KEY='
   xkcd-password --numWords 6 --minLength 5 --maxLength 8 --separator -
   printf 'GRAPHQL_SYNC_WORKSPACE_ROOT=/data/src\n'
