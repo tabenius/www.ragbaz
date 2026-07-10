@@ -168,7 +168,7 @@ export function generateCompletionHtml(registry, updatedDate) {
     <a class="sub" href="/#p-articulate" onclick="closeHM()">articulate</a>
     <a class="sub" href="/#p-mailroute" onclick="closeHM()">mailroute</a>
     <a class="sub" href="/#p-detcordon" onclick="closeHM()">detcordon</a>
-    <a class="sub" href="/#p-baz" onclick="closeHM()">baz signal stack</a>
+    <a class="sub" href="/#p-baz" onclick="closeHM()">baz trade signal stack</a>
     <a class="sub" href="/#p-matches" onclick="closeHM()">matches</a>
     <a class="sub" href="/#p-scipub" onclick="closeHM()">scipub</a>
     <a class="sub" href="/#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>

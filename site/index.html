@@ -449,7 +449,7 @@
     <a class="sub" href="#p-articulate" onclick="closeHM()">articulate</a>
     <a class="sub" href="#p-mailroute" onclick="closeHM()">mailroute</a>
     <a class="sub" href="#p-detcordon" onclick="closeHM()">detcordon</a>
-    <a class="sub" href="#p-baz" onclick="closeHM()">baz signal stack</a>
+    <a class="sub" href="#p-baz" onclick="closeHM()">baz trade signal stack</a>
     <a class="sub" href="#p-scipub" onclick="closeHM()">scipub</a>
     <a class="sub" href="#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
     <a class="sub" href="#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
@@ -570,7 +570,7 @@
                 <ul>
                   <li>captures network, DOM, storage, and file-system behavior</li>
                   <li>keeps payload execution isolated from workstation state</li>
-                  <li>turns observations into structured indicators and reports</li>
+                  <li>turns each run into reusable evidence bundles, indicators, and reports</li>
                 </ul>
                 <a class="link" href="/prospects/detcordon">open prospectus →</a>
               </div>
@@ -628,7 +628,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">active embryo</span><span class="progress">47% complete</span><span>08 / baz signal stack</span></div>
+                <div class="featured-kicker mono"><span class="status">active embryo</span><span class="progress">47% complete</span><span>08 / baz trade signal stack</span></div>
                 <h2>systematic<br />trading <span>toolkit</span></h2>
                 <p class="featured-desc">Three-tier HFT suite: glither.hft compiler dialect produces WASM strategies with signed Ed25519 audit receipts; Palantir orchestrates enrichment and streaming; Luna is the browser notebook.</p>
                 <div class="featured-tags"><span>compiler</span><span>orchestration</span><span>candlestick charts</span></div>
@@ -775,7 +775,7 @@
 
         <article class="prod" id="p-detcordon">
           <div class="hd"><h3>detcordon</h3><span class="st mono">research</span></div>
-          <div class="desc">Unknown payloads are the most dangerous — you can't safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators without exposing your operator surface. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/school/forensics">forensics school →</a></div>
+          <div class="desc">Unknown payloads are the most dangerous — you cannot safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators and evidence bundles without exposing your operator surface. <a class="link" href="/prospects/detcordon">open prospect →</a>  <a class="link" href="/school/forensics">forensics school →</a>  <a class="link" href="/doc/">docs →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>sandbox</h4><p>hardened browser or headless runtime in a disposable container. no network egress except to capture sinks. memory and filesystem snapshots.</p></div>
@@ -825,8 +825,8 @@
         </article>
 
         <article class="prod" id="p-baz">
-          <div class="hd"><h3>baz signal stack</h3><span class="st mono">active embryo</span></div>
-          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, a bug in the signal chain appears first as a loss. The BAZ stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="/doc/experiments/baz-architecture">platform architecture →</a></div>
+          <div class="hd"><h3>baz trade signal stack</h3><span class="st mono">active embryo</span></div>
+          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, and a bug in the signal chain appears first as a loss. The BAZ Trade Signal Stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="/doc/experiments/baz-architecture">platform architecture →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>baz.hft</h4><p>glither.hft compiler dialect and no_std wasm host embryo. compiles trading strategies via baz-hft-roux. signed ed25519 monetary audit receipts, deterministic market-policy evaluation.</p></div>

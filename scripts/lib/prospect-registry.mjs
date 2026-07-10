@@ -271,8 +271,8 @@ const PROSPECTS = [
       "DetCordon should stay honest about maturity: the concept is strong, but the next leap is making the evidence workflow solid enough that analysts trust it in real cases.",
     ctas: [
       { label: "Open product line", href: "/#p-detcordon", primary: true },
+      { label: "Open forensics school", href: "/school/forensics" },
       { label: "Read docs", href: "/doc/" },
-      { label: "Back to ragbaz.cc", href: "/" },
     ],
   },
   {
@@ -330,13 +330,13 @@ const PROSPECTS = [
   {
     slug: "baz-signal-stack",
     productSlug: "baz-signal-stack",
-    order: "07 / baz signal stack prospect",
-    title: "BAZ Signal Stack",
+    order: "07 / baz trade signal stack prospect",
+    title: "BAZ Trade Signal Stack",
     stageLabel: "active embryo",
     completion: 47,
     finishedValueUsd: 260000,
     description:
-      "Prospect page for the BAZ signal stack: glither.hft, Palantir orchestration, and Luna notebook surfaces.",
+      "Prospect page for the BAZ Trade Signal Stack: glither.hft, Palantir orchestration, and Luna notebook surfaces.",
     heroCopy:
       "A three-part systematic trading toolkit: glither.hft for strategy compilation, Palantir for orchestration and enrichment, and Luna for notebook-grade browser inspection.",
     chips: ["compiler", "orchestration", "notebook widgets"],
