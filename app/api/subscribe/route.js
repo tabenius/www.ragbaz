@@ -22,6 +22,7 @@ export async function POST(request) {
     return json({ ok: false, error: "invalid body" }, { status: 400 });
   }
   const email = normalizeEmail(body?.email);
+  const plan = typeof body?.plan === "string" ? body.plan.trim().slice(0, 40) : null;
   if (!isValidEmail(email)) {
     return json({ ok: false, error: "enter a valid email" }, { status: 400 });
   }
@@ -30,10 +31,10 @@ export async function POST(request) {
   }
 
   try {
-    await upsertPendingSubscriber(email);
+    await upsertPendingSubscriber(email, plan);
     const token = await issueToken(email, "confirm_subscribe");
     const confirmUrl = `${appUrl()}/auth/confirm?token=${encodeURIComponent(token)}&purpose=subscribe`;
-    await sendEmail({ to: email, ...confirmSubscribeEmail({ confirmUrl }) });
+    await sendEmail({ to: email, ...confirmSubscribeEmail({ confirmUrl, plan }) });
   } catch (e) {
     console.error("[subscribe]", e?.message || e);
     // Still return OK to avoid leaking internal state / existence.

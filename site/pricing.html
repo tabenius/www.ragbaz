@@ -88,6 +88,27 @@
     }
     .soon-note { font-family: "Intel One Mono", monospace; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--orange-1, #f3c46c); text-align: center; margin-top: .45rem; }
 
+    .plan-sub-form { display: flex; flex-direction: column; gap: .4rem; margin-top: .3rem; }
+    .plan-sub-input { background: var(--bg-3, #151515); border: 1px solid var(--border-2, #2a2a2a); border-radius: 6px; padding: .45rem .55rem; color: var(--fg-1, #f6d7a7); font-size: .78rem; outline: none; width: 100%; box-sizing: border-box; }
+    .plan-sub-input:focus { border-color: var(--orange-1, #f3c46c); }
+    .plan-sub-btn { width: 100%; }
+    .plan-sub-msg { font-size: .7rem; text-align: center; margin: .3rem 0 0; min-height: 1.2rem; }
+    .plan-sub-msg.ok { color: var(--green-1, #b8bb26); }
+    .plan-sub-msg.err { color: var(--red-1, #fb4934); }
+
+    .sticky-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+      background: #15120c; border-top: 1px solid var(--border-warm, #3a2a18);
+      padding: .6rem clamp(1rem, 4vw, 2.5rem);
+      display: flex; align-items: center; justify-content: center; gap: .8rem;
+      font-family: "Intel One Mono", monospace; font-size: .78rem;
+      color: var(--fg-2, #d8c29d);
+      transform: translateY(100%); transition: transform .25s ease;
+    }
+    .sticky-bar.visible { transform: translateY(0); }
+    .sticky-bar .btn { flex-shrink: 0; white-space: nowrap; }
+    body.sticky-padding { padding-bottom: 4.5rem; }
+
     .form-row { display: flex; flex-direction: column; gap: .3rem; margin: .8rem 0; }
     .form-row label { font-family: "Intel One Mono", monospace; font-size: .76rem; color: var(--fg-4, #9f9f9f); }
     .form-row input { background: var(--bg-3, #151515); border: 1px solid var(--border-2, #2a2a2a); border-radius: 6px; padding: .5rem .6rem; color: var(--fg-1, #f6d7a7); font-family: "Intel One Mono", monospace; font-size: .86rem; outline: none; }
@@ -168,8 +189,19 @@
     <a href="/" onclick="closeHM()">home</a>
     <a href="/pricing" class="active" onclick="closeHM()">pricing</a>
     <a href="/#products" onclick="closeHM()">products</a>
+    <a href="/school/" onclick="closeHM()">school</a>
     <a href="https://doc.ragbaz.cc" onclick="closeHM()">docs</a>
     <a href="/tractatus" onclick="closeHM()">tractatus</a>
+    <div class="hm-head">product lines</div>
+    <a class="sub" href="/#p-governance" onclick="closeHM()">ai governance (kagp)</a>
+    <a class="sub" href="/#p-matches" onclick="closeHM()">matches</a>
+    <a class="sub" href="/#p-articulate" onclick="closeHM()">articulate</a>
+    <a class="sub" href="/#p-mailroute" onclick="closeHM()">mailroute</a>
+    <a class="sub" href="/#p-detcordon" onclick="closeHM()">detcordon</a>
+    <a class="sub" href="/#p-baz" onclick="closeHM()">baz signal stack</a>
+    <a class="sub" href="/#p-scipub" onclick="closeHM()">scipub</a>
+    <a class="sub" href="/#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
+    <a class="sub" href="/#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
   </div>
 
   <main>
@@ -206,6 +238,11 @@
     </div>
   </div>
 
+  <div class="sticky-bar" id="sticky-bar">
+    <span>plans are launching — get notified when your tier is ready</span>
+    <a class="btn mono" href="#pricing-grid" onclick="document.querySelector('.plan-sub-input:not([value])')?.focus(); return false;">notify me</a>
+  </div>
+
   <footer>
     <div class="wrap">
       <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
@@ -213,6 +250,7 @@
         <a href="/">home</a>
         <a href="/school/">school</a>
         <a href="https://doc.ragbaz.cc">docs</a>
+        <a href="/pricing">pricing</a>
         <a href="/tractatus">tractatus</a>
         <a href="https://github.com/tabenius/matches">matches · github</a>
       </div>
@@ -225,27 +263,27 @@
       {
         tier: "free", name: "free", price: "0", desc: "single-site wordpress. basic cms, no backup.",
         features: ["1 WordPress site", "256 MB RAM", "No backup", "Community support", "*.ragbaz.cc subdomain"],
-        featured: false,
+        featured: false, sellable: true, status: "live",
       },
       {
         tier: "writer", name: "writer", price: "12", desc: "personal blog or portfolio. lightweight cms + mail.",
         features: ["1 WordPress site", "512 MB RAM", "Email forwarding", "Standard support", "Custom domain ready"],
-        featured: false,
+        featured: false, sellable: false, status: "coming soon",
       },
       {
         tier: "commerce", name: "commerce", price: "29", desc: "shop or course platform. headless + storefront.",
         features: ["1 WordPress site", "1 GB RAM", "Daily backups", "Storefront (Next.js)", "WooCommerce + LearnDash", "GraphQL API access"],
-        featured: true,
+        featured: true, sellable: false, status: "coming soon",
       },
       {
         tier: "agency", name: "agency", price: "79", desc: "multisite for agencies. white-label ready.",
         features: ["Up to 5 sites", "2 GB RAM per site", "Daily backups", "White-label option", "Priority support", "Custom integrations"],
-        featured: false,
+        featured: false, sellable: false, status: "coming soon",
       },
       {
         tier: "secure", name: "secure", price: "149", desc: "isolated tenant for compliance-sensitive workloads.",
         features: ["1 site, hardened isolation", "2 GB RAM", "Daily backups + off-site", "WAF + DDoS protection", "SLA-backed uptime", "Dedicated IP available"],
-        featured: false,
+        featured: false, sellable: false, status: "coming soon",
       },
     ];
     const PRICE_API = "https://provision.ragbaz.cc/api/prices";
@@ -269,22 +307,67 @@
         const desc = p.desc || p.description || "";
         const price = p.display_price || (p.price === "0" ? "free" : "$" + p.price);
         const interval = p.interval ? (p.interval === "month" ? "/mo" : "/" + p.interval) : (price !== "free" ? "/mo" : "");
-        const available = p.configured !== false;
-        const cta = !available ? "unavailable" : price === "free" ? "start free" : "subscribe · " + price + interval;
+        const sellable = p.sellable === true;
+        const btnClass = price === "free" ? "" : "primary";
+        const status = p.status || "coming soon";
+        let ctaHtml;
+        if (sellable) {
+          ctaHtml = `<button class="btn ${btnClass} mono" data-plan-tier="${escapeHtml(tier)}" data-plan-name="${escapeHtml(name)}" onclick="openSignup('${escapeHtml(tier)}','${escapeHtml(name)}')">
+            ${price === "free" ? "start free" : "subscribe · " + price + interval}
+          </button>`;
+        } else {
+          ctaHtml =
+            '<form class="plan-sub-form" data-plan="' + escapeHtml(tier) + '" onsubmit="subscribePlan(event, \'' + escapeHtml(tier) + '\', \'' + escapeHtml(name) + '\')">' +
+            '<input type="email" class="plan-sub-input mono" placeholder="you@example.com" autocomplete="email" required />' +
+            '<button type="submit" class="btn ' + btnClass + ' mono plan-sub-btn">notify me</button>' +
+            '</form>' +
+            '<div class="soon-note">' + escapeHtml(status) + '</div>' +
+            '<p class="plan-sub-msg mono" id="sub-msg-' + escapeHtml(tier) + '"></p>';
+        }
         return `
         <div class="plan${p.featured ? " featured" : ""}">
           <h3 class="mono">${escapeHtml(name)}</h3>
-          <div class="price mono">${escapeHtml(price)}<span>${price !== "free" && available ? escapeHtml(interval) : ""}</span></div>
+          <div class="price mono">${escapeHtml(price)}<span>${price !== "free" && sellable ? escapeHtml(interval) : ""}</span></div>
           <div class="desc">${escapeHtml(desc)}</div>
           <ul>${(p.features || []).map(f => `<li>${escapeHtml(f)}</li>`).join("")}</ul>
-          <div class="cta-wrap" data-tip="coming soon — checkout isn't live yet">
-            <button class="btn ${price === "free" ? "" : "primary"} mono" title="Coming soon — checkout isn't live yet" disabled aria-disabled="true" data-plan-name="${escapeHtml(name)}">
-              ${escapeHtml(cta)}
-            </button>
-            <div class="soon-note">coming soon</div>
+          <div class="cta-wrap">
+            ${ctaHtml}
           </div>
         </div>
       `}).join("");
+    }
+
+    async function subscribePlan(event, tier, name) {
+      event.preventDefault();
+      var form = event.target;
+      var input = form.querySelector(".plan-sub-input");
+      var msg = document.getElementById("sub-msg-" + tier);
+      var btn = form.querySelector(".plan-sub-btn");
+      var email = (input.value || "").trim();
+      if (!msg) return;
+      msg.className = "plan-sub-msg mono";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.textContent = "invalid email"; msg.classList.add("err"); return;
+      }
+      btn.disabled = true;
+      msg.textContent = "sending…";
+      try {
+        var r = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: email, plan: name }),
+        });
+        var d = await r.json();
+        if (r.ok && d.ok) {
+          msg.textContent = "check your email to confirm"; msg.classList.add("ok");
+          input.value = "";
+        } else {
+          msg.textContent = d.error || "could not subscribe"; msg.classList.add("err");
+        }
+      } catch (e) {
+        msg.textContent = "network error"; msg.classList.add("err");
+      }
+      btn.disabled = false;
     }
 
     async function loadPrices() {
@@ -302,8 +385,6 @@
     let selectedTier = "";
 
     function openSignup(tier, name) {
-      // Checkout is not live yet — CTAs are disabled; guard defensively.
-      return;
       selectedTier = tier;
       document.getElementById("modal-title").textContent = "sign up · " + name;
       document.getElementById("signup-email").value = "";
@@ -375,13 +456,26 @@
       el.className = "status-banner " + kind;
     }
 
+    /* ── sticky bar on scroll ── */
+    var stickyBar = document.getElementById("sticky-bar");
+    var stickyThreshold = 600;
+    function onScroll() {
+      if (window.scrollY > stickyThreshold) {
+        stickyBar.classList.add("visible");
+        document.body.classList.add("sticky-padding");
+      } else {
+        stickyBar.classList.remove("visible");
+        document.body.classList.remove("sticky-padding");
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
     const params = new URLSearchParams(window.location.search);
     if (params.get("status") === "success") {
       showBanner("provisioning your tenant — you will receive an email when it is ready.", "success");
     } else if (params.get("status") === "cancelled") {
       showBanner("checkout cancelled — no charges were made.", "info");
-    } else {
-      showBanner("checkout is coming soon — plans aren't purchasable yet. browse the tiers below.", "info");
     }
 
     renderPlans();

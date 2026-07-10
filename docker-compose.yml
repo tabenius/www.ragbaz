@@ -1,3 +1,5 @@
+# Local development — runs the OpenNext Worker in a workerd preview container.
+# Production deploys to the Cloudflare edge via `npm run deploy`.
 services:
   ragbaz-cc:
     build: .
@@ -5,9 +7,14 @@ services:
     container_name: ragbaz-cc
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8820:80"
+      - "127.0.0.1:8820:3000"
+    volumes:
+      - ragbaz-cc-wrangler-state:/app/.wrangler/state
     networks:
       - traefik-public
+
+volumes:
+  ragbaz-cc-wrangler-state:
 
 networks:
   traefik-public:

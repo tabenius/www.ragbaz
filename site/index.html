@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ragbaz — studio runtime</title>
-  <meta name="description" content="ragbaz is a small studio. flagship runtime: matches — autonomous cinematic battle simulation. also: articulate headless commerce, ai governance (kagp), baz signal stack, detcordon, and more." />
+  <meta name="description" content="ragbaz is a small studio. Security-first runtimes: articulate hardened headless WordPress, Konsonans AI Governance EU AI Act Platform, detcordon containment-first malware observation, mailroute mail stream guard, matches autonomous battle simulation, and more." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="ragbaz — studio runtime" />
-  <meta property="og:description" content="ragbaz: autonomous battle runtime, headless commerce, eu ai act governance, systematic trading toolkit, mail security, and containment-first malware observation." />
+  <meta property="og:description" content="ragbaz: hardened headless WordPress runtime, EU AI Act Platform, containment-first malware observation, mail stream guard, autonomous battle simulation, and systematic trading toolkit." />
   <meta property="og:url" content="https://ragbaz.cc" />
   <meta name="theme-color" content="#0a0908" />
   <link rel="icon" href="./assets/logo-mark.svg" />
@@ -269,7 +269,8 @@
 
     /* footer */
     footer { margin-top: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--border-2, #2a2a2a); }
-    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+      footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+      .last-updated { margin-top: 2em; text-align: right; color: var(--fg-5); font-family: var(--font-mono); font-size: var(--t-micro); }
     footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
     footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
     @media (max-width: 720px) {
@@ -362,8 +363,8 @@
             <article class="featured-slide active" data-featured-slide>
               <div class="featured-copy">
                 <div class="featured-kicker mono"><span class="status">building</span><span>01 / governance</span></div>
-                <h2>eu ai act<br />governance <span>platform</span></h2>
-                <p class="featured-desc">KAGP — a policy-as-code control plane that governs AI agents for EU AI Act compliance: every action passes a typed policy gate, lands in a tamper-evident audit chain, and can be held for human approval.</p>
+                <h2>EU AI Act<br />Governance <span>Platform</span></h2>
+                <p class="featured-desc">Konsonans AI Governance — a policy-as-code control plane that governs AI agents for EU AI Act compliance: every action passes a typed policy gate, lands in a tamper-evident audit chain, and can be held for human approval.</p>
                 <div class="featured-tags"><span>policy gate</span><span>audit chain</span><span>human oversight</span></div>
               </div>
               <div class="featured-panel">
@@ -399,7 +400,7 @@
               <div class="featured-copy">
                 <div class="featured-kicker mono"><span class="status">live</span><span>03 / articulate</span></div>
                 <h2>headless commerce<br />and <span>cms</span></h2>
-                <p class="featured-desc">A secure WordPress gateway, Next.js storefront, multi-tenant provisioning, DNS automation, mail, and GraphQL edge surface.</p>
+                <p class="featured-desc">WordPress is the most targeted CMS — every plugin and theme is an unpatched attack surface. Articulate wraps it in a Rust gateway with filesystem immutability, WASM image hardening, and a private origin, then adds a Next.js storefront, multi-tenant provisioning, DNS automation, and GraphQL edge.</p>
                 <div class="featured-tags"><span>gatekeeper</span><span>storefront</span><span>tenant provisioner</span></div>
               </div>
               <div class="featured-panel">
@@ -435,7 +436,7 @@
               <div class="featured-copy">
                 <div class="featured-kicker mono"><span class="status">research</span><span>05 / detcordon</span></div>
                 <h2>containment-first<br /><span>observation</span></h2>
-                <p class="featured-desc">Disposable browser and payload analysis environments for watching hostile web behavior without exposing the operator surface.</p>
+                <p class="featured-desc">Unknown payloads can't safely detonate on your workstation — but ignoring them leaves blind spots. DetCordon runs hostile web content in disposable, network-isolated sandboxes, recording every I/O into structured indicators without exposing your surface.</p>
                 <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
               </div>
               <div class="featured-panel">
@@ -553,7 +554,7 @@
 
         <article class="prod flagship" id="p-governance">
           <div class="hd"><h3>ai governance</h3><span class="st mono">building</span></div>
-          <div class="desc">konsonans ai governance platform (KAGP) — eu ai act compliance for ai agents. a glither.governance policy dialect compiled to wasm, a tamper-evident audit chain, human-in-the-loop approvals, and hardware-signable replica manifests. <a class="link" href="https://doc.ragbaz.cc/docs/products/ai-governance">full breakdown →</a></div>
+          <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="https://doc.ragbaz.cc/docs/products/ai-governance">full breakdown →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>mcp ingress</h4><p>model-context-protocol gateway. every agent tool-call is intercepted and routed through the policy gate before it reaches the upstream tool. identity + rbac enforced at entry.</p></div>
@@ -582,7 +583,7 @@
 
         <article class="prod" id="p-articulate">
           <div class="hd"><h3>articulate</h3><span class="st mono">live</span></div>
-          <div class="desc">headless commerce + cms family — secure wordpress gateway, next.js storefront, multi-tenant provisioning, graphql edge federation.</div>
+          <div class="desc">WordPress powers 43% of the web — and is the single most targeted CMS. Every plugin, theme, and zero-day is an attack surface you didn't write. Articulate wraps your WordPress in a Rust gateway with filesystem immutability, WASM image hardening, GraphQL depth/pagination guardrails, and a private origin invisible from the internet — then adds a Next.js storefront, multi-tenant provisioning, and GraphQL edge federation. <a class="link" href="https://doc.ragbaz.cc">read the docs →</a>  <a class="link" href="/pricing">pricing →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>gatekeeper</h4><p>secure ingress proxy. authenticates and routes requests to tenant wordpress instances. handles custom domain ssl, rate limiting, waf rules.</p></div>
@@ -596,7 +597,7 @@
 
         <article class="prod" id="p-mailroute">
           <div class="hd"><h3>mailroute</h3><span class="st mono">beta</span></div>
-          <div class="desc">imap mail-stream guard — rule-driven filtering, quarantine buckets, audited rule edits, webhook delivery, smtp intercept.</div>
+          <div class="desc">Hostile mail bypasses every perimeter filter eventually — phishing, malware, data exfiltration, and spoofing land in inboxes before signatures catch up. MailRoute sits between the MTA and the mailbox, inspecting every message against hot-reloadable rules with quarantine buckets, audited rule edits (propose → apply → revert), and webhook relays for downstream automation. <a class="link" href="https://doc.ragbaz.cc">read the docs →</a>  <a class="link" href="/school/cellular/">cellular school →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>rule engine</h4><p>pattern-match pipeline. header, body, attachment analysis. allow/block/reject actions, scoring, tag injection. hot-reloadable rule sets.</p></div>
@@ -610,7 +611,7 @@
 
         <article class="prod" id="p-detcordon">
           <div class="hd"><h3>detcordon</h3><span class="st mono">research</span></div>
-          <div class="desc">containment-first malware-observation environment — watches hostile web payloads in isolation, records behavior without exposure.</div>
+          <div class="desc">Unknown payloads are the most dangerous — you can't safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators without exposing your operator surface. <a class="link" href="https://doc.ragbaz.cc">read the docs →</a>  <a class="link" href="/school/forensics/">forensics school →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>sandbox</h4><p>hardened browser or headless runtime in a disposable container. no network egress except to capture sinks. memory and filesystem snapshots.</p></div>
@@ -661,7 +662,7 @@
 
         <article class="prod" id="p-baz">
           <div class="hd"><h3>baz signal stack</h3><span class="st mono">active embryo</span></div>
-          <div class="desc">three-tier systematic trading suite — glither.hft compiler dialect, palantir rust orchestration server, and luna vite browser notebook. compiler and signed audit receipts implemented; live order execution pending durable receipt + venue integration. <a class="link" href="https://doc.ragbaz.cc/docs/experiments/baz-architecture">platform architecture →</a></div>
+          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, a bug in the signal chain appears first as a loss. The BAZ stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="https://doc.ragbaz.cc/docs/experiments/baz-architecture">platform architecture →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
             <div class="comp"><h4>baz.hft</h4><p>glither.hft compiler dialect and no_std wasm host embryo. compiles trading strategies via baz-hft-roux. signed ed25519 monetary audit receipts, deterministic market-policy evaluation.</p></div>
@@ -690,6 +691,7 @@
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
     </div>
   </footer>
+  <div class="wrap last-updated"><time datetime="2026-07-10">2026-07-10</time></div>
 <script>
 function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
 function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }

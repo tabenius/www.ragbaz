@@ -1,0 +1,9 @@
+.git
+.next
+.open-next
+.wrangler
+node_modules
+public
+.env*
+!.env.example
+!.env*.example

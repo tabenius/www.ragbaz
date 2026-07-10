@@ -1,7 +1,7 @@
 # ragbaz.cc — Cloudflare edge worker (OpenNext)
 
 Serves the static `site/` from the Cloudflare edge via Next.js + `@opennextjs/cloudflare`,
-replacing (or fronting) the nginx/docker deploy.
+with a local OpenNext preview origin reserved for `staging.ragbaz.cc`.
 
 ## How it works
 
@@ -19,8 +19,13 @@ serve the existing HTML byte-for-byte:
 - `app/healthz/route.js` → `ok` (parity with the nginx healthcheck).
 - Unknown paths render `app/not-found.js` (styled 404) with a 404 status.
 
-Everything is prerendered — no server rendering, no D1/R2/KV, just the read-only
-static-assets incremental cache bundled with the Worker.
+Most of the site is prerendered. D1 is used only for:
+
+- accounts + newsletter state
+- the workspace GraphQL snapshot used by other RAGBAZ sites
+
+Static HTML/assets still ship via the read-only static-assets incremental cache
+bundled with the Worker.
 
 ## Commands
 
@@ -28,6 +33,51 @@ static-assets incremental cache bundled with the Worker.
     npm run build       # sync-public + next build
     npm run preview     # + opennext build + local workerd (wrangler dev)
     npm run deploy      # + opennext build + deploy to Cloudflare
+    npm run staging:serve
+    npm run graphql:push
+    npm run hooks:install
 
-Deploys to `ragbaz-cc.ragbaz.workers.dev`. Pointing the `ragbaz.cc` apex at the Worker
-(custom domain / route) is a separate DNS step, intentionally not automated here.
+## GraphQL workspace index
+
+`/api/graphql` exposes a read-only view over:
+
+- `site/**/*.html` page metadata
+- manifest/package metadata discovered under `/data/src`
+
+The bundled fallback snapshot is generated at build time by
+`scripts/generate-workspace-index.mjs`.
+
+The deployed Worker can also accept an authenticated mutation that replaces the
+stored snapshot in D1. Configure it with the Worker secret
+`GRAPHQL_SYNC_KEY`, then run `npm run graphql:push` locally to push a fresh
+workspace snapshot to Cloudflare. The tracked post-commit hook calls the same
+script once installed via `npm run hooks:install`.
+
+## Manifest-linked stats
+
+Manifests may point at a sidecar stats file that uses the same family of format
+as the manifest:
+
+- JSON / JSONC manifests: `ragbaz.statsFile` or `ragbaz.stats_file`
+- `Cargo.toml`: `[package.metadata.ragbaz] stats_file = "ragbaz.stats.toml"`
+- `pyproject.toml`: `[tool.ragbaz] stats_file = "ragbaz.stats.toml"`
+- `wrangler.toml`: `[ragbaz] stats_file = "ragbaz.stats.toml"`
+
+The sidecar payload is timeline-shaped:
+
+```json
+{
+  "currency": "USD",
+  "entries": [
+    { "date": "2026-07-09", "dollars": 25000, "completion": 40, "note": "prototype" }
+  ]
+}
+```
+
+These values are included in the GraphQL snapshot and rendered by the Worker at
+`/stats`.
+
+`wrangler.jsonc` declares the public custom domains (`ragbaz.cc`, `www.ragbaz.cc`)
+for the Worker. The local Docker/compose runtime is no longer the old nginx site:
+it runs `opennextjs-cloudflare preview` with a persistent local D1 state and is
+intended to sit behind `staging.ragbaz.cc`.

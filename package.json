@@ -4,16 +4,25 @@
   "private": true,
   "description": "ragbaz.cc — static site served from the Cloudflare edge via OpenNext",
   "scripts": {
-    "dev": "node scripts/sync-public.mjs && next dev",
-    "build": "node scripts/sync-public.mjs && next build",
-    "preview": "npm run build && opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "npm run build && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf-typegen": "wrangler types"
+    "prepare:content": "node scripts/sync-public.mjs && node scripts/generate-workspace-index.mjs && node scripts/check-public-leaks.mjs",
+    "dev": "npm run prepare:content && next dev",
+    "build": "npm run prepare:content && next build",
+    "cf:build": "npm run build && opennextjs-cloudflare build",
+    "preview": "npm run cf:build && opennextjs-cloudflare preview",
+    "deploy": "npm run cf:build && opennextjs-cloudflare deploy",
+    "deploy:staging": "npm run cf:build && opennextjs-cloudflare deploy --env staging",
+    "staging:serve": "sh scripts/start-staging.sh",
+    "cf-typegen": "wrangler types",
+    "graphql:push": "node scripts/push-workspace-index.mjs",
+    "hooks:install": "bash scripts/install-git-hooks.sh",
+    "check:public-leaks": "node scripts/check-public-leaks.mjs"
   },
   "dependencies": {
+    "graphql": "^17.0.2",
     "next": "^15.4.6",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "smol-toml": "^1.7.0"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.8.0",

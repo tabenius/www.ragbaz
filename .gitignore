@@ -5,6 +5,8 @@ node_modules/
 public/
 .wrangler/
 .env*
+!.env.example
+!.env*.example
 
 # build-generated embedded gated content
 lib/accounts/gated-content.generated.mjs
