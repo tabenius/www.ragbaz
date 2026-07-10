@@ -147,7 +147,7 @@ export function generateCompletionHtml(registry, updatedDate) {
         <a href="/completion" class="active">completion</a>
         <a href="/school">school</a>
         <a href="/doc/">docs</a>
-        <a href="/tractatus">tractatus</a>
+        <a href="/konsonans-ai-governance">konsonans ai governance</a>
       </nav>
       <button class="hm-btn mono" onclick="toggleHM()">☰</button>
     </div>
@@ -162,7 +162,7 @@ export function generateCompletionHtml(registry, updatedDate) {
     <a href="/completion" class="active" onclick="closeHM()">completion</a>
     <a href="/school" onclick="closeHM()">school</a>
     <a href="/doc/" onclick="closeHM()">docs</a>
-    <a href="/tractatus" onclick="closeHM()">tractatus</a>
+    <a href="/konsonans-ai-governance" onclick="closeHM()">konsonans ai governance</a>
     <div class="hm-head">product lines</div>
     <a class="sub" href="/#p-governance" onclick="closeHM()">ai governance</a>
     <a class="sub" href="/#p-articulate" onclick="closeHM()">articulate</a>
@@ -200,7 +200,7 @@ export function generateCompletionHtml(registry, updatedDate) {
         <a href="/doc/">docs</a>
         <a href="/pricing">pricing</a>
         <a href="/completion">completion</a>
-        <a href="/tractatus">tractatus</a>
+        <a href="/konsonans-ai-governance">konsonans ai governance</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
     </div>

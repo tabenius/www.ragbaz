@@ -46,7 +46,9 @@
       }
       if (path === "/") return prefix + "index.html" + query + hash;
       if (path === "/pricing") return prefix + "pricing.html" + query + hash;
-      if (path === "/tractatus") return prefix + "tractatus.html" + query + hash;
+      if (path === "/tractatus" || path === "/konsonans-ai-governance") {
+        return prefix + "konsonans-ai-governance.html" + query + hash;
+      }
       if (path === "/school" || path === "/school/") return prefix + "school/index.html" + query + hash;
       if (path === "/school/cellular" || path === "/school/cellular/") return prefix + "school/cellular/index.html" + query + hash;
       if (path === "/school/forensics" || path === "/school/forensics/") return prefix + "school/forensics/index.html" + query + hash;
