@@ -19,21 +19,31 @@
         <p class="hero-copy">Containment-first observation for hostile web payloads: disposable sandboxes, isolated network posture, and structured capture of what the payload actually did.</p>
         <div class="hero-chips"><span class="chip mono">sandbox</span><span class="chip mono">recorder</span><span class="chip mono">ioc extraction</span></div>
       </section>
-      <section class="prospect-grid">
-        <article class="prospect-card"><h2>Core offer</h2><ul><li>Disposable execution lanes separated from analyst workstation state.</li><li>Network, DOM, storage, and file-system capture tied to the same run.</li><li>Structured indicators and reports instead of raw logs only.</li></ul></article>
-        <article class="prospect-card"><h2>Why it matters</h2><ul><li>Unknown payloads should not need to touch your everyday machine.</li><li>Observation is useful only when the evidence survives export and review.</li><li>Repeatable containment matters more than one-off heroic detonation setups.</li></ul></article>
-        <article class="prospect-card"><h2>Current focus</h2><ul><li>Cleaner operator workflow between sandbox, sink, and reports.</li><li>Telemetry capture that stays usable under hostile content.</li><li>Evidence packaging for downstream governance and archival systems.</li></ul></article>
+
+      <section class="status-grid" aria-label="project status">
+        <article class="status-card"><div class="label mono">status</div><div class="value">research</div><div class="subvalue mono">research lane</div><p>Containment-first malware observation — disposable browser and headless runtime sandboxes, network-isolated, I/O recording (DOM, network, filesystem) into structured indicators.</p></article>
+        <article class="status-card"><div class="label mono">completion</div><div class="value">42%</div><div class="status-meter" aria-hidden="true"><span style="width:42%"></span></div><div class="subvalue mono">finished scope progress</div><p>Completion estimate across public surface, working system parts, and remaining implementation depth.</p></article>
+        <article class="status-card"><div class="label mono">current value</div><div class="value">$88k</div><div class="subvalue mono">derived from current completion</div><p>Estimated present studio asset value at the current scope and maturity level.</p></article>
+        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$210k</div><div class="subvalue mono">pricing signal €99–399/mo per node</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
       </section>
+      <p class="status-caption">Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.</p>
+
+      <section class="prospect-grid">
+        <article class="prospect-card"><h2>What is done</h2><p>The key architectural direction is already clear, which matters more here than pretending the product is later-stage than it is.</p><ul><li>The system is decomposed into sandbox, recorder, analyzer, and feeder roles instead of a vague single black box.</li><li>The public positioning is specific about containment-first execution, I/O capture, and structured evidence rather than generic malware analysis talk.</li><li>DetCordon already sits in the studio lineup as a distinct security product with a defined investigative posture.</li></ul></article>
+<article class="prospect-card"><h2>What is left</h2><p>Most of the value is still ahead because the hard part is turning the architecture into a dependable operator tool.</p><ul><li>Finish repeatable runtime packaging for disposable browser and headless execution lanes.</li><li>Refine the analyst workflow between detonation, evidence packaging, and downstream report/export steps.</li><li>Stabilize indicator taxonomy and report structure so hostile runs produce output another analyst can actually reuse.</li></ul></article>
+<article class="prospect-card"><h2>Commercial frame</h2><p>DetCordon has a strong eventual value ceiling because analysts will pay for safer observation and better evidence handling when the workflow is credible.</p><ul><li>Pricing signal: €99–399/mo per node based on containment capacity and managed analysis posture.</li><li>Best fit: incident-response teams, security consultancies, and internal security groups working with unknown payloads.</li><li>Finished-value estimate assumes repeatable runtime packaging, analyst workflow polish, and export-grade evidence bundles.</li></ul></article>
+      </section>
+
       <section class="prospect-note">
-        <p>DetCordon is aimed at operational triage: get the evidence out, keep the blast radius small, and produce output that another analyst can use.</p>
+        <p>DetCordon should stay honest about maturity: the concept is strong, but the next leap is making the evidence workflow solid enough that analysts trust it in real cases.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/#p-detcordon">Open product line</a>
-          <a class="btn" href="/">Back to ragbaz.cc</a>
+          <a class="btn primary" href="/#p-detcordon">Open product line</a><a class="btn" href="/doc/">Read docs</a><a class="btn" href="/">Back to ragbaz.cc</a>
         </div>
       </section>
+
       <nav class="pager">
-        <a href="/prospects/mailroute">← previous prospect</a>
-        <a href="/prospects/school-topics">next prospect →</a>
+        <a href="/prospects/mailroute">← previous prospect: mailroute</a>
+        <a href="/prospects/school-topics">next prospect: ragbaz school topics →</a>
       </nav>
     </div>
   </main>

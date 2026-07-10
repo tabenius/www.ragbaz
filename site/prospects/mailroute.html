@@ -19,21 +19,31 @@
         <p class="hero-copy">A mail stream guard that treats inbox delivery as an auditable rules engine, not a black box: quarantine, review, and signed events live in the same path.</p>
         <div class="hero-chips"><span class="chip mono">mail security</span><span class="chip mono">quarantine</span><span class="chip mono">audit trail</span></div>
       </section>
-      <section class="prospect-grid">
-        <article class="prospect-card"><h2>Core offer</h2><ul><li>Rule-driven IMAP and SMTP inspection with operator-friendly quarantine.</li><li>Audited propose/apply/revert cycles for rule changes.</li><li>Signed event output for downstream automation or escalation.</li></ul></article>
-        <article class="prospect-card"><h2>Operational fit</h2><ul><li>Small teams that need more control than hosted mail filters expose.</li><li>Mail lanes where false positives and operator review both matter.</li><li>Environments that want message policy coupled to local tooling.</li></ul></article>
-        <article class="prospect-card"><h2>Current focus</h2><ul><li>Inspection rule ergonomics and review workflow.</li><li>Glither-backed validation around message handling.</li><li>Safe integration with the evolving mail stack and governance surfaces.</li></ul></article>
+
+      <section class="status-grid" aria-label="project status">
+        <article class="status-card"><div class="label mono">status</div><div class="value">beta</div><div class="subvalue mono">beta lane</div><p>IMAP mail-stream guard — hot-reloadable rule pipeline, quarantine buckets, audited rule edits (propose / apply / revert), webhook relays, SMTP intercept.</p></article>
+        <article class="status-card"><div class="label mono">completion</div><div class="value">74%</div><div class="status-meter" aria-hidden="true"><span style="width:74%"></span></div><div class="subvalue mono">finished scope progress</div><p>Completion estimate across public surface, working system parts, and remaining implementation depth.</p></article>
+        <article class="status-card"><div class="label mono">current value</div><div class="value">$118k</div><div class="subvalue mono">derived from current completion</div><p>Estimated present studio asset value at the current scope and maturity level.</p></article>
+        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$160k</div><div class="subvalue mono">pricing signal €49–199/mo per domain</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
       </section>
+      <p class="status-caption">Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.</p>
+
+      <section class="prospect-grid">
+        <article class="prospect-card"><h2>What is done</h2><p>Mailroute is already framed as a concrete operator tool, not a vague filtering promise.</p><ul><li>The rule-driven inspection model is defined across IMAP/SMTP handling, quarantine buckets, and signed downstream event flow.</li><li>Audited propose/apply/revert rule editing is part of the product shape, which is a real differentiator versus opaque hosted filtering.</li><li>The public product line, docs entry points, and surrounding mail-stack work establish a credible operational direction.</li></ul></article>
+<article class="prospect-card"><h2>What is left</h2><p>What remains is deeper execution hardening around review workflow and message-path reliability.</p><ul><li>Complete the stronger SMTP intercept and delivery-control path so policy can sit earlier in the mail flow.</li><li>Improve the operator review surface around quarantine decisions, exceptions, and false-positive handling.</li><li>Tie message handling more directly into the broader governance and audit infrastructure so rule changes and outcomes share one evidence model.</li></ul></article>
+<article class="prospect-card"><h2>Commercial frame</h2><p>Mailroute sells on visibility and operator control: the ability to explain what happened to a message and why.</p><ul><li>Pricing signal: €49–199/mo per domain, with room for managed review and compliance-sensitive tiers.</li><li>Best fit: smaller teams and controlled environments where generic hosted filtering is either too opaque or too blunt.</li><li>Finished-value estimate assumes hardened policy lanes, clear review UX, and credible downstream event integrations.</li></ul></article>
+      </section>
+
       <section class="prospect-note">
-        <p>The value is not just filtering more mail. It is making every filtering decision, change, and handoff inspectable after the fact.</p>
+        <p>The strongest version of Mailroute is not just stricter filtering. It is a mail control surface where review, evidence, and policy change history are all inspectable.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/#p-mailroute">Open product line</a>
-          <a class="btn" href="/">Back to ragbaz.cc</a>
+          <a class="btn primary" href="/#p-mailroute">Open product line</a><a class="btn" href="/doc/">Read docs</a><a class="btn" href="/">Back to ragbaz.cc</a>
         </div>
       </section>
+
       <nav class="pager">
-        <a href="/prospects/articulate">← previous prospect</a>
-        <a href="/prospects/detcordon">next prospect →</a>
+        <a href="/prospects/articulate">← previous prospect: articulate</a>
+        <a href="/prospects/detcordon">next prospect: detcordon →</a>
       </nav>
     </div>
   </main>

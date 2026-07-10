@@ -19,20 +19,30 @@
         <p class="hero-copy">A three-part systematic trading toolkit: glither.hft for strategy compilation, Palantir for orchestration and enrichment, and Luna for notebook-grade browser inspection.</p>
         <div class="hero-chips"><span class="chip mono">compiler</span><span class="chip mono">orchestration</span><span class="chip mono">notebook widgets</span></div>
       </section>
-      <section class="prospect-grid">
-        <article class="prospect-card"><h2>Core offer</h2><ul><li>Compile glither.hft strategies to WASM with signed monetary audit receipts.</li><li>Palantir manages enrichment, streaming, and signal transport.</li><li>Luna provides browser-native notebook and charting surfaces for inspection.</li></ul></article>
-        <article class="prospect-card"><h2>Why it fits</h2><ul><li>Teams that want executable strategy artifacts, not only notebooks.</li><li>Auditability around strategy execution and monetary planning.</li><li>Operator tools that can move between analysis and runtime review.</li></ul></article>
-        <article class="prospect-card"><h2>Current focus</h2><ul><li>Dialect maturation around baz.hft and glither.hft.</li><li>WebAssembly bridge work for browser/runtime parity.</li><li>Luna-style widgets that surface streaming signals cleanly.</li></ul></article>
+
+      <section class="status-grid" aria-label="project status">
+        <article class="status-card"><div class="label mono">status</div><div class="value">active embryo</div><div class="subvalue mono">active embryo lane</div><p>Systematic trading toolkit — glither.hft compiler dialect compiles strategies to WASM with Ed25519 audit receipts, Palantir Rust orchestration server enriches tick data, Luna Vite browser notebook for live inspection.</p></article>
+        <article class="status-card"><div class="label mono">completion</div><div class="value">47%</div><div class="status-meter" aria-hidden="true"><span style="width:47%"></span></div><div class="subvalue mono">finished scope progress</div><p>Completion estimate across public surface, working system parts, and remaining implementation depth.</p></article>
+        <article class="status-card"><div class="label mono">current value</div><div class="value">$122k</div><div class="subvalue mono">derived from current completion</div><p>Estimated present studio asset value at the current scope and maturity level.</p></article>
+        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$260k</div><div class="subvalue mono">pricing signal —</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
       </section>
+      <p class="status-caption">Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.</p>
+
+      <section class="prospect-grid">
+        <article class="prospect-card"><h2>What is done</h2><p>The stack already has a real conceptual split instead of a single overloaded prototype bucket.</p><ul><li>baz.hft is identified as the dialect layer around executable strategy artifacts and audit-friendly monetary planning receipts.</li><li>Palantir is established as the Rust orchestration and enrichment surface rather than leaving stream handling implicit.</li><li>Luna is positioned as the browser notebook and charting layer, giving the stack a concrete operator-facing inspection surface.</li></ul></article>
+<article class="prospect-card"><h2>What is left</h2><p>The largest remaining work is compiler/runtime maturity and keeping browser and backend execution in parity.</p><ul><li>Finish dialect semantics around baz.hft and glither.hft so strategies become stable, reviewable, and testable artifacts.</li><li>Extend the WASM bridge so web applications can execute or inspect the same compiled parts the Pharo/runtime side uses.</li><li>Harden live data adapters, signal transport, and notebook widgets so the operator surface becomes more than an architecture sketch.</li></ul></article>
+<article class="prospect-card"><h2>Commercial frame</h2><p>This has high eventual value because it joins language, execution, audit receipts, and operator notebook into one traceable lane.</p><ul><li>Current public posture: active embryo and research-heavy stack rather than ready sellable product.</li><li>Best fit: teams that want executable strategy artifacts with auditability, not just disconnected notebooks and charts.</li><li>Finished-value estimate assumes compiler maturity, live stream integration, and a browser/runtime bridge strong enough for daily operator use.</li></ul></article>
+      </section>
+
       <section class="prospect-note">
-        <p>The point is not just to render charts. It is to keep the strategy language, the execution receipts, and the operator notebook in one traceable lane.</p>
+        <p>The value here is not just charting or indicators. It is the continuity from strategy language to execution receipt to operator notebook, with monetary planning visible the whole way through.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/doc/experiments/baz-architecture">Read architecture notes</a>
-          <a class="btn" href="/">Back to ragbaz.cc</a>
+          <a class="btn primary" href="/doc/experiments/baz-architecture">Read architecture notes</a><a class="btn" href="/">Back to ragbaz.cc</a>
         </div>
       </section>
+
       <nav class="pager">
-        <a href="/prospects/school-topics">← previous prospect</a>
+        <a href="/prospects/school-topics">← previous prospect: ragbaz school topics</a>
         <span>last prospect →</span>
       </nav>
     </div>

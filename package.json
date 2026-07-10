@@ -4,7 +4,7 @@
   "private": true,
   "description": "ragbaz.cc — static site served from the Cloudflare edge via OpenNext",
   "scripts": {
-    "prepare:content": "node scripts/generate-products-page.mjs && node scripts/ensure-local-mode.mjs && node scripts/sync-public.mjs && node scripts/generate-workspace-index.mjs && node scripts/check-public-leaks.mjs",
+    "prepare:content": "node scripts/generate-products-page.mjs && node scripts/generate-prospect-pages.mjs && node scripts/ensure-local-mode.mjs && node scripts/sync-public.mjs && node scripts/generate-workspace-index.mjs && node scripts/check-public-leaks.mjs",
     "clean": "node --eval \"import { rmSync } from 'node:fs'; for (const path of ['.next', '.open-next']) rmSync(path, { recursive: true, force: true });\"",
     "dev": "npm run prepare:content && next dev",
     "build": "npm run prepare:content && next build",
