@@ -1,5 +1,6 @@
 import { json, clientIp } from "../../../../lib/accounts/http.mjs";
 import {
+  peekToken,
   consumeToken,
   upsertVerifiedAccountWithPassword,
   confirmSubscriber,
@@ -27,19 +28,32 @@ export async function POST(request) {
     return json({ ok: false, error: "too many requests" }, { status: 429 });
   }
 
-  // Accept a confirm token from either the subscribe or account flow.
-  const consumed =
-    (await consumeToken(token, "confirm_account")) ||
-    (await consumeToken(token, "confirm_subscribe"));
-  if (!consumed) {
+  // Accept a confirm token from either the subscribe or account flow. Validate
+  // without consuming, so a failure below leaves the link usable for a retry;
+  // the token is only burned once the account actually exists.
+  const purpose = (await peekToken(token, "confirm_account"))
+    ? "confirm_account"
+    : (await peekToken(token, "confirm_subscribe"))
+      ? "confirm_subscribe"
+      : null;
+  if (!purpose) {
     return json({ ok: false, error: "link is invalid or expired" }, { status: 400 });
   }
 
-  const hash = await hashPassword(password);
-  const account = await upsertVerifiedAccountWithPassword(consumed.email, hash);
-  // A confirmed email also confirms any pending newsletter subscription.
-  await confirmSubscriber(consumed.email).catch(() => {});
+  try {
+    const hash = await hashPassword(password);
+    const consumed = await consumeToken(token, purpose);
+    if (!consumed) {
+      return json({ ok: false, error: "link is invalid or expired" }, { status: 400 });
+    }
+    const account = await upsertVerifiedAccountWithPassword(consumed.email, hash);
+    // A confirmed email also confirms any pending newsletter subscription.
+    await confirmSubscriber(consumed.email).catch(() => {});
 
-  await startSession({ id: account.id, email: account.email });
-  return json({ ok: true, email: account.email });
+    await startSession({ id: account.id, email: account.email });
+    return json({ ok: true, email: account.email });
+  } catch (err) {
+    console.error("set-password failed:", err?.message || err);
+    return json({ ok: false, error: "account creation failed — please try again" }, { status: 500 });
+  }
 }
