@@ -33,6 +33,8 @@ bundled with the Worker.
     npm run build       # sync-public + next build
     npm run preview     # + opennext build + local workerd (wrangler dev)
     npm run deploy      # + opennext build + deploy to Cloudflare
+    npm run smoke:edge  # production custom-domain smoke checks
+    npm run smoke:edge:staging
     npm run staging:env
     npm run staging:serve
     npm run graphql:push
@@ -88,3 +90,56 @@ intended to sit behind `staging.ragbaz.cc`.
 Create `.env.staging.local` once with `npm run staging:env`; it generates
 `SESSION_SECRET` via `xkcd-password` and is consumed by both `npm run staging:serve`
 and `docker compose up`.
+
+## Post-cutover hardening runbook
+
+The production Worker is the edge runtime for `ragbaz.cc` and `www.ragbaz.cc`.
+Documentation is served below `ragbaz.cc/doc`; no dedicated docs subdomain is
+required. After every production deploy or DNS cutover, run:
+
+```sh
+npm run deploy
+npm run smoke:edge
+```
+
+`scripts/smoke-worker.mjs` checks `/healthz`, `/`, `/doc`, `/pricing`, and
+`/prospects/ai-governance` on the configured site domains. Override the domain
+set when testing a partial cutover:
+
+```sh
+RAGBAZ_SMOKE_ORIGINS=https://ragbaz.cc npm run smoke:edge
+```
+
+For staging:
+
+```sh
+npm run staging:serve
+npm run smoke:edge:staging
+```
+
+## Rollback
+
+1. Identify the last known-good Cloudflare deployment in the Workers dashboard
+   or with Wrangler deployment/version commands.
+2. Roll back the Worker to that deployment without changing D1 bindings.
+3. Run `npm run smoke:edge` and confirm `/healthz` returns `ok`.
+4. If the Worker rollback is not enough, move the affected custom-domain route
+   back to the previous origin/proxy rule and keep D1 untouched.
+5. Record the deployed version, failing version, and smoke output in the
+   incident notes before resuming deploys.
+
+Do not rotate or print Worker secrets during rollback. Secrets are configured
+with `wrangler secret put` and should remain out of tracked config.
+
+## Observability
+
+`wrangler.jsonc` enables Worker observability with full head sampling for the
+post-cutover period. During an incident, check:
+
+- Worker errors/exceptions for the `ragbaz-cc` service.
+- Route-specific status codes for `ragbaz.cc/*` and `www.ragbaz.cc/*`.
+- D1 errors for account, newsletter, and GraphQL snapshot reads/writes.
+- Smoke-test failures from `npm run smoke:edge`.
+
+After the cutover has been stable for a sustained period, reduce
+`observability.head_sampling_rate` if log volume becomes noisy.

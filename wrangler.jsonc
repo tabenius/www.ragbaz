@@ -2,13 +2,14 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ragbaz-cc",
   "main": "worker.mjs",
-  "compatibility_date": "2025-09-01",
+  "compatibility_date": "2026-07-12",
   "compatibility_flags": ["nodejs_compat"],
   "triggers": {
     "crons": ["*/10 * * * *"],
   },
   "observability": {
     "enabled": true,
+    "head_sampling_rate": 1,
   },
   "assets": {
     "directory": ".open-next/assets",
@@ -26,14 +27,6 @@
     },
     {
       "pattern": "www.ragbaz.cc/*",
-      "zone_name": "ragbaz.cc",
-    },
-    {
-      "pattern": "doc.ragbaz.cc/*",
-      "zone_name": "ragbaz.cc",
-    },
-    {
-      "pattern": "www.doc.ragbaz.cc/*",
       "zone_name": "ragbaz.cc",
     },
   ],

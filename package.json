@@ -11,6 +11,8 @@
     "cf:build": "npm run clean && npm run build && opennextjs-cloudflare build --skipNextBuild",
     "preview": "npm run cf:build && opennextjs-cloudflare preview",
     "deploy": "npm run cf:build && opennextjs-cloudflare deploy --env=\"\" && npm run graphql:refresh",
+    "smoke:edge": "node scripts/smoke-worker.mjs",
+    "smoke:edge:staging": "RAGBAZ_SMOKE_ORIGINS=https://staging.ragbaz.cc node scripts/smoke-worker.mjs",
     "staging:env": "sh scripts/bootstrap-staging-env.sh",
     "staging:serve": "sh scripts/start-staging.sh",
     "cf-typegen": "wrangler types",
