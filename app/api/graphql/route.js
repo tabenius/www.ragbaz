@@ -122,10 +122,10 @@ export async function GET(request) {
   if (!query) {
     return htmlResponse(`
 <h1>Workspace GraphQL</h1>
-<p>Public queries expose ragbaz page metadata and manifest/package metadata discovered under <code>/data/src</code>.</p>
+<p>Public queries expose ragbaz page metadata, the published ragbaz product catalog, and manifest/package metadata discovered under <code>/data/src</code>.</p>
 <p>Authenticated updates use <code>Authorization: Bearer &lt;GRAPHQL_SYNC_KEY&gt;</code> or <code>x-ragbaz-auth-key</code> and call <code>pushWorkspaceSnapshot</code> or <code>refreshWorkspaceSnapshot</code>.</p>
 <p><a href="/api/graphql?query=%7Bstats%7BtotalManifests%20totalSitePages%7D%7D">Example stats query</a></p>
-<pre>{ manifests(kind: COMPONENT, limit: 5) { path name componentId owner } }</pre>`);
+<pre>{ publicProducts(limit: 5) { slug name tag completion currentValueUsd } }</pre>`);
   }
 
   try {

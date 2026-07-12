@@ -5,8 +5,11 @@ export const statsPageStyles = `
   .rb-stats h1{font-size:1.5rem;margin:0}
   .rb-stats p{line-height:1.6}
   .rb-stats .hero{display:grid;gap:1rem;padding:1rem 0 1.5rem}
+  .rb-stats .catalog-section,.rb-stats .manifests-section{display:grid;gap:.85rem;margin:0 0 1.5rem}
+  .rb-stats .section-head{display:grid;gap:.35rem}
+  .rb-stats .section-head p{margin:0;color:var(--fg-4,#9f9f9f)}
   .rb-stats .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem}
-  .rb-stats .summary .panel,.rb-stats .project,.rb-stats .empty,.rb-stats .error-panel{border:1px solid var(--border-2,#2a2a2a);background:var(--bg-2,#121212);border-radius:8px}
+  .rb-stats .summary .panel,.rb-stats .project,.rb-stats .empty,.rb-stats .catalog-empty,.rb-stats .error-panel{border:1px solid var(--border-2,#2a2a2a);background:var(--bg-2,#121212);border-radius:8px}
   .rb-stats .summary .panel,.rb-stats .error-panel{padding:1rem}
   .rb-stats .summary span,.rb-stats .metrics span,.rb-stats .eyebrow,.rb-stats .path,.rb-stats .meta,.rb-stats th{font-family:"Intel One Mono",monospace;font-size:.72rem;text-transform:uppercase;color:var(--fg-4,#9f9f9f)}
   .rb-stats .summary strong,.rb-stats .metrics strong{display:block;margin-top:.3rem;color:var(--fg-1,#f6d7a7);font-size:1.15rem}
@@ -35,11 +38,14 @@ export const statsPageStyles = `
   .rb-stats .path,.rb-stats .meta{font-size:.7rem}
   .rb-stats .path{overflow-wrap:anywhere}
   .rb-stats h2{font-size:1rem;margin:.2rem 0 .25rem;color:var(--fg-1,#f6d7a7)}
+  .rb-stats .catalog-summary{margin:.8rem 0 0;color:var(--fg-3,#d4c19a)}
+  .rb-stats .catalog-links{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.9rem}
+  .rb-stats .catalog-links a{font-family:"Intel One Mono",monospace;font-size:.74rem;color:var(--orange-1,#f3c46c);text-transform:uppercase}
   .rb-stats .history-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
   .rb-stats table{width:100%;border-collapse:collapse;margin-top:.9rem;min-width:36rem}
   .rb-stats th,.rb-stats td{text-align:left;padding:.55rem 0;border-top:1px solid var(--border-3,#2d2d2d);vertical-align:top}
   .rb-stats td{font-size:.92rem}
-  .rb-stats .empty,.rb-stats .error-panel{padding:1rem}
+  .rb-stats .empty,.rb-stats .catalog-empty,.rb-stats .error-panel{padding:1rem}
   .rb-stats .error-panel h1{margin-bottom:.6rem}
   .rb-stats .error-actions{margin-top:1rem}
   .rb-stats .retry-btn{font-family:"Intel One Mono",monospace;font-size:.82rem;border:1px solid var(--border-warm,#3a2a18);border-radius:8px;padding:.62rem .9rem;background:var(--bg-3,#161616);color:var(--orange-1,#f3c46c);cursor:pointer}

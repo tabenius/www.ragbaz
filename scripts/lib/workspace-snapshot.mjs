@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseToml } from "smol-toml";
+import { publicSiteCatalog, readSiteCatalog } from "../../../../metadata/src/site-catalog.mjs";
 
 const MANIFEST_KINDS = new Map([
   ["ragbaz.component.json", "component"],
@@ -504,7 +505,7 @@ function collectManifestRecords(workspaceRoot) {
   return manifests.sort((left, right) => left.path.localeCompare(right.path));
 }
 
-function buildStats(manifests, sitePages) {
+function buildStats(manifests, sitePages, publicCatalog) {
   const counts = new Map();
   for (const manifest of manifests) {
     counts.set(manifest.kind, (counts.get(manifest.kind) || 0) + 1);
@@ -512,6 +513,9 @@ function buildStats(manifests, sitePages) {
   return {
     totalManifests: manifests.length,
     totalSitePages: sitePages.length,
+    publishedProducts: Number(publicCatalog?.stats?.publishedProducts || 0),
+    catalogTracks: Number(publicCatalog?.stats?.tracks || 0),
+    prospectEntries: Number(publicCatalog?.stats?.prospectEntries || 0),
     byKind: [...counts.entries()]
       .sort(([left], [right]) => left.localeCompare(right))
       .map(([kind, count]) => ({ kind, count })),
@@ -537,6 +541,7 @@ export function snapshotDigest(snapshot) {
         version: snapshot.version,
         manifests: snapshot.manifests,
         sitePages: snapshot.sitePages,
+        publicCatalog: snapshot.publicCatalog,
       }),
     )
     .digest("hex");
@@ -549,6 +554,7 @@ export function buildWorkspaceSnapshot({
 } = {}) {
   const manifests = collectManifestRecords(workspaceRoot);
   const sitePages = collectSitePages(siteRoot);
+  const publicCatalog = publicSiteCatalog(readSiteCatalog());
   const snapshot = {
     version: 1,
     generatedAt: new Date().toISOString(),
@@ -556,8 +562,9 @@ export function buildWorkspaceSnapshot({
     storedAt: null,
     manifests,
     sitePages,
+    publicCatalog,
   };
-  snapshot.stats = buildStats(manifests, sitePages);
+  snapshot.stats = buildStats(manifests, sitePages, publicCatalog);
   snapshot.digest = snapshotDigest(snapshot);
   return snapshot;
 }

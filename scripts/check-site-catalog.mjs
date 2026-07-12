@@ -1,0 +1,55 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { prospectEntries, publicProducts, readSiteCatalog, unpublishedProducts } from "../../../metadata/src/site-catalog.mjs";
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const indexHtml = readFileSync(path.join(repoRoot, "site", "index.html"), "utf8");
+const pricingHtml = readFileSync(path.join(repoRoot, "site", "pricing.html"), "utf8");
+const completionHtml = readFileSync(path.join(repoRoot, "site", "completion.html"), "utf8");
+
+function anchorFromHref(href) {
+  const match = String(href || "").match(/#([A-Za-z0-9_-]+)$/);
+  return match ? match[1] : null;
+}
+
+function assert(condition, message, failures) {
+  if (!condition) failures.push(message);
+}
+
+const catalog = readSiteCatalog();
+const failures = [];
+
+for (const product of publicProducts(catalog)) {
+  const anchor = anchorFromHref(product.links?.site);
+  if (anchor) {
+    assert(indexHtml.includes(`id="${anchor}"`), `index.html is missing section id "${anchor}" for ${product.slug}`, failures);
+    assert(indexHtml.includes(`#${anchor}`), `index.html is missing nav/reference for #${anchor} (${product.slug})`, failures);
+    assert(pricingHtml.includes(`/#${anchor}`), `pricing.html is missing /#${anchor} nav entry for ${product.slug}`, failures);
+    assert(completionHtml.includes(`/#${anchor}`), `completion.html is missing /#${anchor} nav entry for ${product.slug}`, failures);
+  }
+}
+
+for (const product of unpublishedProducts(catalog)) {
+  const anchor = anchorFromHref(product.links?.site);
+  if (!anchor) continue;
+  assert(!indexHtml.includes(`#${anchor}`), `index.html still references unpublished product ${product.slug}`, failures);
+  assert(!indexHtml.includes(`id="${anchor}"`), `index.html still exposes unpublished product section ${product.slug}`, failures);
+  assert(!pricingHtml.includes(`/#${anchor}`), `pricing.html still references unpublished product ${product.slug}`, failures);
+  assert(!completionHtml.includes(`/#${anchor}`), `completion.html still references unpublished product ${product.slug}`, failures);
+}
+
+for (const entry of prospectEntries(catalog)) {
+  const slug = entry.prospect?.slug;
+  const prospectPath = path.join(repoRoot, "site", "prospects", `${slug}.html`);
+  assert(existsSync(prospectPath), `missing generated prospect page for ${slug}`, failures);
+}
+
+if (failures.length) {
+  console.error("site catalog check failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("site catalog check: public/unpublished product distribution is consistent");

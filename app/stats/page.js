@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "RAGBAZ Stats",
-  description: "Tracked package budget and completion data sourced from the current workspace snapshot.",
+  description: "Published catalog and tracked package budget/completion data sourced from the current workspace snapshot.",
 };
 
 const getWorkspaceStatsSnapshot = cache(async () => {
@@ -46,7 +46,7 @@ function historyRows(entries, currency) {
 function SummarySkeleton() {
   return (
     <div className="summary summary-skeleton" aria-hidden="true">
-      {Array.from({ length: 4 }).map((_, index) => (
+      {Array.from({ length: 7 }).map((_, index) => (
         <div className="panel" key={index}>
           <div className="skeleton skeleton-line short" />
           <div className="skeleton skeleton-line medium" />
@@ -141,23 +141,70 @@ function TrafficBars({ series, tone = "orange" }) {
 
 async function SummaryPanels() {
   const snapshot = await getWorkspaceStatsSnapshot();
+  const catalogEntries = [...snapshot.publicCatalog.products, ...snapshot.publicCatalog.tracks];
   const tracked = snapshot.manifests.filter((manifest) => manifest.stats?.entries?.length);
-  const totalDollars = tracked.reduce((sum, manifest) => sum + Number(manifest.stats?.latestDollars || 0), 0);
-  const averageCompletion = tracked.length
-    ? tracked.reduce((sum, manifest) => sum + Number(manifest.stats?.latestCompletion || 0), 0) / tracked.length
+  const manifestDollars = tracked.reduce((sum, manifest) => sum + Number(manifest.stats?.latestDollars || 0), 0);
+  const catalogCurrentValue = catalogEntries.reduce((sum, entry) => sum + Number(entry.currentValueUsd || 0), 0);
+  const averageCompletion = catalogEntries.length
+    ? catalogEntries.reduce((sum, entry) => sum + Number(entry.completion || 0), 0) / catalogEntries.length
     : 0;
 
   return (
     <div className="summary">
-      <div className="panel"><span>Tracked projects</span><strong>{tracked.length}</strong></div>
-      <div className="panel"><span>Latest dollars</span><strong>{formatMoney(totalDollars)}</strong></div>
+      <div className="panel"><span>Published products</span><strong>{snapshot.stats.publishedProducts}</strong></div>
+      <div className="panel"><span>Catalog tracks</span><strong>{snapshot.stats.catalogTracks}</strong></div>
+      <div className="panel"><span>Catalog current value</span><strong>{formatMoney(catalogCurrentValue)}</strong></div>
       <div className="panel"><span>Avg completion</span><strong>{formatCompletion(averageCompletion)}</strong></div>
+      <div className="panel"><span>Tracked manifests</span><strong>{tracked.length}</strong></div>
+      <div className="panel"><span>Manifest dollars</span><strong>{formatMoney(manifestDollars)}</strong></div>
       <div className="panel"><span>Snapshot</span><strong>{snapshot.storedAt || snapshot.generatedAt || "—"}</strong></div>
     </div>
   );
 }
 
-async function ProjectList() {
+function renderCatalogLinks(entry) {
+  return Object.entries(entry.links || {})
+    .filter(([label, href]) => href && label !== "github")
+    .slice(0, 4)
+    .map(([label, href]) => (
+      <a key={`${entry.slug}-${label}`} href={href}>{label}</a>
+    ));
+}
+
+async function CatalogList() {
+  const snapshot = await getWorkspaceStatsSnapshot();
+  const entries = [...snapshot.publicCatalog.products, ...snapshot.publicCatalog.tracks];
+
+  if (!entries.length) {
+    return <div className="catalog-empty">No published catalog entries are present in the current workspace snapshot.</div>;
+  }
+
+  return (
+    <div className="projects">
+      {entries.map((entry) => (
+        <article className="project catalog-item" key={`${entry.kind}:${entry.slug}`}>
+          <header className="project-head">
+            <div>
+              <p className="eyebrow">{entry.kind} · {entry.tagLabel}</p>
+              <h2>{entry.name}</h2>
+              <p className="path">{entry.slug}</p>
+            </div>
+            <div className="metrics">
+              <div><span>Pricing</span><strong>{entry.pricing || "—"}</strong></div>
+              <div><span>Completion</span><strong>{formatCompletion(entry.completion)}</strong></div>
+              <div><span>Current value</span><strong>{formatMoney(entry.currentValueUsd)}</strong></div>
+              <div><span>Finished value</span><strong>{formatMoney(entry.finishedValueUsd)}</strong></div>
+            </div>
+          </header>
+          <p className="catalog-summary">{entry.value}</p>
+          <div className="catalog-links">{renderCatalogLinks(entry)}</div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+async function ManifestProjectList() {
   const snapshot = await getWorkspaceStatsSnapshot();
   const tracked = snapshot.manifests.filter((manifest) => manifest.stats?.entries?.length);
 
@@ -260,8 +307,8 @@ export default function StatsPage() {
       <section className="hero">
         <div>
           <p className="eyebrow">workspace snapshot</p>
-          <h1>Tracked package stats</h1>
-          <p>Latest budget and completion data from manifest-linked sidecar files in the current Worker snapshot.</p>
+          <h1>Catalog and package stats</h1>
+          <p>Published catalog metadata and manifest-linked budget/completion sidecars distributed from the current Worker snapshot.</p>
         </div>
         <Suspense fallback={<SummarySkeleton />}>
           <SummaryPanels />
@@ -272,9 +319,26 @@ export default function StatsPage() {
           <TrafficWidgets />
         </Suspense>
       </section>
-      <Suspense fallback={<ProjectSkeleton count={4} />}>
-        <ProjectList />
-      </Suspense>
+      <section className="catalog-section">
+        <div className="section-head">
+          <p className="eyebrow">published catalog</p>
+          <h2>Public product surface</h2>
+          <p>Entries below come from the public ragbaz catalog that drives completion, prospects, and Worker GraphQL responses.</p>
+        </div>
+        <Suspense fallback={<ProjectSkeleton count={3} />}>
+          <CatalogList />
+        </Suspense>
+      </section>
+      <section className="manifests-section">
+        <div className="section-head">
+          <p className="eyebrow">manifest sidecars</p>
+          <h2>Tracked package stats</h2>
+          <p>These rows come from manifest-linked stats sidecars discovered under <code>/data/src</code>.</p>
+        </div>
+        <Suspense fallback={<ProjectSkeleton count={4} />}>
+          <ManifestProjectList />
+        </Suspense>
+      </section>
     </main>
   );
 }
