@@ -14,9 +14,13 @@ export function generateStaticParams() {
 export async function GET(request, { params }) {
   const { path: segments } = await params;
   if (Array.isArray(segments) && segments.length === 1 && segments[0] === "tractatus") {
-    const redirectUrl = new URL(request.url);
-    redirectUrl.pathname = "/konsonans-ai-governance";
-    return Response.redirect(redirectUrl.toString(), 308);
+    return new Response("Redirecting to /konsonans-ai-governance", {
+      status: 308,
+      headers: {
+        "content-type": "text/plain; charset=utf-8",
+        location: "/konsonans-ai-governance",
+      },
+    });
   }
   const page = resolvePage(segments ?? []);
   if (page === null) {

@@ -14,6 +14,13 @@ async function syncWorkspaceSnapshot(env) {
   });
 }
 
+function canonicalLegacyPathRedirect(request) {
+  const url = new URL(request.url);
+  if (url.pathname !== "/tractatus" && url.pathname !== "/tractatus/") return null;
+  url.pathname = "/konsonans-ai-governance";
+  return Response.redirect(url.toString(), 308);
+}
+
 function canonicalDocsPath(pathname) {
   if (pathname === "/doc/docs" || pathname === "/doc/docs/") return "/doc/";
   if (!pathname.startsWith("/doc/docs/")) return null;
@@ -48,6 +55,8 @@ function canonicalDocHostRedirect(request) {
 export default {
   async fetch(request, env, ctx) {
     if (env?.DB) ctx.waitUntil(recordSiteHit(request, env.DB));
+    const legacyRedirect = canonicalLegacyPathRedirect(request);
+    if (legacyRedirect) return legacyRedirect;
     const redirect = canonicalDocHostRedirect(request);
     if (redirect) return redirect;
     return handler.fetch(request, env, ctx);
