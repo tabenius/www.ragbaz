@@ -296,6 +296,13 @@
     .prod .desc { color: var(--fg-3, #d4c19a); font-size: .86rem; margin: .3rem 0 .7rem; }
 
     .prod .comp-head { font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--fg-5, #737373); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
+    .prod details.comps-details { margin-bottom: .7rem; }
+    .prod details.comps-details summary { font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--fg-5, #737373); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; list-style: none; }
+    .prod details.comps-details summary::before { content: "▸ "; color: var(--orange-1, #f3c46c); }
+    .prod details.comps-details[open] summary::before { content: "▾ "; }
+    .prod details.comps-details summary::-webkit-details-marker { display: none; }
+    .prod details.comps-details .comps { margin-top: .5rem; margin-bottom: 0; }
+    .prod details.comps-details summary .arch { text-transform: none; letter-spacing: 0; margin-left: .6rem; }
     .prod .comps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .5rem; margin-bottom: .7rem; }
     .prod .comp {
       border-left: 2px solid var(--border-2, #2a2a2a); padding-left: .6rem;
@@ -714,9 +721,9 @@
         </div>
 
         <article class="prod flagship" id="p-governance">
-          <div class="hd"><h3>ai governance</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:61%"></span></span>61% complete</span><span class="st mono">building</span></div>
-          <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="/konsonans-ai-governance">formal specification →</a></div>
-          <div class="comp-head mono">components</div>
+          <div class="hd"><h3>ai governance</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:61%"></span></span>61% complete</span><span class="st mono">building</span></div>
+          <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="/konsonans-ai-governance">formal specification →</a> <a class="link" href="/prospects/ai-governance">prospectus →</a></div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/ai-governance">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>mcp ingress</h4><p>model-context-protocol gateway. every agent tool-call is intercepted and routed through the policy gate before it reaches the upstream tool. identity + rbac enforced at entry.</p></div>
             <div class="comp"><h4>policy gate</h4><p>glither.governance dialect (risk-tiered, fold first-match) compiled to a wasm component. synchronous allow / hold / deny, fail-closed on missing evidence.</p></div>
@@ -724,100 +731,100 @@
             <div class="comp"><h4>human oversight</h4><p>hold-for-approval lifecycle with sla-timeout-to-deny. notifications to discord and email, rbac-gated approvers. art 14 human oversight.</p></div>
             <div class="comp"><h4>manifest signer</h4><p>ed25519 replica-manifest signing, software or pkcs#11 / hsm backend, anchoring cross-node divergence detection and conformity evidence.</p></div>
             <div class="comp"><h4>identity + rbac</h4><p>oidc / saml authentication, role→permission authorization (agent / reviewer / approver / admin) enforced at ingress and on approvals.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">agent</span><span class="f-arr">→</span><span class="f-node">mcp-ingress</span><span class="f-arr">→</span><span class="f-node">policy-gate</span><span class="f-arr">→</span><span class="f-node">audit-chain</span><span class="f-arr">→</span><span class="f-node">oversight</span><span class="f-arr">→</span><span class="f-node">replica-signer</span></div>
         </article>
 
         <article class="prod flagship" id="p-matches">
-          <div class="hd"><h3>matches</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:78%"></span></span>78% complete</span><span class="st mono">flagship</span></div>
-          <div class="desc">autonomous cinematic battle runtime — grounded locomotion, tactical ai, procedural choreography, per-bone keyframe timeline in an in-browser studio.</div>
-          <div class="comp-head mono">components</div>
+          <div class="hd"><h3>matches</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:78%"></span></span>78% complete</span><span class="st mono">live</span></div>
+          <div class="desc">autonomous cinematic battle runtime — grounded locomotion, tactical ai, procedural choreography, per-bone keyframe timeline in an in-browser studio. <a class="link" href="/prospects/matches">prospectus →</a></div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/matches">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>viewport</h4><p>real-time 3d scene renderer. webgl2 viewport with orbit controls, selection, transform gizmos. multi-camera layout (perspective, top, front).</p></div>
             <div class="comp"><h4>timeline</h4><p>per-bone keyframe editor. dope sheet and curve editor. blend modes, easing presets, frame-stepping. deterministic replay.</p></div>
             <div class="comp"><h4>tactical ai</h4><p>goal-oriented action planner. perception system (sight, sound, damage). stance state machine, formation logic, cover evaluation.</p></div>
             <div class="comp"><h4>dsl editor</h4><p>embedded domain-specific language for choreography. syntax-highlighted editor with live preview. seed-based determinism for reproducible playback.</p></div>
             <div class="comp"><h4>procedural engine</h4><p>locomotion blending, ragdoll transitions, procedural wind/react. constraint solver for foot-planting and hand-placement.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">dsl-editor</span><span class="f-arr">→</span><span class="f-node">tactical-ai</span><span class="f-arr">→</span><span class="f-node">procedural-engine</span><span class="f-arr">→</span><span class="f-node">viewport</span><span class="f-arr">←</span><span class="f-node">timeline</span></div>
         </article>
 
         <article class="prod" id="p-articulate">
-          <div class="hd"><h3>articulate</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:86%"></span></span>86% complete</span><span class="st mono">live</span></div>
-          <div class="desc">WordPress powers 43% of the web — and is the single most targeted CMS. Every plugin, theme, and zero-day is an attack surface you didn't write. Articulate wraps your WordPress in a Rust gateway with filesystem immutability, WASM image hardening, GraphQL depth/pagination guardrails, and a private origin invisible from the internet — then adds a Next.js storefront, multi-tenant provisioning, and GraphQL edge federation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/pricing">pricing →</a></div>
-          <div class="comp-head mono">components</div>
+          <div class="hd"><h3>articulate</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:86%"></span></span>86% complete</span><span class="st mono">live</span></div>
+          <div class="desc">WordPress powers 43% of the web — and is the single most targeted CMS. Every plugin, theme, and zero-day is an attack surface you didn't write. Articulate wraps your WordPress in a Rust gateway with filesystem immutability, WASM image hardening, GraphQL depth/pagination guardrails, and a private origin invisible from the internet — then adds a Next.js storefront, multi-tenant provisioning, and GraphQL edge federation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/pricing">pricing →</a> <a class="link" href="/prospects/articulate">prospectus →</a></div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/articulate/overview">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>gatekeeper</h4><p>secure ingress proxy. authenticates and routes requests to tenant wordpress instances. handles custom domain ssl, rate limiting, waf rules.</p></div>
             <div class="comp"><h4>storefront</h4><p>next.js 16 headless frontend. app router, tailwind v4, stripe payments, oauth (google/facebook/microsoft/apple). courses, shop, events, digital downloads.</p></div>
             <div class="comp"><h4>provisioner</h4><p>multi-tenant lifecycle manager. creates wordpress instances via docker-compose, manages dns (cloudflare), mail users, ssl certs. stripe webhook integration for billing.</p></div>
             <div class="comp"><h4>graphql edge</h4><p>federated graphql gateway (strawberry + fastapi). aggregates wp graphql, storefront data, and tenant management into a single endpoint. mcp server for ai-driven operations.</p></div>
             <div class="comp"><h4>mailstack</h4><p>tenant email infrastructure. dovecot imap, postfix smtp, dkim signing, alias management, mailbox provisioning per tenant.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">provisioner</span><span class="f-arr">→</span><span class="f-node">gatekeeper</span><span class="f-arr">→</span><span class="f-node">wordpress</span><span class="f-arr">↔</span><span class="f-node">graphql-edge</span><span class="f-arr">↔</span><span class="f-node">storefront</span><span class="f-arr">→</span><span class="f-node">stripe</span></div>
         </article>
 
         <article class="prod" id="p-mailroute">
-          <div class="hd"><h3>mailroute</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:74%"></span></span>74% complete</span><span class="st mono">beta</span></div>
-          <div class="desc">Hostile mail bypasses every perimeter filter eventually — phishing, malware, data exfiltration, and spoofing land in inboxes before signatures catch up. MailRoute sits between the MTA and the mailbox, inspecting every message against hot-reloadable rules with quarantine buckets, audited rule edits (propose → apply → revert), and webhook relays for downstream automation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/school/cellular">cellular school →</a></div>
-          <div class="comp-head mono">components</div>
+          <div class="hd"><h3>mailroute</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:74%"></span></span>74% complete</span><span class="st mono">beta</span></div>
+          <div class="desc">Hostile mail bypasses every perimeter filter eventually — phishing, malware, data exfiltration, and spoofing land in inboxes before signatures catch up. MailRoute sits between the MTA and the mailbox, inspecting every message against hot-reloadable rules with quarantine buckets, audited rule edits (propose → apply → revert), and webhook relays for downstream automation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/school/cellular">cellular school →</a> <a class="link" href="/prospects/mailroute">prospectus →</a></div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/mailroute">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>rule engine</h4><p>pattern-match pipeline. header, body, attachment analysis. allow/block/reject actions, scoring, tag injection. hot-reloadable rule sets.</p></div>
             <div class="comp"><h4>bucket store</h4><p>quarantine and archive buckets. sqlite-backed with litestream replication. time-based retention policies, manual release or delete.</p></div>
             <div class="comp"><h4>audit</h4><p>propose-apply-revert cycle for rule changes. full diff history per rule. operator approvals, rollback on failure. immutable event log.</p></div>
             <div class="comp"><h4>webhook relay</h4><p>event-driven delivery for matched mail. configurable endpoints, retry with backoff, delivery receipts, secret signing.</p></div>
             <div class="comp"><h4>imap proxy</h4><p>transparent smtp/imap intercept. sits between mta and mailbox. inspects in transit, no client config changes required.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">smtp</span><span class="f-arr">→</span><span class="f-node">imap-proxy</span><span class="f-arr">→</span><span class="f-node">rule-engine</span><span class="f-arr">→</span><span class="f-node">bucket-store</span><span class="f-arr">|</span><span class="f-node">webhook-relay</span></div>
         </article>
 
         <article class="prod" id="p-detcordon">
-          <div class="hd"><h3>detcordon</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:42%"></span></span>42% complete</span><span class="st mono">research</span></div>
+          <div class="hd"><h3>detcordon</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:42%"></span></span>42% complete</span><span class="st mono">research</span></div>
           <div class="desc">Unknown payloads are the most dangerous — you cannot safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators and evidence bundles without exposing your operator surface. <a class="link" href="/prospects/detcordon">open prospect →</a>  <a class="link" href="/school/forensics">forensics school →</a>  <a class="link" href="/doc/">docs →</a></div>
-          <div class="comp-head mono">components</div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/detcordon">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>sandbox</h4><p>hardened browser or headless runtime in a disposable container. no network egress except to capture sinks. memory and filesystem snapshots.</p></div>
             <div class="comp"><h4>recorder</h4><p>captures all i/o: http requests, dom mutations, canvas reads, clipboard access, storage writes. structured event stream, not just video.</p></div>
             <div class="comp"><h4>analyzer</h4><p>static and dynamic analysis. payload deobfuscation, call graph extraction, data-flow tracking. ioc and signature generation.</p></div>
             <div class="comp"><h4>feeder</h4><p>url or attachment ingestion queue. pulls from rss feeds, mailroute buckets, api submissions. dedup and priority scheduling.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">feeder</span><span class="f-arr">→</span><span class="f-node">sandbox</span><span class="f-arr">→</span><span class="f-node">recorder</span><span class="f-arr">→</span><span class="f-node">analyzer</span></div>
         </article>
 
         <article class="prod" id="p-esp32tolk">
-          <div class="hd"><h3>esp32tolk</h3><span class="st mono">alpha</span></div>
+          <div class="hd"><h3>esp32tolk</h3><span class="st mono">building</span></div>
           <div class="desc">esp32 speech-translator firmware — i2s mic or bluetooth capture, on-device transcription, live translation.</div>
-          <div class="comp-head mono">components</div>
+          <details class="comps-details"><summary>components</summary>
           <div class="comps">
             <div class="comp"><h4>capture</h4><p>i2s digital microphone input or bluetooth a2dp source. 16khz/16bit mono pipeline, configurable gain and noise gate. ringbuffer with dma.</p></div>
             <div class="comp"><h4>stt engine</h4><p>on-device speech-to-text via esp-sr or whisper.cpp (q4 quantized). streaming inference, voice-activity detection, keyword spotting.</p></div>
             <div class="comp"><h4>translate</h4><p>local nllb or tiny-llm translation model. phrase cache for low-latency repeat translations. configurable source/target language pair.</p></div>
             <div class="comp"><h4>output</h4><p>serial/uart text out, i2s tts playback, or ble gatt characteristic. lcd display for standalone mode. wifi or bt transport.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">mic</span><span class="f-arr">→</span><span class="f-node">capture</span><span class="f-arr">→</span><span class="f-node">stt-engine</span><span class="f-arr">→</span><span class="f-node">translate</span><span class="f-arr">→</span><span class="f-node">output</span></div>
         </article>
 
         <article class="prod" id="p-shipwrecks">
           <div class="hd"><h3>ShipWrecks</h3><span class="st mono">building</span></div>
           <div class="desc">interactive swedish shipwreck explorer — charted wrecks, dive records, and documented provenance over the swedish coast.</div>
-          <div class="comp-head mono">components</div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/shipwrecks-se">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>map</h4><p>leaflet-based interactive map of the swedish coast. clustered wreck markers with depth contours, exclusion zones, and maritime navigation layers.</p></div>
             <div class="comp"><h4>archive</h4><p>curated registry with per-wreck provenance. coordinates, depth, cargo, sinking date, discovery story. photos, sonar scans, and diver reports.</p></div>
             <div class="comp"><h4>backend</h4><p>node/express api server with postgresql. geo queries, full-text search, image serving. stripe subscription billing, user auth, admin interface for curators.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">map</span><span class="f-arr">↔</span><span class="f-node">backend</span><span class="f-arr">↔</span><span class="f-node">archive</span></div>
         </article>
 
         <article class="prod" id="p-baz">
-          <div class="hd"><h3>baz trade signal stack</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:47%"></span></span>47% complete</span><span class="st mono">active embryo</span></div>
-          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, and a bug in the signal chain appears first as a loss. The BAZ Trade Signal Stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="/doc/experiments/baz-architecture">platform architecture →</a></div>
-          <div class="comp-head mono">components</div>
+          <div class="hd"><h3>baz trade signal stack</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:47%"></span></span>47% complete</span><span class="st mono">active embryo</span></div>
+          <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, and a bug in the signal chain appears first as a loss. The BAZ Trade Signal Stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="/doc/experiments/baz-architecture">platform architecture →</a> <a class="link" href="/prospects/baz-signal-stack">prospectus →</a></div>
+          <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/experiments/baz-architecture">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>baz.hft</h4><p>glither.hft compiler dialect and no_std wasm host embryo. compiles trading strategies via baz-hft-roux. signed ed25519 monetary audit receipts, deterministic market-policy evaluation.</p></div>
             <div class="comp"><h4>baz.palantir</h4><p>rust/axum orchestration server. rule lifecycle management, sma/ema/rsi/bollinger enrichment via bounded ring buffers, websocket streaming, sqlite backlog, bearer auth.</p></div>
             <div class="comp"><h4>baz.luna</h4><p>vite 6 browser trading frontend. codemirror 6 glither.hft notebook editor, lightweight-charts candlestick + rsi view, signal markers, backlog viewer. ~2.7 kB initial js.</p></div>
             <div class="comp"><h4>baz.cx</h4><p>python fastapi exchange connector. 5 venue adapters, websocket stream of tick data and enriched candles to palantir. live execution gate open pending durable receipts.</p></div>
-          </div>
+          </div></details>
           <div class="flow mono"><span class="f-node">baz.cx</span><span class="f-arr">→</span><span class="f-node">baz.palantir</span><span class="f-arr">→</span><span class="f-node">baz.hft</span><span class="f-arr">→</span><span class="f-node">audit-receipts</span><span class="f-arr">|</span><span class="f-node">baz.luna</span></div>
         </article>
 
@@ -834,6 +841,8 @@
         <a href="/doc/">docs</a>
         <a href="/konsonans-ai-governance">konsonans ai governance</a>
         <a href="/completion">completion</a>
+        <a href="/glossary">glossary</a>
+        <a href="/stats">stats</a>
         <a href="/assets/ragbaz-prospectus.pdf?v=20260614aa" download>prospectus · pdf</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>

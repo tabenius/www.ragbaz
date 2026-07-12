@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ragbaz — glossary</title>
+  <meta name="description" content="Plain-language explanations of the technical terms used across the ragbaz products — for readers who are interested in the products but don't live in the jargon." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ragbaz — glossary" />
+  <meta property="og:description" content="The technical terms used across ragbaz products, explained in plain language." />
+  <meta property="og:url" content="https://ragbaz.cc/glossary" />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="icon" href="./assets/logo-mark.svg" />
+  <link rel="stylesheet" href="./colors_and_type.css?v=2" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, 0.9rem + 0.2vw, 17px);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; max-width: 1120px; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
+    .bar .wordmark img { height: 39px; width: auto; display: block; }
+    footer .wordmark img { height: 22px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+    .bar nav a.active { color: var(--orange-1, #f3c46c); }
+    .hm-btn { display: none; background: none; border: 1px solid var(--border-2, #2a2a2a); color: var(--fg-2); font-size: 1.2rem; cursor: pointer; padding: 4px 10px; border-radius: 4px; margin-left: auto; }
+    .hm-overlay { position: fixed; top: 0; right: 0; width: min(86vw, 320px); height: 100%; background: var(--bg-1, #0f0f10); border-left: 1px solid var(--border-2, #2a2a2a); z-index: 20; padding: 1.2rem; display: flex; flex-direction: column; gap: .6rem; transform: translateX(100%); transition: transform .2s ease; overflow-y: auto; }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-overlay a { font-family: "Intel One Mono", monospace; font-size: .88rem; padding: .2rem 0; }
+    .hm-close { align-self: flex-end; background: none; border: none; color: var(--fg-2); font-size: 1.4rem; cursor: pointer; padding: 0 0 .4rem; }
+    .hm-scrim { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 19; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
+    @media (max-width: 720px) {
+      .bar nav { display: none; }
+      .hm-btn { display: flex; }
+    }
+
+    .page-head { padding: clamp(2.5rem, 6vw, 4rem) 0 1rem; }
+    .page-head h1 { font-family: "Intel One Mono", monospace; font-size: 1.6rem; color: var(--fg-1, #f6d7a7); margin: 0; }
+    .page-head p { max-width: 64ch; margin: .6rem 0 0; color: var(--fg-3, #d4c19a); }
+
+    .g-section { padding: 1.2rem 0 .4rem; }
+    .g-kicker { font-family: "Intel One Mono", monospace; font-size: .72rem; color: var(--orange-1, #f3c46c); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .6rem; }
+    dl { margin: 0 0 1rem; display: grid; gap: .55rem; }
+    .g-row {
+      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px; padding: .8rem 1rem;
+    }
+    .g-row:hover { border-color: var(--border-warm, #3a2a18); }
+    dt { font-family: "Intel One Mono", monospace; font-size: .88rem; color: var(--orange-1, #f3c46c); font-weight: 600; }
+    dd { margin: .25rem 0 0; color: var(--fg-3, #d4c19a); font-size: .88rem; }
+    dd .ref { font-size: .78rem; color: var(--fg-5, #737373); }
+
+    footer { margin-top: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--border-2, #2a2a2a); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; max-width: 1120px; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
+    @media (max-width: 720px) { footer .wrap { align-items: flex-start; } footer .meta { margin-left: 0; } }
+  </style>
+  <script src="./assets/local-mode.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="wordmark" href="/"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <nav>
+        <a href="/">home</a>
+        <a href="/pricing">pricing</a>
+        <a href="/#products">products</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
+        <a href="/glossary" class="active">glossary</a>
+      </nav>
+      <button class="hm-btn mono" onclick="toggleHM()">☰</button>
+    </div>
+  </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay" id="hm-overlay">
+    <button class="hm-close" onclick="closeHM()">✕</button>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <a href="/#products" onclick="closeHM()">products</a>
+    <a href="/school" onclick="closeHM()">school</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
+    <a href="/glossary" class="active" onclick="closeHM()">glossary</a>
+    <a href="/completion" onclick="closeHM()">completion</a>
+  </div>
+
+  <main>
+    <section class="page-head">
+      <div class="wrap">
+        <h1 class="mono">// glossary</h1>
+        <p>The technical terms used across the ragbaz products, explained in plain language — for readers who are interested in what the products do without living in the jargon. Each product page links back here.</p>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <div class="wrap">
+        <div class="g-kicker">how the products run</div>
+        <dl>
+          <div class="g-row"><dt>headless WordPress</dt><dd>WordPress used only as a content database behind the scenes. Visitors never touch WordPress itself — they see a separate, faster, hardened site that reads from it. <span class="ref">(articulate)</span></dd></div>
+          <div class="g-row"><dt>edge / edge worker</dt><dd>Code that runs in data centers physically close to each visitor instead of on one central server, so pages respond quickly everywhere in the world.</dd></div>
+          <div class="g-row"><dt>WASM (WebAssembly)</dt><dd>A portable format for running fast code inside a protective sandbox — the code can compute, but can't reach anything it wasn't given.</dd></div>
+          <div class="g-row"><dt>sandbox</dt><dd>An isolated, disposable environment where risky code or files can run without touching real systems. When the analysis is done, the sandbox is destroyed. <span class="ref">(detcordon)</span></dd></div>
+          <div class="g-row"><dt>GraphQL</dt><dd>A way for a site or program to ask a service for exactly the data it needs in one request — nothing more, nothing missing.</dd></div>
+          <div class="g-row"><dt>multi-tenant</dt><dd>One installation securely serving many customers at once, with each customer's data and configuration isolated from the others. <span class="ref">(articulate)</span></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <div class="wrap">
+        <div class="g-kicker">ai governance — konsonans</div>
+        <dl>
+          <div class="g-row"><dt>AI agent</dt><dd>Software that uses an AI model to <em>act</em> — call tools, write files, send messages — rather than just answer questions. That autonomy is what makes governance necessary.</dd></div>
+          <div class="g-row"><dt>MCP (Model Context Protocol)</dt><dd>The standard "plug" through which AI agents connect to tools and data. Governing the plug means every agent action can be checked on its way through.</dd></div>
+          <div class="g-row"><dt>policy gate</dt><dd>A checkpoint that decides <em>allow</em>, <em>hold for a human</em>, or <em>deny</em> for each agent action before it happens — and denies by default when evidence is missing.</dd></div>
+          <div class="g-row"><dt>human-in-the-loop (HITL)</dt><dd>Risky actions pause until a person reviews and approves them. If nobody decides within the deadline, the action is denied automatically.</dd></div>
+          <div class="g-row"><dt>audit trail / hash chain</dt><dd>A permanent record of events where each entry carries a cryptographic fingerprint of the one before it — so deleting or editing history becomes detectable.</dd></div>
+          <div class="g-row"><dt>SHA-256</dt><dd>A fingerprint function for data: any change to the data, however small, produces a completely different fingerprint.</dd></div>
+          <div class="g-row"><dt>Ed25519</dt><dd>A digital-signature scheme. A signature proves who produced a record and that it hasn't been altered since.</dd></div>
+          <div class="g-row"><dt>EU AI Act</dt><dd>The European Union's regulation for AI systems (2024/1689). It requires things like event logging, human oversight, and transparency — the platform maps its controls to specific articles.</dd></div>
+          <div class="g-row"><dt>SLA (service-level agreement)</dt><dd>A deadline promise. Here: how long a held action may wait for human review before it is automatically denied.</dd></div>
+          <div class="g-row"><dt>RBAC (role-based access control)</dt><dd>Permissions organized by role — who may submit, review, approve, or administer — instead of per person.</dd></div>
+          <div class="g-row"><dt>OIDC (OpenID Connect)</dt><dd>The standard behind "sign in with your company account": a trusted identity provider vouches for who the user is.</dd></div>
+          <div class="g-row"><dt>HSM / PKCS#11</dt><dd>A hardware security module is a tamper-resistant device that holds signing keys so they can be used but never copied; PKCS#11 is the standard interface programs use to talk to it.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <div class="wrap">
+        <div class="g-kicker">mail security — mailroute</div>
+        <dl>
+          <div class="g-row"><dt>MTA (mail transfer agent)</dt><dd>The server software that moves email between systems — the postal service of the internet. MailRoute inspects mail between the MTA and the mailbox.</dd></div>
+          <div class="g-row"><dt>quarantine</dt><dd>A holding area where suspicious mail is parked instead of being delivered, so a person or rule can decide its fate.</dd></div>
+          <div class="g-row"><dt>SPF / DKIM / DMARC</dt><dd>Three complementary checks, published in DNS, that let a receiving mail server verify a message really comes from the domain it claims — and what to do when it doesn't.</dd></div>
+          <div class="g-row"><dt>phishing / spoofing</dt><dd>Mail crafted to look legitimate in order to steal credentials or deliver malware (phishing), often by forging the sender (spoofing).</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <div class="wrap">
+        <div class="g-kicker">forensics &amp; school</div>
+        <dl>
+          <div class="g-row"><dt>DFIR</dt><dd>Digital forensics and incident response — finding out what happened on a device or network, and containing it.</dd></div>
+          <div class="g-row"><dt>rootkit / RAT / stalkerware</dt><dd>Families of hidden malicious software: rootkits conceal themselves inside the system, RATs give an attacker remote control, stalkerware covertly monitors the device's owner.</dd></div>
+          <div class="g-row"><dt>ADB (Android Debug Bridge)</dt><dd>Android's built-in diagnostic interface. The forensics course uses it read-only: inspecting a phone without changing the evidence on it.</dd></div>
+          <div class="g-row"><dt>SIM / eSIM / eUICC</dt><dd>The chip that proves a phone's subscriber identity to the network. An eSIM is that chip embedded in the phone (the eUICC), with profiles delivered remotely instead of on a plastic card.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <div class="wrap">
+        <div class="g-kicker">trading — baz signal stack</div>
+        <dl>
+          <div class="g-row"><dt>HFT (high-frequency trading)</dt><dd>Trading where strategies observe the market and decide in fractions of a second, so the software's speed and correctness matter as much as the strategy.</dd></div>
+          <div class="g-row"><dt>candlestick chart</dt><dd>A price chart where each bar ("candle") shows the opening, highest, lowest, and closing price of one time interval.</dd></div>
+          <div class="g-row"><dt>SMA / EMA / RSI / Bollinger bands</dt><dd>Standard indicators computed from price history — moving averages, momentum, and volatility bands — used as inputs to trading signals.</dd></div>
+          <div class="g-row"><dt>WebSocket</dt><dd>A connection that stays open between browser and server so live updates (prices, signals) stream in without reloading the page.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <div class="wrap">
+        <div class="g-kicker">terms used on this site</div>
+        <dl>
+          <div class="g-row"><dt>completion</dt><dd>An estimate of how much of a product's finished scope exists today, shown as a percentage with the date of its last evaluation.</dd></div>
+          <div class="g-row"><dt>prospectus</dt><dd>The per-product page describing scope, maturity, and value — what you'd hand a prospective customer or partner.</dd></div>
+          <div class="g-row"><dt>current / finished value</dt><dd>Internal studio estimates in USD of a product's present value and its value at finished scope. They are planning signals, not booked revenue.</dd></div>
+          <div class="g-row"><dt>flagship</dt><dd>The products the studio currently leads with.</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark"><img src="./assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <div class="links">
+        <a href="/">home</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
+        <a href="/pricing">pricing</a>
+        <a href="/completion">completion</a>
+        <a href="/glossary">glossary</a>
+      </div>
+      <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
+    </div>
+  </footer>
+  <script>
+  function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
+  function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
+  </script>
+</body>
+</html>

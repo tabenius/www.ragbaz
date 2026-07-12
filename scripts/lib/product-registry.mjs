@@ -1,9 +1,4 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const CANONICAL_PATH = path.resolve(repoRoot, "..", "..", "products.json");
+import { publicProducts, readSiteCatalog } from "../../../../metadata/src/site-catalog.mjs";
 
 const TAG_CSS_CLASS = {
   "live": "tag-live",
@@ -15,19 +10,40 @@ const TAG_CSS_CLASS = {
 };
 
 export function readProductRegistry() {
-  const raw = readFileSync(CANONICAL_PATH, "utf8");
-  return JSON.parse(raw);
+  const catalog = readSiteCatalog();
+  return {
+    ...catalog,
+    products: publicProducts(catalog),
+  };
 }
 
 export function generateCompletionHtml(registry, updatedDate) {
-  const rows = registry.products.map((p) => {
-    const tagClass = TAG_CSS_CLASS[p.tag] || "tag-building";
+  const navLinks = renderProductNavLinks(registry.products);
+  const rows = registry.products.map((product) => {
+    const tagClass = TAG_CSS_CLASS[product.tag] || "tag-building";
+    const metrics = [
+      product.completion !== null ? `<span class="metric mono">${escHtml(`${product.completion}% complete`)}</span>` : "",
+      product.currentValueUsd !== null ? `<span class="metric mono">${escHtml(formatUsdCompact(product.currentValueUsd))} current</span>` : "",
+      product.finishedValueUsd !== null ? `<span class="metric mono">${escHtml(formatUsdCompact(product.finishedValueUsd))} finished</span>` : "",
+    ].filter(Boolean).join("");
+    const links = [
+      product.links?.docs ? `<a href="${escAttr(product.links.docs)}">docs</a>` : "",
+      product.links?.prospect ? `<a href="${escAttr(product.links.prospect)}">prospect</a>` : "",
+      product.links?.pricing ? `<a href="${escAttr(product.links.pricing)}">pricing</a>` : "",
+    ].filter(Boolean).join('<span class="sep">·</span>');
+
     return `
           <div class="product-row">
-            <span class="product-name">${escHtml(p.name)}</span>
-            <span class="product-tag ${tagClass}">${escHtml(p.tagLabel)}</span>
-            <span class="product-value">${escHtml(p.value)}</span>
-            <span class="product-price">${p.pricing === "free" ? "<strong>free</strong>" : p.pricing === "—" ? "<strong>—</strong>" : `<strong>${escHtml(p.pricing)}</strong>`}</span>
+            <div class="product-head">
+              <span class="product-name">${escHtml(product.name)}</span>
+              <span class="product-tag ${tagClass}">${escHtml(product.tagLabel)}</span>
+              ${metrics ? `<div class="product-metrics">${metrics}</div>` : ""}
+            </div>
+            <span class="product-value">${escHtml(product.value)}</span>
+            <div class="product-foot">
+              <span class="product-price">${renderPricing(product.pricing)}</span>
+              ${links ? `<span class="product-links mono">${links}</span>` : ""}
+            </div>
           </div>`;
   }).join("\n");
 
@@ -37,10 +53,10 @@ export function generateCompletionHtml(registry, updatedDate) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ragbaz — product value</title>
-  <meta name="description" content="ragbaz product value summary — all studio products with value propositions and pricing." />
+  <meta name="description" content="ragbaz product value summary — published studio products with value propositions, pricing, and completion signals." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="ragbaz — product value" />
-  <meta property="og:description" content="A summary of every product ragbaz builds and the value it delivers." />
+  <meta property="og:description" content="A summary of the published product catalog ragbaz ships and the value each line is aiming at." />
   <meta property="og:url" content="https://ragbaz.cc/completion" />
   <meta name="theme-color" content="#0a0908" />
   <link rel="icon" href="./assets/logo-mark.svg" />
@@ -62,11 +78,10 @@ export function generateCompletionHtml(registry, updatedDate) {
     a:hover { color: var(--orange-3, #ff9900); }
 
     .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
-    .rule { border: 0; border-top: 1px solid var(--border-2, #2a2a2a); margin: 0; }
 
     header.bar {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      background: rgba(16, 16, 16, 0.82); backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border-2, #2a2a2a);
     }
     .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
@@ -97,43 +112,53 @@ export function generateCompletionHtml(registry, updatedDate) {
     footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
     footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
     footer .meta { margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .74rem; color: var(--fg-5, #737373); }
-    @media (max-width: 720px) { footer .wrap { align-items: flex-start; } footer .meta { margin-left: 0; } }
+    @media (max-width: 720px) { footer .wrap { align-items: flex-start; } footer .meta { margin-left: 0; width: 100%; } }
 
     .page-head { padding: clamp(2.5rem, 6vw, 4rem) 0 1.5rem; }
     .page-head h1 { font-family: "Intel One Mono", monospace; font-size: 1.6rem; color: var(--fg-1, #f6d7a7); margin: 0; }
-    .page-head p { max-width: 60ch; margin: .6rem 0 0; color: var(--fg-3, #d4c19a); }
+    .page-head p { max-width: 64ch; margin: .6rem 0 0; color: var(--fg-3, #d4c19a); }
 
-    .product-grid { display: flex; flex-direction: column; gap: .6rem; padding-bottom: clamp(2rem, 5vw, 3rem); }
+    .product-grid { display: grid; gap: .8rem; padding-bottom: clamp(2rem, 5vw, 3rem); }
     .product-row {
-      display: flex; flex-wrap: wrap; gap: 1rem;
-      background: var(--bg-2, #121212); border: 1px solid var(--border-2, #2a2a2a);
-      border-radius: 8px; padding: 1rem 1.2rem;
-      align-items: baseline;
+      display: grid;
+      gap: .8rem;
+      background: var(--bg-2, #121212);
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
     }
     .product-row:hover { border-color: var(--border-warm, #3a2a18); }
-    .product-name { font-family: "Intel One Mono", monospace; font-weight: 700; color: var(--orange-1, #f3c46c); min-width: 14ch; }
+    .product-head { display: flex; flex-wrap: wrap; gap: .55rem .7rem; align-items: center; }
+    .product-name { font-family: "Intel One Mono", monospace; font-weight: 700; color: var(--orange-1, #f3c46c); }
     .product-tag { font-family: "Intel One Mono", monospace; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; padding: 2px 8px; border-radius: 4px; }
     .tag-live { background: #16241a; color: var(--green-1, #b8bb26); border: 1px solid #4a6a3a; }
     .tag-beta { background: #1d2416; color: var(--yellow-1, #fabd2f); border: 1px solid #5a5a2a; }
     .tag-building { background: #241816; color: var(--orange-3, #ff9900); border: 1px solid #5a3a1a; }
     .tag-research { background: #16202a; color: var(--blue-1, #7ab8ff); border: 1px solid #2a4a6a; }
     .tag-embryo { background: #1a1624; color: var(--purple-1, #d3869b); border: 1px solid #3a2a5a; }
-    .product-value { flex: 1; min-width: 24ch; color: var(--fg-2, #d8c29d); font-size: .9rem; overflow-wrap: anywhere; }
-    .product-price { font-family: "Intel One Mono", monospace; color: var(--fg-4, #9f9f9f); font-size: .82rem; white-space: nowrap; margin-left: auto; }
+    .product-metrics { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .metric {
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 999px;
+      padding: .12rem .45rem;
+      font-size: .72rem;
+      color: var(--fg-4, #9f9f9f);
+      background: var(--bg-3, #151515);
+    }
+    .product-value { color: var(--fg-2, #d8c29d); font-size: .92rem; overflow-wrap: anywhere; }
+    .product-foot { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; justify-content: space-between; }
+    .product-price { font-family: "Intel One Mono", monospace; color: var(--fg-4, #9f9f9f); font-size: .82rem; white-space: nowrap; }
     .product-price strong { color: var(--orange-3, #ff9900); }
+    .product-links { display: flex; flex-wrap: wrap; gap: .45rem; color: var(--fg-4, #9f9f9f); font-size: .78rem; }
+    .product-links a { color: var(--orange-1, #f3c46c); }
+    .product-links .sep { color: var(--fg-5, #737373); }
 
     @media (max-width: 760px) {
-      .product-row { flex-direction: column; gap: .4rem; }
-      .product-name { min-width: auto; }
-      .product-value { min-width: auto; }
-      .product-price { margin-left: 0; }
+      .product-foot { align-items: flex-start; }
     }
-    @media (max-width: 720px) { footer .wrap { align-items: flex-start; } footer .meta { margin-left: 0; width: 100%; } }
     @media (max-width: 540px) {
       .page-head h1 { font-size: 1.35rem; }
       .product-row { padding: .95rem 1rem; }
-      .product-tag,
-      .product-price { align-self: flex-start; }
     }
   </style>
 </head>
@@ -164,22 +189,15 @@ export function generateCompletionHtml(registry, updatedDate) {
     <a href="/doc/" onclick="closeHM()">docs</a>
     <a href="/konsonans-ai-governance" onclick="closeHM()">konsonans ai governance</a>
     <div class="hm-head">product lines</div>
-    <a class="sub" href="/#p-governance" onclick="closeHM()">ai governance</a>
-    <a class="sub" href="/#p-articulate" onclick="closeHM()">articulate</a>
-    <a class="sub" href="/#p-mailroute" onclick="closeHM()">mailroute</a>
-    <a class="sub" href="/#p-detcordon" onclick="closeHM()">detcordon</a>
-    <a class="sub" href="/#p-baz" onclick="closeHM()">baz trade signal stack</a>
-    <a class="sub" href="/#p-matches" onclick="closeHM()">matches</a>
-    <a class="sub" href="/#p-scipub" onclick="closeHM()">scipub</a>
-    <a class="sub" href="/#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
-    <a class="sub" href="/#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
+    ${navLinks}
   </div>
 
   <main>
     <section class="page-head">
       <div class="wrap">
         <h1 class="mono">// product value</h1>
-        <p>A summary of every product in the studio, the value it delivers, and where it sits in the lifecycle. Canonical data from <span class="mono" style="color:var(--fg-4)">/products.json</span>.</p>
+        <p>Published product catalog, pricing signals, and completion/value metadata distributed from <span class="mono" style="color:var(--fg-4)">/metadata/products.json</span>. Internal or unpublished lines are kept out of this public view.</p>
+        <p class="mono" style="font-size:.8rem"><a href="/pricing">pricing →</a> &nbsp; <a href="/#products">product lines →</a> &nbsp; <a href="/stats">live stats →</a></p>
       </div>
     </section>
 
@@ -200,6 +218,8 @@ export function generateCompletionHtml(registry, updatedDate) {
         <a href="/doc/">docs</a>
         <a href="/pricing">pricing</a>
         <a href="/completion">completion</a>
+        <a href="/glossary">glossary</a>
+        <a href="/stats">stats</a>
         <a href="/konsonans-ai-governance">konsonans ai governance</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
@@ -216,13 +236,37 @@ function closeHM(){ document.getElementById('hm-overlay').classList.remove('open
 }
 
 export function generateProductsJsModule(registry) {
-  return `// Generated from /products.json — do not edit directly.
+  return `// Generated from /metadata/products.json — do not edit directly.
 // Run \`npm run prepare:content\` to regenerate.
 
 export const PRODUCTS = ${JSON.stringify(registry.products, null, 2)};
 `;
 }
 
-function escHtml(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+function renderPricing(pricing) {
+  if (pricing === "free") return "<strong>free</strong>";
+  if (pricing === "—") return "<strong>—</strong>";
+  return `<strong>${escHtml(pricing)}</strong>`;
+}
+
+function renderProductNavLinks(products) {
+  return products.map((product) => {
+    const label = product.name.toLowerCase();
+    const href = product.links?.site || "/";
+    return `<a class="sub" href="${escAttr(href)}" onclick="closeHM()">${escHtml(label)}</a>`;
+  }).join("\n    ");
+}
+
+function formatUsdCompact(value) {
+  if (value >= 1000000) return `$${(value / 1000000).toFixed(1).replace(/\\.0$/, "")}m`;
+  if (value >= 1000) return `$${Math.round(value / 1000)}k`;
+  return `$${Math.round(value)}`;
+}
+
+function escHtml(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function escAttr(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }
