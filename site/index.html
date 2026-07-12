@@ -113,13 +113,6 @@
       padding: .12rem .5rem;
       background: rgba(255, 153, 0, .07);
     }
-    .featured-kicker .progress {
-      color: var(--blue-1, #7ab8ff);
-      border: 1px solid var(--border-2, #2a2a2a);
-      border-radius: 999px;
-      padding: .12rem .5rem;
-      background: rgba(122, 184, 255, .08);
-    }
     .featured-slide h2 {
       margin: 0;
       font-family: "Noto Sans", sans-serif;
@@ -161,27 +154,29 @@
       min-height: 290px;
     }
     .featured-panel-head {
-      display: grid;
-      gap: .95rem;
-      align-content: start;
+      display: flex;
+      align-items: center;
+      gap: .9rem;
     }
     .featured-panel-icon {
-      width: 4.15rem;
-      height: 4.15rem;
+      flex: none;
+      width: 3.6rem;
+      height: 3.6rem;
       display: grid;
       place-items: center;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid var(--border-warm, #3a2a18);
-      background: linear-gradient(180deg, rgba(255, 153, 0, .12), rgba(18, 18, 18, .92));
+      background: radial-gradient(120% 120% at 30% 20%, rgba(255, 153, 0, .18), rgba(18, 18, 18, .94) 70%);
+      box-shadow: 0 0 22px rgba(255, 153, 0, .1), inset 0 1px 0 rgba(246, 215, 167, .08);
       color: var(--orange-1, #f3c46c);
     }
     .featured-panel-icon svg {
-      width: 2.35rem;
-      height: 2.35rem;
+      width: 2.1rem;
+      height: 2.1rem;
       display: block;
       stroke: currentColor;
       fill: none;
-      stroke-width: 1.7;
+      stroke-width: 1.6;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -293,6 +288,9 @@
     .prod .hd { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; margin-bottom: .2rem; }
     .prod .hd h3 { font-family: "Intel One Mono", monospace; font-size: .95rem; color: var(--fg-1, #f6d7a7); margin: 0; letter-spacing: .01em; }
     .prod .hd .st { font-family: "Intel One Mono", monospace; font-size: .65rem; color: var(--fg-5, #737373); border: 1px solid var(--border-2, #2a2a2a); border-radius: 999px; padding: .1rem .5rem; white-space: nowrap; }
+    .prod .hd .pct { margin-left: auto; display: inline-flex; align-items: center; gap: .5rem; font-size: .65rem; color: var(--fg-4, #9f9f9f); white-space: nowrap; }
+    .prod .hd .pct .track { width: 72px; height: 4px; border-radius: 999px; background: var(--bg-3, #151515); border: 1px solid var(--border-2, #2a2a2a); overflow: hidden; }
+    .prod .hd .pct .fill { display: block; height: 100%; background: linear-gradient(90deg, var(--orange-4, #d97742), var(--orange-3, #ff9900)); }
     .prod.flagship .hd .st { color: var(--orange-1, #f3c46c); border-color: var(--border-warm, #3a2a18); }
 
     .prod .desc { color: var(--fg-3, #d4c19a); font-size: .86rem; margin: .3rem 0 .7rem; }
@@ -346,15 +344,15 @@
         padding: .9rem;
       }
       .featured-panel-head {
-        gap: .75rem;
+        gap: .7rem;
       }
       .featured-panel-icon {
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 3rem;
+        height: 3rem;
       }
       .featured-panel-icon svg {
-        width: 2rem;
-        height: 2rem;
+        width: 1.75rem;
+        height: 1.75rem;
       }
       .featured-controls {
         padding: .75rem;
@@ -450,9 +448,8 @@
     <a class="sub" href="#p-mailroute" onclick="closeHM()">mailroute</a>
     <a class="sub" href="#p-detcordon" onclick="closeHM()">detcordon</a>
     <a class="sub" href="#p-baz" onclick="closeHM()">baz trade signal stack</a>
-    <a class="sub" href="#p-scipub" onclick="closeHM()">scipub</a>
     <a class="sub" href="#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
-    <a class="sub" href="#p-shipwrecks" onclick="closeHM()">shipwrecks.se</a>
+    <a class="sub" href="#p-shipwrecks" onclick="closeHM()">shipwrecks</a>
   </div>
 
   <main>
@@ -463,7 +460,7 @@
           <div class="featured-frame">
             <article class="featured-slide active" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">building</span><span class="progress">61% complete</span><span>01 / governance</span></div>
+                <div class="featured-kicker mono"><span class="status">building</span><span>01 / governance</span></div>
                 <h2>EU AI Act<br />Governance <span>Platform</span></h2>
                 <p class="featured-desc">Konsonans AI Governance — a policy-as-code control plane that governs AI agents for EU AI Act compliance: every action passes a typed policy gate, lands in a tamper-evident audit chain, and can be held for human approval.</p>
                 <div class="featured-tags"><span>policy gate</span><span>audit chain</span><span>human oversight</span></div>
@@ -486,7 +483,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">flagship</span><span class="progress">78% complete</span><span>02 / matches</span></div>
+                <div class="featured-kicker mono"><span class="status">flagship</span><span>02 / matches</span></div>
                 <h2>autonomous cinematic<br />battle <span>runtime</span></h2>
                 <p class="featured-desc">Grounded locomotion, tactical AI, procedural choreography, and per-bone keyframe timelines in a deterministic in-browser studio.</p>
                 <div class="featured-tags"><span>3d viewport</span><span>dsl editor</span><span>blender export</span></div>
@@ -509,7 +506,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">86% complete</span><span>03 / articulate</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span>03 / articulate</span></div>
                 <h2>headless commerce<br />and <span>cms</span></h2>
                 <p class="featured-desc">WordPress is the most targeted CMS — every plugin and theme is an unpatched attack surface. Articulate wraps it in a Rust gateway with filesystem immutability, WASM image hardening, and a private origin, then adds a Next.js storefront, multi-tenant provisioning, DNS automation, and GraphQL edge.</p>
                 <div class="featured-tags"><span>gatekeeper</span><span>storefront</span><span>tenant provisioner</span></div>
@@ -532,7 +529,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">beta</span><span class="progress">74% complete</span><span>04 / mailroute</span></div>
+                <div class="featured-kicker mono"><span class="status">beta</span><span>04 / mailroute</span></div>
                 <h2>mail stream<br /><span>guard</span></h2>
                 <p class="featured-desc">Rule-driven IMAP and SMTP inspection with quarantine buckets, audited rule edits, event hooks, and operator review.</p>
                 <div class="featured-tags"><span>mail security</span><span>quarantine</span><span>audit trail</span></div>
@@ -555,7 +552,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">research</span><span class="progress">42% complete</span><span>05 / detcordon</span></div>
+                <div class="featured-kicker mono"><span class="status">research</span><span>05 / detcordon</span></div>
                 <h2>containment-first<br /><span>observation</span></h2>
                 <p class="featured-desc">Unknown payloads can't safely detonate on your workstation — but ignoring them leaves blind spots. DetCordon runs hostile web content in disposable, network-isolated sandboxes, recording every I/O into structured indicators without exposing your surface.</p>
                 <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
@@ -578,7 +575,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">58% complete</span><span>06 / school topics</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span>06 / school topics</span></div>
                 <h2>cellular +<br /><span>forensics</span> school</h2>
                 <p class="featured-desc">The RAGBAZ school runs two field modules: cellular — SIM and eUICC trust, sender provenance limits, covert transport channels — and forensics, a hands-on Android compromise-assessment course with five labs, a teacher&rsquo;s manual, and read-only acquisition tools.</p>
                 <div class="featured-tags"><span>cellular</span><span>forensics</span><span>five labs</span><span>teacher&rsquo;s manual</span></div>
@@ -605,7 +602,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">live</span><span class="progress">81% complete</span><span>07 / atlas + docs</span></div>
+                <div class="featured-kicker mono"><span class="status">live</span><span>07 / atlas + docs</span></div>
                 <h2>product atlas<br />and <span>status</span></h2>
                 <p class="featured-desc">The documentation and operations surface for RAGBAZ products, specs, status checks, deployment notes, and design-system references.</p>
                 <div class="featured-tags"><span>ragbaz.cc/doc</span><span>status</span><span>design system</span></div>
@@ -628,7 +625,7 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">active embryo</span><span class="progress">47% complete</span><span>08 / baz trade signal stack</span></div>
+                <div class="featured-kicker mono"><span class="status">active embryo</span><span>08 / baz trade signal stack</span></div>
                 <h2>systematic<br />trading <span>toolkit</span></h2>
                 <p class="featured-desc">Three-tier HFT suite: glither.hft compiler dialect produces WASM strategies with signed Ed25519 audit receipts; Palantir orchestrates enrichment and streaming; Luna is the browser notebook.</p>
                 <div class="featured-tags"><span>compiler</span><span>orchestration</span><span>candlestick charts</span></div>
@@ -713,11 +710,11 @@
       <div class="wrap">
         <div class="sec-head">
           <h2>// product lines</h2>
-          <span class="count mono">9 surfaces</span>
+          <span class="count mono">8 surfaces</span>
         </div>
 
         <article class="prod flagship" id="p-governance">
-          <div class="hd"><h3>ai governance</h3><span class="st mono">building</span></div>
+          <div class="hd"><h3>ai governance</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:61%"></span></span>61% complete</span><span class="st mono">building</span></div>
           <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="/konsonans-ai-governance">formal specification →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -732,7 +729,7 @@
         </article>
 
         <article class="prod flagship" id="p-matches">
-          <div class="hd"><h3>matches</h3><span class="st mono">flagship</span></div>
+          <div class="hd"><h3>matches</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:78%"></span></span>78% complete</span><span class="st mono">flagship</span></div>
           <div class="desc">autonomous cinematic battle runtime — grounded locomotion, tactical ai, procedural choreography, per-bone keyframe timeline in an in-browser studio.</div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -746,7 +743,7 @@
         </article>
 
         <article class="prod" id="p-articulate">
-          <div class="hd"><h3>articulate</h3><span class="st mono">live</span></div>
+          <div class="hd"><h3>articulate</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:86%"></span></span>86% complete</span><span class="st mono">live</span></div>
           <div class="desc">WordPress powers 43% of the web — and is the single most targeted CMS. Every plugin, theme, and zero-day is an attack surface you didn't write. Articulate wraps your WordPress in a Rust gateway with filesystem immutability, WASM image hardening, GraphQL depth/pagination guardrails, and a private origin invisible from the internet — then adds a Next.js storefront, multi-tenant provisioning, and GraphQL edge federation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/pricing">pricing →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -760,7 +757,7 @@
         </article>
 
         <article class="prod" id="p-mailroute">
-          <div class="hd"><h3>mailroute</h3><span class="st mono">beta</span></div>
+          <div class="hd"><h3>mailroute</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:74%"></span></span>74% complete</span><span class="st mono">beta</span></div>
           <div class="desc">Hostile mail bypasses every perimeter filter eventually — phishing, malware, data exfiltration, and spoofing land in inboxes before signatures catch up. MailRoute sits between the MTA and the mailbox, inspecting every message against hot-reloadable rules with quarantine buckets, audited rule edits (propose → apply → revert), and webhook relays for downstream automation. <a class="link" href="/doc/">read the docs →</a>  <a class="link" href="/school/cellular">cellular school →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -774,7 +771,7 @@
         </article>
 
         <article class="prod" id="p-detcordon">
-          <div class="hd"><h3>detcordon</h3><span class="st mono">research</span></div>
+          <div class="hd"><h3>detcordon</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:42%"></span></span>42% complete</span><span class="st mono">research</span></div>
           <div class="desc">Unknown payloads are the most dangerous — you cannot safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon runs hostile web content and attachments in disposable, network-isolated sandboxes, recording every I/O — DOM mutations, network requests, filesystem writes — into structured indicators and evidence bundles without exposing your operator surface. <a class="link" href="/prospects/detcordon">open prospect →</a>  <a class="link" href="/school/forensics">forensics school →</a>  <a class="link" href="/doc/">docs →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -784,19 +781,6 @@
             <div class="comp"><h4>feeder</h4><p>url or attachment ingestion queue. pulls from rss feeds, mailroute buckets, api submissions. dedup and priority scheduling.</p></div>
           </div>
           <div class="flow mono"><span class="f-node">feeder</span><span class="f-arr">→</span><span class="f-node">sandbox</span><span class="f-arr">→</span><span class="f-node">recorder</span><span class="f-arr">→</span><span class="f-node">analyzer</span></div>
-        </article>
-
-        <article class="prod" id="p-scipub">
-          <div class="hd"><h3>scipub</h3><span class="st mono">alpha</span></div>
-          <div class="desc">scientific-publishing toolkit — literature retrieval, structured database access, and evaluation over primary sources.</div>
-          <div class="comp-head mono">components</div>
-          <div class="comps">
-            <div class="comp"><h4>retriever</h4><p>multi-source literature fetcher. pubmed, arxiv, crossref, openalex adapters. full-text and metadata extraction, dedup, canonical id resolution.</p></div>
-            <div class="comp"><h4>evaluator</h4><p>structured assessment over source texts. claim extraction, evidence grading, citation-network analysis. outputs machine-readable verdicts.</p></div>
-            <div class="comp"><h4>database</h4><p>sqlite with fts5 full-text search over ingested papers. normalized schema for authors, affiliations, funders. export to json/bibtex/csl.</p></div>
-            <div class="comp"><h4>api</h4><p>graphql and rest endpoints for querying the corpus. faceted search, citation graph traversal, batch export. api-key auth with usage tracking.</p></div>
-          </div>
-          <div class="flow mono"><span class="f-node">retriever</span><span class="f-arr">→</span><span class="f-node">database</span><span class="f-arr">↔</span><span class="f-node">evaluator</span><span class="f-arr">→</span><span class="f-node">api</span></div>
         </article>
 
         <article class="prod" id="p-esp32tolk">
@@ -813,7 +797,7 @@
         </article>
 
         <article class="prod" id="p-shipwrecks">
-          <div class="hd"><h3>shipwrecks.se</h3><span class="st mono">live</span></div>
+          <div class="hd"><h3>ShipWrecks</h3><span class="st mono">building</span></div>
           <div class="desc">interactive swedish shipwreck explorer — charted wrecks, dive records, and documented provenance over the swedish coast.</div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -825,7 +809,7 @@
         </article>
 
         <article class="prod" id="p-baz">
-          <div class="hd"><h3>baz trade signal stack</h3><span class="st mono">active embryo</span></div>
+          <div class="hd"><h3>baz trade signal stack</h3><span class="pct mono" title="completion"><span class="track"><span class="fill" style="width:47%"></span></span>47% complete</span><span class="st mono">active embryo</span></div>
           <div class="desc">Automated trading pipelines are opaque — strategies execute without audit, and a bug in the signal chain appears first as a loss. The BAZ Trade Signal Stack compiles each glither.hft strategy to a signed WASM component with Ed25519 monetary audit receipts, enriches tick data in a verifiable Rust pipeline (SMA/EMA/RSI/Bollinger), and surfaces every execution in a live browser notebook you can inspect. <a class="link" href="/doc/experiments/baz-architecture">platform architecture →</a></div>
           <div class="comp-head mono">components</div>
           <div class="comps">
@@ -849,7 +833,7 @@
         <a href="/school">school</a>
         <a href="/doc/">docs</a>
         <a href="/konsonans-ai-governance">konsonans ai governance</a>
-        <a href="https://github.com/tabenius/matches">matches · github</a>
+        <a href="/completion">completion</a>
         <a href="/assets/ragbaz-prospectus.pdf?v=20260614aa" download>prospectus · pdf</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
