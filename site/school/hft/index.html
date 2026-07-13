@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Reading the Tape &mdash; SMA, Bollinger, RSI, Volume &amp; Volatility as BAZ.HFT Rules</title>
+<link rel="icon" href="../../assets/logo-mark.svg" />
+<link rel="stylesheet" href="../../colors_and_type.css?v=2" />
+<style>
+:root{--bg:var(--bg-0,#0a0908);--fg:var(--fg-2,#d8c29d);--accent:var(--orange-3,#ff9900);--accent-soft:var(--orange-1,#f3c46c);--rule:var(--border-2,#2a2a2a);--code:var(--bg-2,#121212);--paper:#fffff8;}
+html{font-size:15px;}
+body{margin:0;background:var(--bg);color:var(--fg);}
+.school-article{width:87.5%;max-width:1500px;margin:0 auto;padding:2rem 0 6rem 12.5%;
+ font-family:var(--font-serif,"Spectral","Noto Serif",Georgia,serif);
+ counter-reset:sidenote-counter;line-height:1.55;}
+h1{font-weight:400;margin-top:1.2rem;font-size:2.9rem;line-height:1.05;color:var(--fg-1,#f6d7a7);}
+h2{font-weight:400;font-style:italic;font-size:1.9rem;margin-top:3rem;color:var(--fg-1,#f6d7a7);}
+h3{font-weight:400;font-style:italic;font-size:1.35rem;margin-top:2rem;color:var(--fg-1,#f6d7a7);}
+.subtitle{font-style:italic;font-size:1.6rem;color:var(--fg-3,#d4c19a);margin-top:.4rem;display:block;}
+p,ol,ul,table,.note{width:55%;}
+p,ol,ul{font-size:1.18rem;}
+li{margin-bottom:.4rem;}
+a{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 1.05em;}
+a:hover{color:var(--accent);}
+a.glink{background:none;border-bottom:1px dotted var(--accent);}
+blockquote{width:50%;font-style:italic;border-left:2px solid var(--rule);margin-left:0;padding-left:1.2rem;color:var(--fg-3,#d4c19a);}
+blockquote p{width:100%;}
+hr{border:0;border-top:1px solid var(--rule);width:55%;margin:3rem 0;}
+/* sidenotes / margin notes */
+.marginnote,.sidenote{float:right;clear:right;margin-right:-58%;width:48%;margin-top:.3rem;margin-bottom:1rem;
+ font-size:.95rem;line-height:1.4;vertical-align:baseline;position:relative;color:var(--fg-4,#9f9f9f);}
+.marginnote strong,.sidenote strong{color:var(--accent-soft,#f3c46c);font-weight:700;}
+.sidenote-number{counter-increment:sidenote-counter;}
+.sidenote-number:after{content:counter(sidenote-counter);font-size:.7rem;top:-.5rem;left:.1rem;position:relative;vertical-align:baseline;}
+.sidenote:before{content:counter(sidenote-counter) " ";font-size:.7rem;top:-.5rem;position:relative;vertical-align:baseline;}
+input.margin-toggle{display:none;}
+label.sidenote-number{display:inline;}
+label.margin-toggle:not(.sidenote-number){display:none;color:var(--accent);cursor:pointer;}
+/* figures */
+figure{margin:2.2rem 0;max-width:100%;}
+figure.fullwidth{width:88%;max-width:1150px;}
+figure.puml{background:var(--paper,#fffff8);border:1px solid var(--border-3,#2d2d2d);border-radius:4px;padding:1rem 1rem .4rem;}
+figure img{max-width:100%;height:auto;display:block;margin:0 auto;}
+figcaption{font-size:.98rem;font-style:italic;color:var(--fg-4,#9f9f9f);margin-top:.6rem;width:100%;}
+details{margin-top:.6rem;font-size:.9rem;}
+summary{cursor:pointer;color:var(--accent);}
+pre.code{background:var(--code);border:1px solid var(--rule);padding:.8rem;overflow:auto;font-size:.82rem;line-height:1.35;
+ font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);white-space:pre;color:var(--fg-3,#d4c19a);}
+code{font-family:var(--font-mono,ui-monospace,Menlo,Consolas,monospace);font-size:.9em;background:var(--code);color:var(--orange-2,#f2a77a);padding:.05em .3em;border-radius:3px;}
+/* widgets */
+.widget{width:82%;max-width:1000px;background:var(--bg-2,#121212);border:1px solid var(--rule);border-left:4px solid var(--accent);
+ border-radius:4px;padding:1.1rem 1.3rem;margin:2rem 0;box-shadow:var(--shadow-1,0 1px 0 rgba(0,0,0,.4));}
+.widget h4{margin:.1rem 0 .8rem;font-size:1.1rem;font-weight:700;font-style:normal;letter-spacing:.02em;color:var(--fg-1,#f6d7a7);}
+.widget .tag{display:inline-block;font-size:.72rem;background:var(--accent);color:var(--fg-on-warm,#1a1208);padding:.1rem .5rem;border-radius:3px;
+ vertical-align:middle;margin-left:.5rem;font-family:var(--font-mono,ui-monospace,monospace);letter-spacing:.05em;}
+.controls{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-bottom:.9rem;}
+.controls label{font-size:1rem;cursor:pointer;user-select:none;}
+.controls button{font:inherit;font-size:.95rem;background:var(--bg-4,#181818);color:var(--fg-2,#d8c29d);border:1px solid var(--rule);border-radius:4px;
+ padding:.35rem .7rem;cursor:pointer;margin:.15rem .3rem .15rem 0;}
+.controls button:hover{border-color:var(--accent);color:var(--accent);}
+.controls button.active{background:var(--accent);color:var(--fg-on-warm,#1a1208);border-color:var(--accent);}
+select{font:inherit;font-size:1rem;padding:.3rem;border:1px solid var(--rule);border-radius:4px;background:var(--bg-4,#181818);color:var(--fg-2,#d8c29d);}
+.readout{background:var(--code);border:1px solid var(--rule);border-radius:4px;padding:.8rem 1rem;font-size:1rem;line-height:1.5;min-height:2rem;}
+.readout .ok{color:var(--green-1,#b8bb26);font-weight:700;}
+.readout .bad{color:var(--red-1,#fb4934);font-weight:700;}
+.readout .warn{color:var(--yellow-1,#fabd2f);font-weight:700;}
+.readout ul{width:100%;margin:.4rem 0 0;padding-left:1.2rem;font-size:.98rem;}
+.timeline{width:55%;border-left:2px solid var(--rule);margin-left:.4rem;padding-left:1.2rem;}
+.timeline li{list-style:none;position:relative;margin-bottom:.7rem;}
+.timeline li:before{content:"";position:absolute;left:-1.55rem;top:.45rem;width:9px;height:9px;background:var(--accent);border-radius:50%;}
+.timeline .d{font-family:var(--font-mono,ui-monospace,monospace);font-size:.85rem;color:var(--accent-soft,#f3c46c);}
+.banner{width:82%;max-width:1000px;background:var(--bg-elev,#1d1812);border:1px solid var(--border-warm,#3a2a18);border-radius:4px;padding:.8rem 1.1rem;font-size:.98rem;color:var(--fg-2,#d8c29d);margin:1.5rem 0;}
+.glossary{width:82%;max-width:1000px;}
+.glossary dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1.2rem;font-size:1rem;}
+.glossary dt{font-weight:700;color:var(--accent-soft,#f3c46c);font-family:var(--font-mono,ui-monospace,monospace);font-size:.92rem;padding-top:.15rem;}
+.glossary dd{margin:0;}
+footer{width:55%;margin-top:4rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.9rem;color:var(--fg-5,#737373);font-style:italic;}
+.site-wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem);}
+.site-bar{
+ position:sticky;top:0;z-index:20;background:rgba(16,16,16,.92);backdrop-filter:blur(8px);
+ border-bottom:1px solid var(--border-2,#2a2a2a);
+}
+.site-bar .site-wrap{display:flex;align-items:center;gap:1rem;height:56px;}
+.site-wordmark{
+ display:flex;align-items:center;gap:.6rem;font-family:"Intel One Mono",ui-monospace,monospace;font-weight:600;
+ letter-spacing:.14em;color:var(--fg-1,#f6d7a7);text-transform:uppercase;background:none;
+}
+.site-wordmark img{height:39px;width:auto;display:block;}
+.site-nav{margin-left:auto;display:flex;gap:1.4rem;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.82rem;}
+.site-nav a,.school-menu a,.site-footer a{background:none;text-decoration:none;}
+.site-nav a{color:var(--fg-4,#9f9f9f);}
+.site-nav a:hover,.site-nav a.active{color:var(--orange-1,#f3c46c);}
+.hm-btn{background:none;border:none;color:var(--fg-2,#d8c29d);font-size:1.2rem;cursor:pointer;padding:0;line-height:1;margin-left:auto;display:none;align-items:center;}
+.hm-btn:hover{color:var(--orange-1,#f3c46c);}
+.hm-overlay{position:fixed;top:0;right:0;width:min(86vw,320px);height:100vh;background:#15120c;border-left:1px solid var(--border-2,#2a2a2a);transform:translateX(100%);transition:transform .2s ease;z-index:30;padding:1.5rem;overflow-y:auto;}
+.hm-overlay.open{transform:translateX(0);}
+.hm-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--fg-2,#d8c29d);font-size:1.2rem;cursor:pointer;}
+.hm-close:hover{color:var(--orange-1,#f3c46c);}
+.hm-head{font-family:"Intel One Mono",ui-monospace,monospace;font-size:.7rem;color:var(--fg-5,#737373);text-transform:uppercase;letter-spacing:.12em;margin-top:2rem;margin-bottom:.15rem;}
+.hm-overlay a{display:block;padding:.35rem 0;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.85rem;color:var(--fg-2,#d8c29d);background:none;text-decoration:none;}
+.hm-overlay a:hover,.hm-overlay a.active{color:var(--orange-1,#f3c46c);}
+.hm-scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:29;opacity:0;pointer-events:none;transition:opacity .2s ease;}
+.hm-scrim.open{opacity:1;pointer-events:auto;}
+.school-nav{
+ border-bottom:1px solid var(--border-2,#2a2a2a);
+ background:var(--bg-elev,#1d1812);
+}
+.school-nav .site-wrap{
+ display:flex;flex-wrap:wrap;align-items:center;gap:.9rem 1.2rem;padding-top:.75rem;padding-bottom:.75rem;
+}
+.school-label{
+ font-family:"Intel One Mono",ui-monospace,monospace;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--orange-3,#ff9900);
+}
+.school-menu{display:flex;flex-wrap:wrap;gap:.6rem;}
+.school-menu a{
+ padding:.3rem .65rem;border:1px solid var(--border-warm,#3a2a18);border-radius:999px;
+ font-family:"Intel One Mono",ui-monospace,monospace;font-size:.76rem;color:var(--fg-3,#d4c19a);
+ background:rgba(0,0,0,.12);
+}
+.school-menu a:hover,.school-menu a.active{color:var(--orange-1,#f3c46c);border-color:var(--orange-4,#d97742);}
+.site-footer{
+ margin-top:0;padding:0;border:0;width:100%;font-style:normal;color:inherit;
+ border-top:1px solid var(--border-2,#2a2a2a);background:var(--bg-0,#0a0908);
+}
+.site-footer .site-wrap{
+ display:flex;flex-wrap:wrap;gap:1.2rem 2rem;align-items:center;padding-top:2rem;padding-bottom:3rem;
+}
+.site-footer .site-wordmark img{height:22px;}
+.site-footer .site-links{
+ display:flex;flex-wrap:wrap;gap:1.4rem;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.82rem;
+}
+.site-footer .site-links a{color:var(--orange-1,#f3c46c);}
+.site-footer .site-meta{
+ margin-left:auto;font-family:"Intel One Mono",ui-monospace,monospace;font-size:.74rem;color:var(--fg-5,#737373);
+}
+@media(max-width:980px){
+ .school-article{width:100%;max-width:74rem;padding:1.5rem clamp(1rem,5vw,2rem) 4rem;}
+ p,ol,ul,table,.note,blockquote,hr,.timeline,footer{width:100%;}
+ figure.fullwidth,.widget,.banner,.glossary{width:100%;}
+ .marginnote,.sidenote{display:none;}
+ label.margin-toggle:not(.sidenote-number){display:inline;}
+ .margin-toggle:checked+.sidenote,.margin-toggle:checked+.marginnote{display:block;float:none;clear:both;width:95%;margin:1rem 0;
+  padding:.6rem .8rem;background:var(--code);border-left:3px solid var(--accent);}
+ .glossary dl{grid-template-columns:1fr;gap:.1rem;}
+ .glossary dt{padding-top:.6rem;}
+ h1{font-size:clamp(2.1rem,8vw,2.8rem);}
+ h2{font-size:clamp(1.5rem,6vw,1.9rem);}
+ p,ol,ul{font-size:1.05rem;}
+}
+@media(max-width:720px){
+ .site-bar .site-wrap{
+  height:auto;
+  padding-top:.75rem;
+  padding-bottom:.9rem;
+ }
+ .site-nav{display:none;}
+ .hm-btn{display:flex;}
+ .school-nav .site-wrap{
+  gap:.7rem 1rem;
+ }
+ .school-menu{
+  width:100%;
+ }
+ .site-footer .site-meta{
+  width:100%;
+  margin-left:0;
+ }
+ table{
+  display:block;
+  overflow-x:auto;
+  max-width:100%;
+ }
+}
+@media(max-width:560px){
+ .school-nav .site-wrap{align-items:flex-start;}
+ .site-footer .site-meta{margin-left:0;}
+ .school-menu a{width:100%;text-align:center;}
+ .widget,.banner{padding:.85rem .95rem;}
+ figure.puml{padding:.75rem .75rem .35rem;}
+ pre.code{font-size:.78rem;}
+}
+canvas{display:block;width:100%;background:#0e0d0b;border:1px solid var(--rule);border-radius:3px;margin:.2rem 0 .6rem;}
+.controls input[type=range]{vertical-align:middle;accent-color:var(--orange-3,#ff9900);width:130px;}
+.mono{font-family:var(--font-mono,ui-monospace,monospace);}
+</style>
+  <script src="../../assets/local-mode.js" defer></script>
+</head>
+<body>
+<header class="site-bar">
+<div class="site-wrap">
+<a class="site-wordmark" href="/"><img src="../../assets/logo-mark.svg" alt="RAGBAZ"/>RAGBAZ</a>
+<nav class="site-nav">
+<a href="/">home</a>
+<a href="/pricing">pricing</a>
+<a href="/#products">products</a>
+<a href="/school" class="active">school</a>
+<a href="/doc/">docs</a>
+<a href="/konsonans-ai-governance">konsonans ai governance</a>
+</nav>
+<button class="hm-btn mono" onclick="toggleHM()">☰</button>
+</div>
+</header>
+<div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+<div class="hm-overlay" id="hm-overlay">
+<button class="hm-close" onclick="closeHM()">✕</button>
+<div class="hm-head">navigate</div>
+<a href="/" onclick="closeHM()">home</a>
+<a href="/pricing" onclick="closeHM()">pricing</a>
+<a href="/#products" onclick="closeHM()">products</a>
+<a href="/school" class="active" onclick="closeHM()">school</a>
+<a href="/doc/" onclick="closeHM()">docs</a>
+<a href="/konsonans-ai-governance" onclick="closeHM()">konsonans ai governance</a>
+<div class="hm-head">modules</div>
+<a href="/school" onclick="closeHM()">overview</a>
+<a href="/school/cellular" onclick="closeHM()">cellular</a>
+<a href="/school/forensics" onclick="closeHM()">forensics</a>
+<a href="/school/hft" class="active" onclick="closeHM()">trading</a>
+</div>
+<section class="school-nav" aria-label="school sections">
+<div class="site-wrap">
+<div class="school-label">school</div>
+<nav class="school-menu">
+<a href="/school">overview</a>
+<a href="/school/cellular">cellular</a>
+<a href="/school/forensics">forensics</a>
+<a href="/school/hft" class="active">trading</a>
+</nav>
+</div>
+</section>
+<div class="school-article">
+<article>
+
+<h1>Reading the Tape</h1>
+<span class="subtitle">SMA, Bollinger bands, RSI, volume &amp; volatility &mdash; from intuition to executable BAZ.HFT rules</span>
+
+<p><label for="mt-epi" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mt-epi" class="margin-toggle"/>
+<span class="marginnote"><strong>On the typography.</strong> Like its sibling modules, this page keeps its <em>Tufte&nbsp;CSS</em> conventions &mdash; a narrow measure, numbered sidenotes, a wide right margin for glosses &mdash; reflowed onto the RAGBAZ token sheet. Every chart below is <em>live</em>: it is drawn in your browser from a synthetic price tape you control. Terms carry a margin gloss and link to the <a class="glink" href="#glossary">glossary</a>.</span>
+Markets print a stream of numbers &mdash; price, volume, time &mdash; and every trading idea ever written is a way of <em>reading</em> that stream. This module builds the five classic instruments for reading it (moving averages, Bollinger bands, RSI, volume, volatility), shows the two opposite temperaments a strategy can have (<em>riding the waves</em> and <em>trading the noise</em>), and then writes both temperaments as real, compilable <a class="glink" href="#glossary">BAZ.HFT</a> rules &mdash; the same files the BAZ trading stack executes.</p>
+
+<blockquote><p>A moving average is a memory. A Bollinger band is a tolerance. RSI is a speedometer. Volume is a show of hands. Volatility is the weather. Strategies are just sentences built from these five words.</p></blockquote>
+
+<div class="banner">&#9888; <strong>Scope.</strong> This is an engineering field reference about <em>signal construction</em>, not investment advice. Every chart on this page runs on a <strong>synthetic tape</strong> &mdash; a random price series generated in your browser &mdash; and the toy fill model ignores fees, slippage, and queue position. Real markets are adversarial; treat everything here as vocabulary, not as an edge.</div>
+
+<h2 id="moods">1 &middot; The two moods of a market</h2>
+
+<p><label for="mt-regime" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-regime" class="margin-toggle"/>
+<span class="sidenote"><strong>Regime</strong> &mdash; a stretch of time in which the market keeps one statistical personality: trending (returns correlate positively) or mean-reverting (they correlate negatively). Most strategy failures are regime mismatches, not bad indicators.</span>
+Zoom into any price chart and you will find two personalities taking turns. Sometimes price <em>goes somewhere</em>: buyers (or sellers) stay in charge for hours and each step tends to continue the last one &mdash; a <strong>trend</strong>. The rest of the time price goes <em>nowhere</em>: it oscillates around a fair value, overshooting and snapping back &mdash; <strong>chop</strong>, or noise. The tragedy of trading is that the best strategy for one mood is close to the worst for the other. A trend-follower gets whipsawed to death in chop; a mean-reverter steps in front of every breakout in a trend.</p>
+
+<p>All the charts in this module share one synthetic tape. Choose its mood here &mdash; every widget below redraws from the same series, so you can watch each indicator succeed and fail as the regime changes.</p>
+
+<div class="widget" id="w-tape">
+<h4>The tape <span class="tag">shared by every chart</span></h4>
+<div class="controls">
+<button id="rg-trend" class="active">trending</button>
+<button id="rg-chop">choppy</button>
+<button id="rg-mixed">mixed</button>
+<button id="rg-seed" title="new random seed">&#8635; reseed</button>
+</div>
+<canvas id="cv-tape" height="240"></canvas>
+<div class="readout" id="ro-tape"></div>
+</div>
+
+<h2 id="sma">2 &middot; Moving averages: price with a memory</h2>
+
+<p><label for="mt-sma" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-sma" class="margin-toggle"/>
+<span class="sidenote"><strong>SMA.</strong> The simple moving average over the last <em>N</em> closes: <span class="mono">&mu;<sub>N</sub>(t) = (1/N) &Sigma;<sub>i=0..N&minus;1</sub> close(t&minus;i)</span>. Bigger <em>N</em> &rarr; smoother and slower. BAZ.HFT spells it <code>&mu;(state.close)</code>, computed by Palantir over a ring buffer of the last <em>N</em> bars.</span>
+The rawest question about a price is &ldquo;is it higher or lower than it used to be?&rdquo; A <strong>simple moving average</strong> answers it by averaging the last <em>N</em> closes: today against the smoothed memory of recent days. Keep two memories &mdash; a <em>short</em> one that reacts fast and a <em>long</em> one that barely moves &mdash; and their relationship becomes a trend detector: when the fast average climbs above the slow one, recent prices are beating older prices, which is the definition of &ldquo;going up&rdquo;.</p>
+
+<p><label for="mt-cross" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-cross" class="margin-toggle"/>
+<span class="sidenote"><strong>Golden / death cross.</strong> Trader slang for the fast SMA crossing above (golden) or below (death) the slow SMA. The names come from daily charts (50/200); the mechanics are identical at 15-minute scale with 9/21.</span>
+The moments the two averages <em>cross</em> are the classic entry signals. Try dragging the windows: short windows produce many early, noisy crosses; long windows produce few, late, reliable ones. There is no setting that is both early and reliable &mdash; that trade-off is the entire game.</p>
+
+<div class="widget" id="w-sma">
+<h4>Short / long SMA <span class="tag">&mu;(fast) vs &mu;(slow)</span></h4>
+<div class="controls">
+<label>fast <input type="range" id="sma-fast" min="3" max="30" value="9"/> <span class="mono" id="sma-fast-v">9</span></label>
+<label>slow <input type="range" id="sma-slow" min="10" max="80" value="21"/> <span class="mono" id="sma-slow-v">21</span></label>
+</div>
+<canvas id="cv-sma" height="240"></canvas>
+<div class="readout" id="ro-sma"></div>
+</div>
+
+<h2 id="waves">3 &middot; Riding the waves: trend following</h2>
+
+<p>A wave-rider assumes the current move will continue and wants to be aboard for the middle of it &mdash; missing the start, leaving before the end, but capturing the body. The temperament: <em>enter rarely, hold long, take a wide stop</em>, because the one big move pays for the several small failures. Here is the idea as a complete, compilable BAZ.HFT strategy &mdash; this exact file lives in the dialect&rsquo;s example set:</p>
+
+<figure class="fullwidth">
+<pre class="code">#pragma dialect glither.hft ; fold first-match
+#pragma version 2.0-beta
+
+/// # BAZ.CX: Riding the Waves
+/// Trend following momentum on BTC/USDT.
+/// SMA cross confirmation + RSI momentum filter.
+/// Wide stops at -3%; every signal timestamped to backlog.
+
+state wave_fast =
+  bars | window = 9
+       | timeframe = 15m
+       | tracks = [ close ]
+
+state wave_slow =
+  bars | window = 21
+       | timeframe = 15m
+       | tracks = [ close ]
+
+state wave_rsi =
+  bars | window = 14
+       | timeframe = 15m
+       | tracks = [ close ]
+
+rule golden_cross_long =
+  tick | &mu;(wave_fast.close) &gt; &mu;(wave_slow.close)
+       | rsi(wave_rsi.close) &gt; 60.0
+  =&gt; transact market_buy
+       on    fill  into position(target = &mu;(wave_slow.close))
+       after 4h   market_close_all (reason = trend_exit)
+  then_log backlog
+
+rule death_cross_short =
+  tick | &mu;(wave_fast.close) &lt; &mu;(wave_slow.close)
+       | rsi(wave_rsi.close) &lt; 40.0
+  =&gt; transact market_sell
+       on    fill  into position(target = &mu;(wave_slow.close))
+       after 4h   market_close_all (reason = trend_exit)
+  then_log backlog
+
+rule wave_take_profit =
+  position | position.unrealized_pnl &gt;= 0.08
+  =&gt; market_close_all (reason = momentum_target_hit)
+  then_log backlog
+
+rule wave_stop_loss =
+  position | position.unrealized_pnl &lt;= -0.03
+  =&gt; market_close_all (reason = trend_reversal_stop)
+  then_log backlog</pre>
+<figcaption><span class="mono">dialects/glither.hft/examples/riding_the_waves.glith</span> &mdash; verbatim from the BAZ.HFT dialect examples. <code>state</code> blocks declare ring-buffered bar windows; <code>rule</code> blocks are guard&nbsp;<span class="mono">|</span>&nbsp;conditions <span class="mono">=&gt;</span> action pipelines; <code>fold first-match</code> means the first rule whose conditions hold wins the tick.</figcaption>
+</figure>
+
+<p><label for="mt-anatomy" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-anatomy" class="margin-toggle"/>
+<span class="sidenote"><strong>Reading a rule.</strong> <code>tick | A | B =&gt; transact &hellip;</code> reads: on every tick, if A and B hold, transact. <code>on fill into position(&hellip;)</code> arms the position with a target; <code>after 4h market_close_all</code> is a time fence; <code>then_log backlog</code> writes the signed evidence record.</span>
+Four rules, one temperament. The two entry rules demand <em>agreement</em>: the SMA cross says &ldquo;the trend flipped&rdquo; and the RSI filter (&gt;60 for longs, &lt;40 for shorts) says &ldquo;with conviction&rdquo; &mdash; filtering out the limp crosses that happen inside chop. The exits encode wave-rider psychology exactly: take profit at <strong>+8%</strong>, stop out at <strong>&minus;3%</strong>, and if neither happens the 4-hour fence closes the ride. Watch it work &mdash; and watch what the same file does to a choppy tape:</p>
+
+<div class="widget" id="w-waves">
+<h4>Strategy sim: riding the waves <span class="tag">toy fill model</span></h4>
+<canvas id="cv-waves" height="240"></canvas>
+<div class="readout" id="ro-waves"></div>
+</div>
+
+<h2 id="bb">4 &middot; Bollinger bands: a corridor of normal</h2>
+
+<p><label for="mt-bb" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-bb" class="margin-toggle"/>
+<span class="sidenote"><strong>Bands.</strong> Over the last <em>N</em> closes take the mean <span class="mono">&mu;</span> and standard deviation <span class="mono">&sigma; = &radic;((1/N)&Sigma;(close&minus;&mu;)&sup2;)</span>. The bands are <span class="mono">&mu; &plusmn; k&sigma;</span>, classically <em>N</em>=20, <em>k</em>=2. In BAZ.HFT: <code>bbands_lower(s.close, dev&nbsp;=&nbsp;2.5)</code>, <code>bbands_mid</code>, <code>bbands_upper</code>.</span>
+Wrap the moving average in a measure of how much price <em>usually</em> wobbles and you get <strong>Bollinger bands</strong>: a center line (the 20-bar mean) with an envelope <em>k</em> standard deviations either side. For a layman: a rubber corridor around the recent average. Price inside the corridor is business as usual; price poking outside it is statistically stretched &mdash; roughly a 2-in-100 event per bar at <em>k</em>=2 if returns were well-behaved (they aren&rsquo;t, which is why practitioners widen to 2.5 for entries).</p>
+
+<p>The corridor breathes: it tightens when the market is calm and balloons when it panics. That width is itself a signal &mdash; a <em>squeeze</em> (very narrow bands) often precedes a violent move, because quiet markets attract the orders that end them.</p>
+
+<div class="widget" id="w-bb">
+<h4>Bollinger bands <span class="tag">&mu; &plusmn; k&sigma;</span></h4>
+<div class="controls">
+<label>window <input type="range" id="bb-win" min="10" max="40" value="20"/> <span class="mono" id="bb-win-v">20</span></label>
+<label>k (dev) <input type="range" id="bb-dev" min="10" max="35" value="20"/> <span class="mono" id="bb-dev-v">2.0</span></label>
+</div>
+<canvas id="cv-bb" height="240"></canvas>
+<div class="readout" id="ro-bb"></div>
+</div>
+
+<h2 id="rsi">5 &middot; RSI: the speedometer</h2>
+
+<p><label for="mt-rsi" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-rsi" class="margin-toggle"/>
+<span class="sidenote"><strong>RSI (Wilder, 1978).</strong> Split the last <em>N</em> bar-to-bar changes into gains and losses, smooth each (Wilder&rsquo;s smoothing: <span class="mono">avg &larr; (avg&middot;(N&minus;1) + new)/N</span>), form <span class="mono">RS = avgGain/avgLoss</span>, then <span class="mono">RSI = 100 &minus; 100/(1+RS)</span>. All gains &rarr; 100; all losses &rarr; 0; a balanced market idles near 50.</span>
+The <strong>relative strength index</strong> compresses recent price action into a single dial from 0 to 100: how much of the recent movement was <em>up</em> versus <em>down</em>. Above 70 the market has been climbing almost without breathing &mdash; &ldquo;overbought&rdquo;; below 30 it has been falling the same way &mdash; &ldquo;oversold&rdquo;. Two opposite readings of the dial correspond exactly to our two temperaments: the wave-rider treats a high RSI as <em>confirmation</em> (the move has momentum, join it), the noise-trader treats an extreme RSI as <em>exhaustion</em> (the move has overrun, fade it). Same number, opposite bets &mdash; the regime decides who is right.</p>
+
+<div class="widget" id="w-rsi">
+<h4>RSI <span class="tag">0&ndash;100 momentum dial</span></h4>
+<div class="controls">
+<label>period <input type="range" id="rsi-per" min="5" max="30" value="14"/> <span class="mono" id="rsi-per-v">14</span></label>
+</div>
+<canvas id="cv-rsi-price" height="150"></canvas>
+<canvas id="cv-rsi" height="120"></canvas>
+<div class="readout" id="ro-rsi"></div>
+</div>
+
+<h2 id="volume">6 &middot; Volume: the show of hands</h2>
+
+<p><label for="mt-vol" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-vol" class="margin-toggle"/>
+<span class="sidenote"><strong>Volume confirmation.</strong> In BAZ.HFT the noise strategy demands <code>volume(s.volume) &gt; &mu;(s.volume)</code> &mdash; the current bar&rsquo;s volume above its own 20-bar average &mdash; before it will fade an extreme. An extreme on thin volume is a rumour; on heavy volume it is a vote.</span>
+Price says what happened; <strong>volume</strong> says how many participants made it happen. A price poking out of the Bollinger corridor on trickle volume is a few small orders wandering in an empty room &mdash; it means little and reverts easily. The same poke on a surge of volume is a crowd event: real money disagreed about value. Nearly every robust signal on this page becomes more honest when you require volume to second the motion; that is exactly the <code>volume(&hellip;) &gt; &mu;(&hellip;)</code> clause in the strategies.</p>
+
+<div class="widget" id="w-volume">
+<h4>Volume <span class="tag">with &mu;(volume) reference</span></h4>
+<canvas id="cv-volp" height="150"></canvas>
+<canvas id="cv-vol" height="110"></canvas>
+<div class="readout" id="ro-vol"></div>
+</div>
+
+<h2 id="vola">7 &middot; Volatility: the weather report</h2>
+
+<p><label for="mt-vola" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-vola" class="margin-toggle"/>
+<span class="sidenote"><strong>Realized volatility.</strong> Take log returns <span class="mono">r(t) = ln(close(t)/close(t&minus;1))</span>, their rolling standard deviation over <em>N</em> bars, and scale by &radic;(bars per year) to annualize. Volatility <em>clusters</em>: calm follows calm, storm follows storm (Mandelbrot, 1963) &mdash; which is why yesterday&rsquo;s weather is a usable forecast.</span>
+<strong>Volatility</strong> is the size of the market&rsquo;s typical step, regardless of direction &mdash; the weather in which every other signal operates. It sets the two numbers no strategy can ignore: <em>how wide the stop must be</em> (a stop inside the market&rsquo;s ordinary wobble is a donation) and <em>how large the position may be</em> (risk a fixed fraction, so double the weather means half the size). The wave strategy&rsquo;s &minus;3% stop and the noise strategy&rsquo;s &minus;0.8% stop are not style choices &mdash; they are the same rule quoted in two different climates: 15-minute swells versus 1-minute ripples.</p>
+
+<div class="widget" id="w-vola">
+<h4>Rolling volatility <span class="tag">&sigma; of returns, 20-bar</span></h4>
+<canvas id="cv-volap" height="150"></canvas>
+<canvas id="cv-vola" height="110"></canvas>
+<div class="readout" id="ro-vola"></div>
+</div>
+
+<h2 id="noise">8 &middot; Trading the noise: mean reversion</h2>
+
+<p>The opposite temperament. In chop, every excursion is a mistake that the market corrects; a noise-trader&rsquo;s job is to sell the overshoot and buy the undershoot &mdash; <em>fade</em> the move &mdash; and to be gone in seconds. Where the wave-rider wanted one big win to pay for many small losses, the noise-trader collects many small wins and must therefore forbid the one big loss: tight stops, short timeouts, and a demand that volume confirm each extreme. Again as a real dialect example, verbatim:</p>
+
+<figure class="fullwidth">
+<pre class="code">#pragma dialect glither.hft ; fold first-match
+#pragma version 2.0-beta
+
+/// # BAZ.CX: Trading from Noise
+/// Mean reversion scalping on BTC/USDT.
+/// Entries at extreme RSI + Bollinger Band touch with volume confirmation.
+/// Tight stops at -0.8% P&amp;L; every signal timestamped to backlog.
+
+state noise_rsi =
+  bars | window = 14
+       | timeframe = 1m
+       | tracks = [ close ]
+
+state noise_bb =
+  bars | window = 20
+       | timeframe = 1m
+       | tracks = [ close, volume ]
+
+rule rsi_oversold_reversal =
+  tick | rsi(noise_rsi.close) &lt; 25.0
+       | tick.close &lt; bbands_lower(noise_bb.close, dev = 2.5)
+       | volume(noise_bb.volume) &gt; &mu;(noise_bb.volume)
+  =&gt; transact market_buy
+       on    fill  into position(target = bbands_mid(noise_bb.close))
+       after 30s   market_close_all (reason = mean_reversion_timeout)
+  then_log backlog
+
+rule rsi_overbought_reversal =
+  tick | rsi(noise_rsi.close) &gt; 75.0
+       | tick.close &gt; bbands_upper(noise_bb.close, dev = 2.5)
+       | volume(noise_bb.volume) &gt; &mu;(noise_bb.volume)
+  =&gt; transact market_sell
+       on    fill  into position(target = bbands_mid(noise_bb.close))
+       after 30s   market_close_all (reason = mean_reversion_timeout)
+  then_log backlog
+
+rule noise_stop_loss =
+  position | position.unrealized_pnl &lt;= -0.008
+  =&gt; market_close_all (reason = noise_vol_stop)
+  then_log backlog
+
+rule noise_take_profit =
+  position | position.unrealized_pnl &gt;= 0.015
+  =&gt; market_close_all (reason = mean_reversion_target_hit)
+  then_log backlog</pre>
+<figcaption><span class="mono">dialects/glither.hft/examples/trading_from_noise.glith</span> &mdash; three conditions must agree before an entry: the RSI dial pinned (&lt;25 or &gt;75), price outside the 2.5&sigma; corridor, and volume above its average. The position&rsquo;s <em>target</em> is the band midline &mdash; the strategy literally bets on the return to normal.</figcaption>
+</figure>
+
+<p><label for="mt-asym" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="mt-asym" class="margin-toggle"/>
+<span class="sidenote"><strong>The asymmetry.</strong> Wave: stop &minus;3%, target +8%, few trades &mdash; pays on the ratio. Noise: stop &minus;0.8%, target +1.5%, many trades &mdash; pays on the hit-rate. Neither survives in the other&rsquo;s regime; both log every decision to the backlog so you can prove which regime you were actually in.</span>
+Run it on the shared tape. On <em>choppy</em>, entries appear at the band-edges and resolve to the midline; flip the tape to <em>trending</em> and watch the same rules bleed &mdash; each &ldquo;overshoot&rdquo; it fades keeps going, and only the tight stop keeps the damage survivable. That contrast, not any single indicator, is the lesson of this module.</p>
+
+<div class="widget" id="w-noise">
+<h4>Strategy sim: trading the noise <span class="tag">toy fill model</span></h4>
+<canvas id="cv-noise" height="240"></canvas>
+<div class="readout" id="ro-noise"></div>
+</div>
+
+<h2 id="third">9 &middot; Composing your own: a squeeze breakout</h2>
+
+<p>The five instruments compose. Here is a third temperament written from the same vocabulary &mdash; a <em>breakout</em> rule that waits for the corridor to stretch, requires the crowd to show up, and asks the dial for momentum. It fires far less often than either example above, which is precisely its virtue:</p>
+
+<figure class="fullwidth">
+<pre class="code">#pragma dialect glither.hft ; fold first-match
+#pragma version 2.0-beta
+
+/// # BAZ.CX: Squeeze Breakout
+/// Volume-confirmed Bollinger breakout with momentum agreement.
+
+state box =
+  bars | window = 20
+       | timeframe = 5m
+       | tracks = [ close, volume ]
+
+state box_rsi =
+  bars | window = 14
+       | timeframe = 5m
+       | tracks = [ close ]
+
+rule squeeze_breakout_long =
+  tick | tick.close &gt; bbands_upper(box.close, dev = 2.0)
+       | volume(box.volume) &gt; &mu;(box.volume)
+       | rsi(box_rsi.close) &gt; 55.0
+  =&gt; transact market_buy
+       on    fill  into position(target = &mu;(box.close))
+       after 2h   market_close_all (reason = breakout_expiry)
+  then_log backlog
+
+rule breakout_stop =
+  position | position.unrealized_pnl &lt;= -0.015
+  =&gt; market_close_all (reason = failed_breakout)
+  then_log backlog</pre>
+<figcaption>The same clause the noise strategy used to <em>fade</em> a band-break (<code>tick.close &gt; bbands_upper</code>) here becomes the reason to <em>join</em> it &mdash; the difference is one RSI comparison and a regime opinion. Vocabulary is cheap; the temperament is the strategy.</figcaption>
+</figure>
+
+<h2 id="stack">10 &middot; From this page to production: CX, Palantir, Luna</h2>
+
+<p>Everything you just manipulated by hand has a permanent seat in the BAZ trade-signal stack. The division of labour:</p>
+
+<figure class="fullwidth">
+<pre class="code">   exchange feeds                    the numbers            the decisions              the humans
+ ┌────────────────┐   ticks &amp;   ┌──────────────────┐  WS   ┌──────────────────┐      ┌──────────────────┐
+ │     BAZ.CX     │───candles──▶│   BAZ.Palantir   │──────▶│     BAZ.Luna     │      │     backlog      │
+ │ market-data    │   (:8000)   │ validates rules  │stream │ CodeMirror 6     │      │ Ed25519-signed   │
+ │ subscriptions  │             │ ring buffers     │       │ notebook,        │      │ monetary audit   │
+ │ per symbol     │             │ SMA/BB/RSI/vol   │       │ candlestick      │      │ receipts, one    │
+ └────────────────┘             │ enrichment       │       │ charts, backlog  │      │ per transact     │
+                                └──────────────────┘       │ viewer           │      └──────────────────┘
+                                        ▲                  └──────────────────┘              ▲
+                                        │ compiled WASM strategy                             │
+                                ┌──────────────────┐                                         │
+                                │     BAZ.HFT      │─────────────────────────────────────────┘
+                                │ glither.hft      │   every fill emits a signed receipt
+                                │ compiler         │
+                                └──────────────────┘</pre>
+<figcaption>The BAZ trade-signal stack. The <code>state</code> blocks in a strategy are provisioning instructions for Palantir&rsquo;s ring buffers; the indicator calls are requests against its enrichment engine; the <code>then_log backlog</code> clauses land as signed receipts that Luna renders.</figcaption>
+</figure>
+
+<ul>
+<li><strong>BAZ.CX</strong> is the market-data layer: it holds the exchange subscriptions and streams raw ticks and candles for each subscribed symbol (Palantir reconnects to it with exponential backoff &mdash; the feed, not the strategy, is the fragile part).</li>
+<li><strong>BAZ.Palantir</strong> is the Rust orchestration server in the middle. It <em>validates and stores</em> glither.hft rules, derives which symbols they need and registers those with CX, keeps each <code>state</code> window in a bounded ring buffer, computes exactly the indicators from this page (&mu;, bands, RSI, volume averages) over those buffers, and streams the enriched events onward over WebSocket.</li>
+<li><strong>BAZ.Luna</strong> is where humans watch: a browser notebook (CodeMirror&nbsp;6) for editing strategies like the three above, candlestick charts for the enriched stream &mdash; the professional rendering of the toy canvases on this page &mdash; and a backlog viewer for the receipts.</li>
+<li><strong>BAZ.HFT</strong> itself is the compiler dialect: it turns the <code>.glith</code> files into WASM components and gives every <code>transact</code> a cryptographic afterlife &mdash; an Ed25519-signed monetary audit receipt in the backlog, so a strategy&rsquo;s claimed behaviour and its actual behaviour can be reconciled after the fact.</li>
+</ul>
+
+<div style="width:55%;border-left:3px solid var(--orange-3,#ff9900);background:var(--bg-elev,#1d1812);border-radius:0 6px 6px 0;padding:1rem 1.2rem;margin:2rem 0">
+  <p style="margin:0;font-family:'Intel One Mono',monospace;font-size:.72rem;color:var(--orange-1,#f3c46c);letter-spacing:.08em;text-transform:uppercase">&larr; ragbaz product</p>
+  <p style="margin:.3rem 0 0;font-size:.88rem;color:var(--fg-2,#d8c29d)">The stack this module teaches against is the <a href="/#p-baz"><strong>BAZ Trade Signal Stack</strong></a> &mdash; glither.hft compiler with signed receipts, Palantir orchestration, Luna frontend. <a href="/prospects/baz-signal-stack" style="white-space:nowrap">open prospectus &rarr;</a></p>
+</div>
+
+<h2 id="glossary">11 &middot; Glossary</h2>
+
+<div class="glossary">
+<dl>
+<dt>tick</dt><dd>One market update &mdash; the newest trade or quote. Strategies here are evaluated on every tick.</dd>
+<dt>bar / candle</dt><dd>All the ticks of one time slice summarized as open, high, low, close (and volume). A &ldquo;15m bar&rdquo; compresses fifteen minutes.</dd>
+<dt>timeframe</dt><dd>The bar size a state window is built from &mdash; the strategies above use 1m, 5m and 15m.</dd>
+<dt>SMA / &mu;</dt><dd>Simple moving average: the mean of the last N closes. The market&rsquo;s short-term memory.</dd>
+<dt>golden / death cross</dt><dd>Fast SMA crossing above / below the slow SMA &mdash; the classic trend-flip signal.</dd>
+<dt>Bollinger bands</dt><dd>A corridor of &ldquo;normal&rdquo;: the 20-bar mean &plusmn; k standard deviations. Touches mark statistically stretched prices.</dd>
+<dt>squeeze</dt><dd>Unusually narrow bands &mdash; a calm that often precedes a violent move.</dd>
+<dt>&sigma; (standard deviation)</dt><dd>The typical size of the wobble around the average; the yardstick the bands are built from.</dd>
+<dt>RSI</dt><dd>Relative strength index, 0&ndash;100: how one-sided recent movement has been. &gt;70 overbought, &lt;30 oversold.</dd>
+<dt>volume</dt><dd>How much was actually traded in a bar &mdash; the number of hands behind the price move.</dd>
+<dt>volatility</dt><dd>The size of the market&rsquo;s typical step, direction-blind. Sets stop widths and position sizes.</dd>
+<dt>regime</dt><dd>The market&rsquo;s current statistical personality: trending or mean-reverting (chop).</dd>
+<dt>trend following</dt><dd>&ldquo;Riding the waves&rdquo; &mdash; betting the current move continues. Few trades, wide stops, big targets.</dd>
+<dt>mean reversion</dt><dd>&ldquo;Trading the noise&rdquo; &mdash; betting the overshoot snaps back. Many trades, tight stops, small targets.</dd>
+<dt>fade</dt><dd>To trade against the most recent move &mdash; selling the spike, buying the dip.</dd>
+<dt>whipsaw</dt><dd>Being repeatedly stopped out as chop crosses your signals back and forth. The trend-follower&rsquo;s tax in the wrong regime.</dd>
+<dt>long / short</dt><dd>A position that profits when price rises / falls. <code>market_buy</code> opens longs, <code>market_sell</code> shorts.</dd>
+<dt>stop loss / take profit</dt><dd>Exit rules on the position&rsquo;s unrealized P&amp;L: the pre-committed loss you accept, the win you bank.</dd>
+<dt>P&amp;L</dt><dd>Profit and loss. <code>position.unrealized_pnl</code> is the open position&rsquo;s current fraction gained or lost.</dd>
+<dt>slippage</dt><dd>The gap between the price a signal saw and the price the fill got. The toy model on this page pretends it is zero; production must not.</dd>
+<dt>glither.hft</dt><dd>The BAZ.HFT strategy dialect: <code>state</code> windows + guarded <code>rule</code> pipelines, compiled to WASM. <code>fold first-match</code> = first matching rule wins the tick.</dd>
+<dt>ring buffer</dt><dd>A fixed-size window that forgets the oldest entry as each new one arrives &mdash; how Palantir stores every <code>state</code> block.</dd>
+<dt>backlog</dt><dd>The append-only record of every signal and fill, each entry Ed25519-signed &mdash; the strategy&rsquo;s audit trail, browsable in Luna.</dd>
+<dt>Ed25519 receipt</dt><dd>A digital signature attached to each transaction record, proving origin and integrity of the monetary audit trail.</dd>
+</dl>
+</div>
+
+<footer>Reading the Tape &mdash; a RAGBAZ school module. Synthetic tapes, real strategy files. The companion modules cover <a href="/school/cellular">cellular identity</a> and <a href="/school/forensics">Android forensics</a>.</footer>
+
+</article>
+<script>
+/* ── Reading the Tape: shared synthetic tape + indicator engine ── */
+(function(){
+"use strict";
+var N=360, tape=null, seed=7, regime='trend';
+var C={fg:'#d8c29d',dim:'#737373',grid:'#22201c',price:'#d8c29d',fast:'#ff9900',slow:'#7ab8ff',
+       band:'rgba(122,184,255,.14)',bandline:'#4a637f',up:'#b8bb26',dn:'#fb4934',warn:'#fabd2f',
+       mid:'#9f9f9f',accent:'#f3c46c'};
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);
+ t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(rnd){var u=0,v=0;while(u===0)u=rnd();while(v===0)v=rnd();
+ return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+function genTape(kind,sd){
+ var rnd=mulberry32(sd), close=[],vol=[],p=100,drift=0,anchor=100;
+ for(var i=0;i<N;i++){
+  var seg=(kind==='mixed')?(Math.floor(i/90)%2===0?'trend':'chop'):kind;
+  var r;
+  if(seg==='trend'){
+   if(i%120===0||drift===0){drift=(rnd()<0.5?-1:1)*(0.0009+0.0008*rnd());}
+   r=drift+0.0028*gauss(rnd);
+  }else{
+   anchor+= (p-anchor)*0.02;
+   r=(anchor-p)/p*0.10+0.0022*gauss(rnd);
+  }
+  p=p*(1+r); close.push(p);
+  var burst=Math.min(3,Math.abs(r)/0.002);
+  vol.push(Math.max(4, 30+18*burst+12*gauss(rnd)+(rnd()<0.04?70*rnd():0)));
+ }
+ return {close:close,vol:vol,kind:kind};
+}
+
+function sma(a,n){var out=new Array(a.length).fill(null),s=0;
+ for(var i=0;i<a.length;i++){s+=a[i];if(i>=n)s-=a[i-n];if(i>=n-1)out[i]=s/n;}return out;}
+function stdev(a,n){var out=new Array(a.length).fill(null);
+ for(var i=n-1;i<a.length;i++){var s=0,m=0,j;
+  for(j=i-n+1;j<=i;j++)m+=a[j];m/=n;
+  for(j=i-n+1;j<=i;j++)s+=(a[j]-m)*(a[j]-m);
+  out[i]=Math.sqrt(s/n);}return out;}
+function rsiW(a,n){var out=new Array(a.length).fill(null),g=0,l=0,i,d;
+ for(i=1;i<=n;i++){d=a[i]-a[i-1];if(d>0)g+=d;else l-=d;}
+ g/=n;l/=n;out[n]=100-100/(1+(l===0?1e9:g/l));
+ for(i=n+1;i<a.length;i++){d=a[i]-a[i-1];
+  g=(g*(n-1)+(d>0?d:0))/n; l=(l*(n-1)+(d<0?-d:0))/n;
+  out[i]=100-100/(1+(l===0?1e9:g/l));}return out;}
+function rollVol(a,n){var r=[null];for(var i=1;i<a.length;i++)r.push(Math.log(a[i]/a[i-1]));
+ var out=new Array(a.length).fill(null);
+ for(i=n;i<a.length;i++){var s=0,m=0,j;
+  for(j=i-n+1;j<=i;j++)m+=r[j];m/=n;
+  for(j=i-n+1;j<=i;j++)s+=(r[j]-m)*(r[j]-m);
+  out[i]=Math.sqrt(s/n);}return out;}
+
+/* ── canvas helpers ── */
+function prep(cv){var dpr=window.devicePixelRatio||1,w=cv.clientWidth||cv.parentNode.clientWidth-40;
+ cv.style.width='100%';var h=parseInt(cv.getAttribute('height'),10);
+ cv.width=w*dpr;cv.height=h*dpr;var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+ return {ctx:ctx,w:w,h:h};}
+function scaler(vals,h,pad){var mn=Infinity,mx=-Infinity;
+ vals.forEach(function(v){if(v===null||v===undefined)return;if(v<mn)mn=v;if(v>mx)mx=v;});
+ if(mn===mx){mn-=1;mx+=1;}
+ return function(v){return h-pad-(v-mn)/(mx-mn)*(h-2*pad);};}
+function xOf(i,w){return 8+i/(N-1)*(w-16);}
+function line(ctx,w,arr,y,col,lw){ctx.strokeStyle=col;ctx.lineWidth=lw||1.3;ctx.beginPath();var started=false;
+ for(var i=0;i<arr.length;i++){if(arr[i]===null)continue;
+  var x=xOf(i,w),yy=y(arr[i]);if(!started){ctx.moveTo(x,yy);started=true;}else ctx.lineTo(x,yy);}ctx.stroke();}
+function frame(ctx,w,h){ctx.fillStyle='#0e0d0b';ctx.fillRect(0,0,w,h);
+ ctx.strokeStyle=C.grid;ctx.lineWidth=1;
+ for(var i=1;i<4;i++){ctx.beginPath();ctx.moveTo(0,h*i/4);ctx.lineTo(w,h*i/4);ctx.stroke();}}
+function marker(ctx,x,y,dir,col){ctx.fillStyle=col;ctx.beginPath();
+ if(dir>0){ctx.moveTo(x,y-9);ctx.lineTo(x-5,y);ctx.lineTo(x+5,y);}else{ctx.moveTo(x,y+9);ctx.lineTo(x-5,y);ctx.lineTo(x+5,y);}
+ ctx.closePath();ctx.fill();}
+function cross(ctx,x,y,col){ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.beginPath();
+ ctx.moveTo(x-4,y-4);ctx.lineTo(x+4,y+4);ctx.moveTo(x+4,y-4);ctx.lineTo(x-4,y+4);ctx.stroke();}
+function pct(x){return (x>=0?'+':'')+(100*x).toFixed(2)+'%';}
+function esc(cls,txt){return "<span class='"+cls+"'>"+txt+"</span>";}
+
+/* ── widgets ── */
+function wTape(){var p=prep(document.getElementById('cv-tape')),y=scaler(tape.close,p.h,14);
+ frame(p.ctx,p.w,p.h);line(p.ctx,p.w,tape.close,y,C.price,1.4);
+ if(tape.kind==='mixed'){p.ctx.fillStyle='rgba(255,153,0,.05)';
+  for(var s=0;s<N;s+=180)p.ctx.fillRect(xOf(s,p.w),0,xOf(Math.min(s+90,N-1),p.w)-xOf(s,p.w),p.h);}
+ var last=tape.close[N-1],first=tape.close[0],chg=(last-first)/first;
+ document.getElementById('ro-tape').innerHTML=
+  "regime "+esc('warn',tape.kind)+" &middot; "+N+" bars &middot; net move "+esc(chg>=0?'ok':'bad',pct(chg))+
+  " &middot; every chart below reads this same series"+(tape.kind==='mixed'?" &middot; shaded spans = trending segments":"");}
+
+function wSma(){var f=+document.getElementById('sma-fast').value,s=+document.getElementById('sma-slow').value;
+ if(f>=s){s=f+1;document.getElementById('sma-slow').value=s;}
+ document.getElementById('sma-fast-v').textContent=f;document.getElementById('sma-slow-v').textContent=s;
+ var p=prep(document.getElementById('cv-sma')),y=scaler(tape.close,p.h,14);
+ frame(p.ctx,p.w,p.h);
+ var F=sma(tape.close,f),S=sma(tape.close,s);
+ line(p.ctx,p.w,tape.close,y,'rgba(216,194,157,.45)',1);
+ line(p.ctx,p.w,F,y,C.fast,1.6);line(p.ctx,p.w,S,y,C.slow,1.6);
+ var golden=0,death=0;
+ for(var i=1;i<N;i++){if(F[i-1]===null||S[i-1]===null)continue;
+  var a=F[i-1]-S[i-1],b=F[i]-S[i];
+  if(a<=0&&b>0){golden++;marker(p.ctx,xOf(i,p.w),y(tape.close[i])+14,1,C.up);}
+  if(a>=0&&b<0){death++;marker(p.ctx,xOf(i,p.w),y(tape.close[i])-14,-1,C.dn);}}
+ document.getElementById('ro-sma').innerHTML=
+  esc('ok','&mu;('+f+')')+" fast &middot; "+esc('warn','&mu;('+s+')')+" slow &middot; "+
+  golden+" golden "+esc('ok','&#9650;')+" / "+death+" death "+esc('bad','&#9660;')+" crosses on this tape &mdash; "+
+  (golden+death>10?"that many flips is chop talking: most of these crosses whipsaw.":"few flips: the averages agree with the regime.");}
+
+function simWaves(){var F=sma(tape.close,9),S=sma(tape.close,21),R=rsiW(tape.close,14);
+ var trades=[],pos=null;
+ for(var i=22;i<N;i++){
+  if(pos){var ret=(tape.close[i]-pos.px)/pos.px*pos.dir;
+   if(ret>=0.08||ret<=-0.03||i-pos.i>=16||i===N-1){trades.push({i0:pos.i,i1:i,dir:pos.dir,ret:ret});pos=null;}}
+  if(!pos){
+   if(F[i]>S[i]&&R[i]>60)pos={i:i,px:tape.close[i],dir:1};
+   else if(F[i]<S[i]&&R[i]<40)pos={i:i,px:tape.close[i],dir:-1};}}
+ return trades;}
+function wWaves(){var p=prep(document.getElementById('cv-waves')),y=scaler(tape.close,p.h,14);
+ frame(p.ctx,p.w,p.h);
+ line(p.ctx,p.w,tape.close,y,'rgba(216,194,157,.45)',1);
+ line(p.ctx,p.w,sma(tape.close,9),y,C.fast,1.2);line(p.ctx,p.w,sma(tape.close,21),y,C.slow,1.2);
+ var t=simWaves(),wins=0,pnl=0;
+ t.forEach(function(tr){if(tr.ret>0)wins++;pnl+=tr.ret;
+  marker(p.ctx,xOf(tr.i0,p.w),y(tape.close[tr.i0])+(tr.dir>0?14:-14),tr.dir,tr.dir>0?C.up:C.dn);
+  cross(p.ctx,xOf(tr.i1,p.w),y(tape.close[tr.i1]),tr.ret>0?C.up:C.dn);});
+ document.getElementById('ro-waves').innerHTML= t.length===0?
+  "no entries &mdash; the cross+RSI agreement never happened on this tape.":
+  t.length+" trades &middot; "+wins+" wins ("+Math.round(100*wins/t.length)+"%) &middot; sum of returns "+
+  esc(pnl>=0?'ok':'bad',pct(pnl))+" &middot; "+esc('warn','&#9650;&#9660;')+" entries, &times; exits &middot; toy fills: next tick, no fees. Flip the regime and rerun.";}
+
+function wBB(){var n=+document.getElementById('bb-win').value,k=+document.getElementById('bb-dev').value/10;
+ document.getElementById('bb-win-v').textContent=n;document.getElementById('bb-dev-v').textContent=k.toFixed(1);
+ var M=sma(tape.close,n),SD=stdev(tape.close,n),up=[],lo=[],i;
+ for(i=0;i<N;i++){up.push(M[i]===null?null:M[i]+k*SD[i]);lo.push(M[i]===null?null:M[i]-k*SD[i]);}
+ var p=prep(document.getElementById('cv-bb')),y=scaler(tape.close.concat(up.filter(Boolean),lo.filter(Boolean)),p.h,14);
+ frame(p.ctx,p.w,p.h);
+ p.ctx.fillStyle=C.band;p.ctx.beginPath();var st=false;
+ for(i=0;i<N;i++){if(up[i]===null)continue;var x=xOf(i,p.w);if(!st){p.ctx.moveTo(x,y(up[i]));st=true;}else p.ctx.lineTo(x,y(up[i]));}
+ for(i=N-1;i>=0;i--){if(lo[i]===null)continue;p.ctx.lineTo(xOf(i,p.w),y(lo[i]));}
+ p.ctx.closePath();p.ctx.fill();
+ line(p.ctx,p.w,up,y,C.bandline,1);line(p.ctx,p.w,lo,y,C.bandline,1);line(p.ctx,p.w,M,y,C.mid,1);
+ line(p.ctx,p.w,tape.close,y,C.price,1.3);
+ var touches=0;
+ for(i=0;i<N;i++){if(up[i]===null)continue;
+  if(tape.close[i]>up[i]){touches++;marker(p.ctx,xOf(i,p.w),y(tape.close[i])-12,-1,C.warn);}
+  else if(tape.close[i]<lo[i]){touches++;marker(p.ctx,xOf(i,p.w),y(tape.close[i])+12,1,C.warn);}}
+ document.getElementById('ro-bb').innerHTML=
+  "&mu;&nbsp;&plusmn;&nbsp;"+k.toFixed(1)+"&sigma; over "+n+" bars &middot; "+touches+" band excursions "+esc('warn','&#9650;&#9660;')+
+  " &middot; wider k = rarer, more meaningful touches &middot; the noise strategy uses k=2.5 for exactly that reason.";}
+
+function wRsi(){var n=+document.getElementById('rsi-per').value;
+ document.getElementById('rsi-per-v').textContent=n;
+ var R=rsiW(tape.close,n);
+ var pp=prep(document.getElementById('cv-rsi-price')),yy=scaler(tape.close,pp.h,10);
+ frame(pp.ctx,pp.w,pp.h);line(pp.ctx,pp.w,tape.close,yy,C.price,1.2);
+ var p=prep(document.getElementById('cv-rsi'));frame(p.ctx,p.w,p.h);
+ var y=function(v){return p.h-10-(v/100)*(p.h-20);};
+ p.ctx.fillStyle='rgba(251,73,52,.08)';p.ctx.fillRect(0,y(100),p.w,y(70)-y(100));
+ p.ctx.fillStyle='rgba(184,187,38,.08)';p.ctx.fillRect(0,y(30),p.w,y(0)-y(30));
+ [30,50,70].forEach(function(l){p.ctx.strokeStyle=l===50?C.grid:'#3a352c';p.ctx.beginPath();
+  p.ctx.moveTo(0,y(l));p.ctx.lineTo(p.w,y(l));p.ctx.stroke();});
+ p.ctx.strokeStyle=C.accent;p.ctx.lineWidth=1.4;p.ctx.beginPath();var st=false;
+ for(var i=0;i<N;i++){if(R[i]===null)continue;var x=xOf(i,p.w);
+  if(!st){p.ctx.moveTo(x,y(R[i]));st=true;}else p.ctx.lineTo(x,y(R[i]));}
+ p.ctx.stroke();
+ var ob=0,os=0;for(i=0;i<N;i++){if(R[i]===null)continue;if(R[i]>70)ob++;if(R[i]<30)os++;}
+ var cur=R[N-1];
+ document.getElementById('ro-rsi').innerHTML=
+  "RSI("+n+") now "+esc(cur>70?'bad':cur<30?'ok':'warn',cur===null?'&mdash;':cur.toFixed(1))+
+  " &middot; "+ob+" bars overbought (&gt;70), "+os+" oversold (&lt;30) &middot; wave rules read &gt;60 as fuel; noise rules read &gt;75 as exhaustion.";}
+
+function wVol(){var pp=prep(document.getElementById('cv-volp')),yy=scaler(tape.close,pp.h,10);
+ frame(pp.ctx,pp.w,pp.h);line(pp.ctx,pp.w,tape.close,yy,C.price,1.2);
+ var p=prep(document.getElementById('cv-vol'));frame(p.ctx,p.w,p.h);
+ var M=sma(tape.vol,20),mx=Math.max.apply(null,tape.vol);
+ var y=function(v){return p.h-6-(v/mx)*(p.h-14);};
+ var bw=Math.max(1,(p.w-16)/N-0.6),surge=0;
+ for(var i=0;i<N;i++){var upBar=i>0&&tape.close[i]>=tape.close[i-1];
+  var isSurge=M[i]!==null&&tape.vol[i]>M[i];if(isSurge)surge++;
+  p.ctx.fillStyle=isSurge?(upBar?C.up:C.dn):'rgba(159,159,159,.35)';
+  p.ctx.fillRect(xOf(i,p.w)-bw/2,y(tape.vol[i]),bw,p.h-6-y(tape.vol[i]));}
+ line(p.ctx,p.w,M,y,C.accent,1.2);
+ document.getElementById('ro-vol').innerHTML=
+  surge+" of "+N+" bars above "+esc('warn','&mu;(volume)')+" (amber line) &middot; colored bars = crowd present (green up / red down) &middot; grey = thin tape, distrust its signals.";}
+
+function wVola(){var pp=prep(document.getElementById('cv-volap')),yy=scaler(tape.close,pp.h,10);
+ frame(pp.ctx,pp.w,pp.h);line(pp.ctx,pp.w,tape.close,yy,C.price,1.2);
+ var V=rollVol(tape.close,20),p=prep(document.getElementById('cv-vola'));
+ frame(p.ctx,p.w,p.h);var y=scaler(V,p.h,10);
+ var m=null,c=0;V.forEach(function(v){if(v!==null){m=(m===null?v:m+v);c++;}});m=m/c;
+ p.ctx.fillStyle='rgba(251,73,52,.07)';
+ for(var i=0;i<N;i++){if(V[i]!==null&&V[i]>1.4*m)p.ctx.fillRect(xOf(i,p.w)-1,0,3,p.h);}
+ line(p.ctx,p.w,V,y,C.dn,1.4);
+ var cur=V[N-1],ann=cur===null?null:cur*Math.sqrt(365*24*4)*100;
+ document.getElementById('ro-vola').innerHTML=
+  "20-bar &sigma; of returns &middot; now "+esc(cur>1.4*m?'bad':'ok',cur===null?'&mdash;':(100*cur).toFixed(2)+'% / bar')+
+  (ann?" (&asymp; "+ann.toFixed(0)+"% annualized at 15m bars)":"")+
+  " &middot; red shading = storm (&gt;1.4&times; average) &mdash; halve the size or stand aside &middot; notice how storms cluster.";}
+
+function simNoise(){var R=rsiW(tape.close,14),M=sma(tape.close,20),SD=stdev(tape.close,20),VM=sma(tape.vol,20);
+ var trades=[],pos=null;
+ for(var i=21;i<N;i++){
+  var up=M[i]+2.5*SD[i],lo=M[i]-2.5*SD[i];
+  if(pos){var ret=(tape.close[i]-pos.px)/pos.px*pos.dir,hitMid=(pos.dir>0?tape.close[i]>=pos.tgt:tape.close[i]<=pos.tgt);
+   if(ret<=-0.008||ret>=0.015||hitMid||i-pos.i>=8||i===N-1){trades.push({i0:pos.i,i1:i,dir:pos.dir,ret:ret});pos=null;}}
+  if(!pos&&VM[i]!==null&&tape.vol[i]>VM[i]){
+   if(R[i]<25&&tape.close[i]<lo)pos={i:i,px:tape.close[i],dir:1,tgt:M[i]};
+   else if(R[i]>75&&tape.close[i]>up)pos={i:i,px:tape.close[i],dir:-1,tgt:M[i]};}}
+ return trades;}
+function wNoise(){var p=prep(document.getElementById('cv-noise')),
+  M=sma(tape.close,20),SD=stdev(tape.close,20),up=[],lo=[],i;
+ for(i=0;i<N;i++){up.push(M[i]===null?null:M[i]+2.5*SD[i]);lo.push(M[i]===null?null:M[i]-2.5*SD[i]);}
+ var y=scaler(tape.close.concat(up.filter(Boolean),lo.filter(Boolean)),p.h,14);
+ frame(p.ctx,p.w,p.h);
+ line(p.ctx,p.w,up,y,C.bandline,1);line(p.ctx,p.w,lo,y,C.bandline,1);line(p.ctx,p.w,M,y,C.mid,1);
+ line(p.ctx,p.w,tape.close,y,C.price,1.3);
+ var t=simNoise(),wins=0,pnl=0;
+ t.forEach(function(tr){if(tr.ret>0)wins++;pnl+=tr.ret;
+  marker(p.ctx,xOf(tr.i0,p.w),y(tape.close[tr.i0])+(tr.dir>0?14:-14),tr.dir,tr.dir>0?C.up:C.dn);
+  cross(p.ctx,xOf(tr.i1,p.w),y(tape.close[tr.i1]),tr.ret>0?C.up:C.dn);});
+ document.getElementById('ro-noise').innerHTML= t.length===0?
+  "no entries &mdash; no volume-confirmed band+RSI extreme on this tape (typical when the corridor keeps stretching in a trend).":
+  t.length+" trades &middot; "+wins+" wins ("+Math.round(100*wins/t.length)+"%) &middot; sum of returns "+
+  esc(pnl>=0?'ok':'bad',pct(pnl))+" &middot; band 2.5&sigma;, RSI 25/75, volume&gt;&mu;, stop &minus;0.8%, target midline &middot; timeout compressed to 8 bars for legibility.";}
+
+function drawAll(){wTape();wSma();wWaves();wBB();wRsi();wVol();wVola();wNoise();}
+function setTape(kind){regime=kind;tape=genTape(kind,seed);
+ ['rg-trend','rg-chop','rg-mixed'].forEach(function(id){document.getElementById(id).classList.remove('active');});
+ document.getElementById(kind==='trend'?'rg-trend':kind==='chop'?'rg-chop':'rg-mixed').classList.add('active');
+ drawAll();}
+
+document.getElementById('rg-trend').addEventListener('click',function(){setTape('trend');});
+document.getElementById('rg-chop').addEventListener('click',function(){setTape('chop');});
+document.getElementById('rg-mixed').addEventListener('click',function(){setTape('mixed');});
+document.getElementById('rg-seed').addEventListener('click',function(){seed=Math.floor(Math.random()*1e6);setTape(regime);});
+['sma-fast','sma-slow'].forEach(function(id){document.getElementById(id).addEventListener('input',wSma);});
+['bb-win','bb-dev'].forEach(function(id){document.getElementById(id).addEventListener('input',wBB);});
+document.getElementById('rsi-per').addEventListener('input',wRsi);
+var rsz;window.addEventListener('resize',function(){clearTimeout(rsz);rsz=setTimeout(drawAll,150);});
+setTape('trend');
+})();
+</script>
+
+</div>
+<footer class="site-footer">
+<div class="site-wrap">
+<a class="site-wordmark" href="/"><img src="../../assets/logo-mark.svg" alt="RAGBAZ"/>RAGBAZ</a>
+<div class="site-links">
+<a href="/">home</a>
+<a href="/school">school</a>
+<a href="/pricing">pricing</a>
+<a href="/doc/">docs</a>
+<a href="/konsonans-ai-governance">konsonans ai governance</a>
+</div>
+<span class="site-meta">studio · oslo + stockholm · warm-solarized-dark</span>
+</div>
+</footer>
+<script>
+function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
+function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
+</script>
+</body>
+</html>
