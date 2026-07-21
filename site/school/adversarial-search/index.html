@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Searching the Solver Tree - RAGBAZ School</title>
+  <meta name="description" content="A RAGBAZ School module on game theory, frontier search, minimax, alpha-beta pruning, B* intervals, and checkers as a solved game." />
+  <link rel="canonical" href="https://ragbaz.cc/school/adversarial-search" />
+  <link rel="icon" href="../../assets/logo-mark.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book.css" />
+<style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: #0a0908;
+      color: #d8c29d;
+      font-family: "et-book", Georgia, serif;
+      font-size: clamp(16px, .94rem + .25vw, 19px);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #f3c46c; text-decoration: none; }
+    a:hover { color: #ff9900; }
+    :focus-visible { outline: 2px solid #7ab8ff; outline-offset: 3px; }
+    .mono { font-family: "Intel One Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+    code, pre { font-family: "Intel One Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { border: 1px solid #3a2a18; border-radius: 5px; padding: .05rem .25rem; background: #111; color: #f6d7a7; }
+    pre { overflow-x: auto; border: 1px solid #2a2a2a; border-radius: 8px; padding: .9rem; background: #0f0f10; color: #7ab8ff; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+    .bar { position: sticky; top: 0; z-index: 20; background: #15120c; border-bottom: 1px solid #2a2a2a; }
+    .bar .wrap { min-height: 56px; display: flex; align-items: center; gap: 1rem; }
+    .wordmark { display: flex; align-items: center; gap: .6rem; color: #f6d7a7; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .wordmark img { width: auto; height: 39px; display: block; }
+    .bar nav { margin-left: auto; display: flex; align-items: center; gap: .95rem; font-size: .82rem; }
+    .bar nav a, .nav-trigger { color: #9f9f9f; }
+    .bar nav a:hover, .bar nav a.active, .nav-trigger:hover, .nav-trigger.active, .nav-group[open] .nav-trigger { color: #f3c46c; }
+    .nav-group { position: relative; }
+    .nav-trigger { list-style: none; cursor: pointer; white-space: nowrap; }
+    .nav-trigger::-webkit-details-marker { display: none; }
+    .nav-trigger::after { content: " v"; color: #737373; font-size: .72rem; }
+    .nav-group[open] .nav-trigger::after { content: " ^"; color: #f3c46c; }
+    .nav-menu { position: absolute; top: calc(100% + .9rem); left: 50%; z-index: 30; min-width: 215px; max-height: min(72vh, 520px); overflow-y: auto; padding: .55rem; border: 1px solid #2a2a2a; border-radius: 8px; background: #15120c; transform: translateX(-50%); }
+    .nav-menu a { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .45rem .55rem; border-radius: 6px; color: #d4c19a; }
+    .nav-menu a::after { content: "->"; color: #737373; }
+    .nav-menu a:hover { background: #121212; }
+    .hm-btn { display: none; margin-left: auto; border: 0; background: none; color: #d8c29d; font-size: 1.2rem; line-height: 1; cursor: pointer; }
+    .hm-scrim { position: fixed; inset: 0; z-index: 39; background: rgba(0,0,0,.5); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
+    .hm-overlay { position: fixed; top: 0; right: 0; z-index: 40; width: min(86vw, 330px); height: 100vh; overflow-y: auto; padding: 1.5rem; background: #15120c; border-left: 1px solid #2a2a2a; transform: translateX(100%); transition: transform .2s ease; }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-close { position: absolute; top: 1rem; right: 1rem; border: 0; background: none; color: #d8c29d; cursor: pointer; font-size: 1.2rem; }
+    .hm-head { margin-top: .7rem; margin-bottom: .15rem; color: #737373; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+    .hm-head:first-of-type { margin-top: 2rem; }
+    .hm-overlay a { display: block; padding: .35rem 0; color: #d8c29d; font-size: .85rem; }
+    .hero { border-bottom: 1px solid #2a2a2a; padding: clamp(3rem, 8vw, 6rem) 0 clamp(2rem, 5vw, 3.25rem); background: radial-gradient(900px 460px at 78% -8%, rgba(255,153,0,.13), transparent 62%), radial-gradient(760px 420px at -8% 72%, rgba(79,179,199,.10), transparent 58%); }
+    .crumbs { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; margin-bottom: .9rem; color: #737373; font-size: .78rem; }
+    .crumbs a { color: #9f9f9f; }
+    .crumbs span::before { content: "/"; margin-right: .45rem; color: #737373; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .42fr); gap: clamp(1.25rem, 4vw, 3rem); align-items: end; }
+    h1 { margin: 0; max-width: 920px; color: #f6d7a7; font-family: "et-book", Georgia, serif; font-size: clamp(2.4rem, 1rem + 6vw, 5.8rem); line-height: .98; letter-spacing: 0; }
+    .lede { max-width: 72ch; margin: 1.1rem 0 0; color: #d8c29d; font-size: clamp(1.08rem, 1rem + .35vw, 1.32rem); }
+    .spec-strip { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+    .spec-chip { border: 1px solid #3a2a18; border-radius: 999px; padding: .24rem .55rem; background: rgba(255,153,0,.07); color: #d4c19a; font-size: .74rem; }
+    .summary-panel, .card, .widget { border: 1px solid #3a2a18; border-radius: 8px; background: linear-gradient(180deg, rgba(29,24,18,.96), rgba(18,18,18,.98)); }
+    .summary-panel { padding: 1rem; }
+    .summary-panel h2 { margin: 0 0 .8rem; color: #f3c46c; font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; }
+    .summary-panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .55rem; color: #d4c19a; font-size: .9rem; }
+    .summary-panel li::before { content: "-> "; color: #f3c46c; }
+    .toc-band { border-bottom: 1px solid #2a2a2a; background: #0f0f10; }
+    .toc-band .wrap { display: flex; flex-wrap: wrap; gap: .35rem 1rem; padding-top: .8rem; padding-bottom: .8rem; }
+    .toc-band a { color: #9f9f9f; font-size: .78rem; }
+    .toc-band a:hover { color: #f3c46c; }
+    .part { padding: clamp(2.4rem, 6vw, 4rem) 0; border-bottom: 1px solid #2a2a2a; }
+    .part-head { display: grid; grid-template-columns: minmax(0, .72fr) minmax(240px, .28fr); gap: 1.5rem; align-items: end; margin-bottom: 1.4rem; }
+    .kicker { color: #ff9900; font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
+    h2 { margin: .25rem 0 0; color: #f6d7a7; font-size: clamp(1.55rem, 1rem + 2.3vw, 2.8rem); line-height: 1.08; }
+    h3 { margin: 1rem 0 .4rem; color: #7ab8ff; font-size: 1.08rem; }
+    p { margin: .65rem 0 0; }
+    .note { border-left: 2px solid #d97742; padding: .8rem 1rem; background: rgba(29,24,18,.65); color: #d4c19a; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .card { padding: 1rem; }
+    .equation { font-size: 1.3rem; color: #f6d7a7; text-align: center; padding: 1rem; }
+    .legend-svg, .board-svg, .widget svg { width: 100%; height: auto; display: block; }
+    .legend-svg text, .board-svg text, .widget svg text { font-family: "Intel One Mono", ui-monospace, monospace; }
+    .widget { padding: clamp(1rem, 3vw, 1.25rem); margin-top: 1rem; }
+    .widget-head { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; justify-content: space-between; margin-bottom: .8rem; }
+    .widget-head h3 { margin: 0; color: #f6d7a7; }
+    .controls { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; }
+    button, select { border: 1px solid #2a2a2a; border-radius: 8px; padding: .44rem .65rem; background: #0f0f10; color: #d4c19a; cursor: pointer; font: inherit; }
+    button:hover, button.active, select:hover { border-color: #d97742; color: #f3c46c; }
+    .readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin-top: .75rem; }
+    .metric { border: 1px solid #2a2a2a; border-radius: 8px; padding: .65rem; background: #0f0f10; }
+    .metric span { display: block; color: #737373; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+    .metric strong { display: block; color: #f6d7a7; font-size: 1.05rem; margin-top: .2rem; }
+    .set-line { overflow-wrap: anywhere; }
+    .widget-copy { color: #d4c19a; min-height: 3.1rem; }
+    .kbd { display: inline-flex; min-width: 1.65rem; min-height: 1.35rem; align-items: center; justify-content: center; border: 1px solid #2a2a2a; border-bottom-color: #3a2a18; border-radius: 6px; padding: .03rem .32rem; background: #0f0f10; color: #f6d7a7; font-size: .75rem; }
+    .table-wrap { overflow-x: auto; border: 1px solid #2a2a2a; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    th, td { padding: .72rem .8rem; border-bottom: 1px solid #2a2a2a; vertical-align: top; text-align: left; }
+    th { color: #f3c46c; background: rgba(29,24,18,.8); }
+    tr:last-child td { border-bottom: 0; }
+    footer { border-top: 1px solid #2a2a2a; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .wordmark img { height: 22px; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .82rem; }
+    footer .meta { margin-left: auto; color: #737373; font-size: .74rem; }
+    @media (max-width: 860px) {
+      .bar .wrap { min-height: auto; padding-top: .75rem; padding-bottom: .9rem; }
+      .bar nav { display: none; }
+      .hm-btn { display: block; }
+      .hero-grid, .part-head, .grid-2 { grid-template-columns: 1fr; }
+      .readout { grid-template-columns: 1fr; }
+      footer .meta { width: 100%; margin-left: 0; }
+    }
+    @media (max-width: 540px) {
+      h1 { font-size: 2.25rem; }
+      .controls button, .controls select { flex: 1 1 45%; }
+    }
+  </style>
+  <script src="../../assets/local-mode.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="wordmark mono" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <nav class="mono" aria-label="RAGBAZ sections">
+        <a href="/">home</a>
+        <details class="nav-group"><summary class="nav-trigger">products</summary><div class="nav-menu"><a href="/#products">product lines</a><a href="/#p-governance">ai governance</a><a href="/#p-matches">matches</a><a href="/#p-articulate">articulate</a><a href="/#p-mailroute">mailroute</a><a href="/#p-baz">baz signals</a><a href="/completion">completion</a></div></details>
+        <details class="nav-group"><summary class="nav-trigger active">learn</summary><div class="nav-menu"><a class="active" href="/school">school</a><a href="/school/adversarial-search">game search</a><a href="/school/vision/face-mesh-morphing-techniques">face lesson</a><a href="/doc/">docs</a></div></details>
+        <details class="nav-group"><summary class="nav-trigger">governance</summary><div class="nav-menu"><a href="/ai-governance">buyer page</a><a href="/konsonans-ai-governance">formal spec</a><a href="/doc/products/ai-governance">architecture</a></div></details>
+        <details class="nav-group"><summary class="nav-trigger">demos</summary><div class="nav-menu"><a href="https://face.ragbaz.cc">face demo</a><a href="/glither-wasm">glither wasm</a><a href="/prospects/baz-signal-stack">baz signals</a></div></details>
+        <a href="/pricing">pricing</a>
+      </nav>
+      <button class="hm-btn mono" onclick="toggleHM()" aria-label="Open menu" aria-controls="hm-overlay" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay mono" id="hm-overlay" aria-label="RAGBAZ menu">
+    <button class="hm-close" onclick="closeHM()" aria-label="Close menu">✕</button>
+    <div class="hm-head">sections</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <div class="hm-head">learn</div>
+    <a href="/school" class="active" onclick="closeHM()">school</a>
+    <a href="/school/adversarial-search" class="active" onclick="closeHM()">game search</a>
+    <a href="/school/vision/face-mesh-morphing-techniques" onclick="closeHM()">face lesson</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
+    <div class="hm-head">demos</div>
+    <a href="https://face.ragbaz.cc" onclick="closeHM()">face demo</a>
+    <a href="/glither-wasm" onclick="closeHM()">glither wasm</a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="crumbs mono"><a href="/school">school</a><span>adversarial search</span></div>
+          <h1>Searching the Solver Tree</h1>
+          <p class="lede">A finite perfect-information game has a value under optimal play. The problem is that the tree is usually too large to read. Search is how we approximate the game-theoretic value we cannot compute exactly.</p>
+          <div class="spec-strip mono">
+            <span class="spec-chip">game theory</span>
+            <span class="spec-chip">frontier search</span>
+            <span class="spec-chip">minimax</span>
+            <span class="spec-chip">alpha-beta</span>
+            <span class="spec-chip">B* intervals</span>
+          </div>
+        </div>
+        <aside class="summary-panel">
+          <h2 class="mono">keyboard</h2>
+          <ul>
+            <li><span class="kbd">F</span> cycles BFS / Dijkstra / A*</li>
+            <li><span class="kbd">M</span> toggles move ordering</li>
+            <li><span class="kbd">B</span> advances the B* interval</li>
+            <li><span class="kbd">Alt</span> + <span class="kbd">M</span> opens the menu</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <nav class="toc-band mono" aria-label="module parts">
+      <div class="wrap">
+        <a href="#game-theory">0 game theory</a>
+        <a href="#solver-tree">I solver tree</a>
+        <a href="#frontier">II frontier explorer</a>
+        <a href="#checkers">III two players</a>
+        <a href="#bstar">B* intervals</a>
+        <a href="#synthesis">IV synthesis</a>
+      </div>
+    </nav>
+
+    <section class="part" id="game-theory">
+      <div class="wrap">
+        <div class="part-head">
+          <div><div class="kicker mono">part 0</div><h2>Game Theory First</h2></div>
+          <p class="note">For zero-sum, perfect-information games, optimal play pins down a value: win, loss, draw, or a numeric utility. The finite tree can be solved by backward induction.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Why search exists</h3>
+            <p>The exact value is available in principle but not in practice. Chess, checkers, go, and tactical planning trees blow up so quickly that a program needs a budgeted procedure: expand the most useful part of the tree, estimate what cannot be expanded, and preserve enough trace to audit the decision.</p>
+          </div>
+          <div class="card">
+            <h3>The module spine</h3>
+            <p>One-player search teaches frontier discipline. Two-player search adds an opponent who can answer. Alpha-beta shows how exact reasoning can skip irrelevant branches. B* changes the scalar score into an interval and asks which move can be proved best.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="part" id="solver-tree">
+      <div class="wrap">
+        <div class="part-head">
+          <div><div class="kicker mono">part I</div><h2>The Solver Tree</h2></div>
+          <p class="note">Branching factor <code>b</code> and depth <code>d</code> produce the wall: <code>b^d</code>. Every technique below is a way to spend less work against that wall.</p>
+        </div>
+        <div class="grid-2">
+          <svg class="legend-svg" viewBox="0 0 620 280" role="img" aria-label="Tree legend with root, edges, internal nodes, leaves, and depth levels">
+            <rect width="620" height="280" fill="#0f0f10" rx="8"/>
+            <g stroke="#3a2a18" stroke-width="2">
+              <path d="M310 56 L170 138 M310 56 L450 138 M170 138 L95 222 M170 138 L245 222 M450 138 L375 222 M450 138 L525 222"/>
+            </g>
+            <g fill="#15120c" stroke="#d97742" stroke-width="2">
+              <circle cx="310" cy="56" r="24"/><circle cx="170" cy="138" r="24"/><circle cx="450" cy="138" r="24"/>
+            </g>
+            <g fill="#121212" stroke="#7ab8ff" stroke-width="2">
+              <circle cx="95" cy="222" r="22"/><circle cx="245" cy="222" r="22"/><circle cx="375" cy="222" r="22"/><circle cx="525" cy="222" r="22"/>
+            </g>
+            <g fill="#f6d7a7" font-size="13" text-anchor="middle">
+              <text x="310" y="61">root</text><text x="170" y="143">node</text><text x="450" y="143">node</text>
+              <text x="95" y="226">leaf</text><text x="245" y="226">leaf</text><text x="375" y="226">leaf</text><text x="525" y="226">leaf</text>
+            </g>
+            <g fill="#737373" font-size="12"><text x="28" y="62">depth 0</text><text x="28" y="144">depth 1</text><text x="28" y="226">depth 2</text></g>
+          </svg>
+          <div class="card">
+            <h3>Vocabulary</h3>
+            <p>A <code>node</code> is a state. An <code>edge</code> is an action. A <code>leaf</code> is a terminal state or a budget boundary where the evaluator is called. The <code>frontier</code> is the set of generated states not expanded yet.</p>
+            <div class="equation mono">nodes ≈ b<sup>d</sup></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="part" id="frontier">
+      <div class="wrap">
+        <div class="part-head">
+          <div><div class="kicker mono">part II</div><h2>One Player: The Explorer's Path</h2></div>
+          <p class="note">BFS, Dijkstra, and A* are the same frontier machine with different priorities. Dijkstra is A* with <code>h = 0</code>. BFS is Dijkstra with unit costs.</p>
+        </div>
+        <div class="widget" id="frontier-widget">
+          <div class="widget-head">
+            <h3>Widget 1 - Frontier Explorer</h3>
+            <div class="controls mono">
+              <button type="button" data-frontier-mode="bfs">BFS</button>
+              <button type="button" data-frontier-mode="dijkstra">Dijkstra</button>
+              <button type="button" data-frontier-mode="astar" class="active">A*</button>
+              <button type="button" data-frontier-prev>prev</button>
+              <button type="button" data-frontier-next>next</button>
+            </div>
+          </div>
+          <p class="widget-copy" id="frontier-copy"></p>
+          <svg id="frontier-svg" viewBox="0 0 720 360" role="img" aria-label="Weighted graph frontier explorer"></svg>
+          <div class="readout mono">
+            <div class="metric"><span>expanded</span><strong id="frontier-count">0</strong></div>
+            <div class="metric"><span>open</span><strong class="set-line" id="frontier-open">-</strong></div>
+            <div class="metric"><span>closed</span><strong class="set-line" id="frontier-closed">-</strong></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Admissibility and consistency</h3>
+            <p>An admissible heuristic never overestimates the remaining cost. A consistent heuristic also respects the edge costs between neighboring states. Those two properties are why A* can stop when it expands the goal and still return an optimal path.</p>
+          </div>
+          <div class="card">
+            <h3>IDA* memory note</h3>
+            <p>When the frontier will not fit in memory, IDA* does repeated depth-first passes with increasing <code>f</code> limits. It repeats some work, but its memory footprint is close to the current path instead of the whole frontier.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="part" id="checkers">
+      <div class="wrap">
+        <div class="part-head">
+          <div><div class="kicker mono">part III</div><h2>Two Players: Checkers</h2></div>
+          <p class="note">Two-player search alternates control. A good move is not just locally attractive; it must survive the opponent's best reply.</p>
+        </div>
+        <div class="grid-2">
+          <svg class="board-svg" viewBox="0 0 420 420" role="img" aria-label="Mini checkers endgame board">
+            <rect width="420" height="420" fill="#0f0f10" rx="8"/>
+            <g id="board-cells"></g>
+            <g fill="#f3c46c" stroke="#0a0908" stroke-width="3"><circle cx="157.5" cy="52.5" r="22"/><circle cx="262.5" cy="157.5" r="22"/></g>
+            <g fill="#7ab8ff" stroke="#0a0908" stroke-width="3"><circle cx="52.5" cy="262.5" r="22"/><circle cx="157.5" cy="367.5" r="22"/></g>
+            <text x="22" y="404" fill="#737373" font-size="13">toy endgame: yellow to move</text>
+          </svg>
+          <div class="widget" id="ab-widget">
+            <div class="widget-head">
+              <h3>Widget 2 - Minimax to Alpha-Beta</h3>
+              <div class="controls mono">
+                <button type="button" data-order="best" class="active">best-first</button>
+                <button type="button" data-order="worst">worst-first</button>
+                <button type="button" data-ab-prev>prev</button>
+                <button type="button" data-ab-next>next</button>
+              </div>
+            </div>
+            <p class="widget-copy" id="ab-copy"></p>
+            <svg id="ab-svg" viewBox="0 0 720 360" role="img" aria-label="Minimax alpha-beta tree"></svg>
+            <div class="readout mono">
+              <div class="metric"><span>visited</span><strong id="ab-count">0</strong></div>
+              <div class="metric"><span>root choice</span><strong id="ab-choice">-</strong></div>
+              <div class="metric"><span>ordering</span><strong id="ab-order">best</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Negamax</h3>
+            <pre><code>score(s, d) = max(-score(child, d - 1))</code></pre>
+            <p>Negamax writes minimax with one function. Positive means good for the side to move, so the child score is negated when the turn changes.</p>
+          </div>
+          <div class="card">
+            <h3>Move ordering</h3>
+            <p>Alpha-beta can approach about <code>b^(d/2)</code> work under excellent ordering and degrade toward <code>b^d</code> under poor ordering. That is why engines spend so much effort predicting which move to search first.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="part" id="bstar">
+      <div class="wrap">
+        <div class="part-head">
+          <div><div class="kicker mono">part IIIb</div><h2>B* Interval Search</h2></div>
+          <p class="note">B* backs up intervals instead of scalar scores. The engine tries to prove one move best or disprove the rest.</p>
+        </div>
+        <div class="widget" id="bstar-widget">
+          <div class="widget-head">
+            <h3>Widget 3 - Prove Best, Disprove Rest</h3>
+            <div class="controls mono">
+              <button type="button" data-b-prev>prev</button>
+              <button type="button" data-b-next>next</button>
+            </div>
+          </div>
+          <p class="widget-copy" id="b-copy"></p>
+          <svg id="b-svg" viewBox="0 0 720 330" role="img" aria-label="B star interval tree"></svg>
+          <div class="readout mono">
+            <div class="metric"><span>root interval</span><strong id="b-root">[-8, 9]</strong></div>
+            <div class="metric"><span>focus</span><strong id="b-focus">A</strong></div>
+            <div class="metric"><span>status</span><strong id="b-status">uncertain</strong></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>SSS* and MTD(f)</h3>
+          <p>B* is not the only best-first adversarial line. SSS* showed how best-first minimax search could reason over solution trees; MTD(f) later reframed repeated zero-window alpha-beta probes around a guessed value. The shared theme is practical: use bounds and memory to avoid treating every branch as equally urgent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="part" id="synthesis">
+      <div class="wrap">
+        <div class="part-head">
+          <div><div class="kicker mono">part IV</div><h2>Synthesis And Coda</h2></div>
+          <p class="note">The same tree vocabulary spans pathfinding, engines, and governance traces. What changes is the backup rule and the proof obligation.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Line</th><th>Core value</th><th>Guarantee</th><th>When it wins</th></tr></thead>
+            <tbody>
+              <tr><td>single-agent search</td><td>path cost</td><td>optimal path with admissible/consistent heuristic</td><td>navigation, planning, routing</td></tr>
+              <tr><td>minimax / alpha-beta</td><td>scalar adversarial value</td><td>same answer as minimax when bounds are correct</td><td>perfect-information games with useful move ordering</td></tr>
+              <tr><td>B*</td><td>pessimistic/optimistic interval</td><td>choose when one move can be proved to dominate</td><td>expensive evaluations with useful value bounds</td></tr>
+              <tr><td>MCTS</td><td>sampled value estimate</td><td>statistical improvement with more visits</td><td>large branching spaces where rollouts or learned priors help</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-2" style="margin-top:1rem">
+          <div class="card">
+            <h3>Checkers is solved</h3>
+            <p>Chinook and Jonathan Schaeffer's team combined search with endgame databases. In 2007, checkers was announced as solved: with optimal play from both sides, the game-theoretic value is a draw.</p>
+          </div>
+          <div class="card">
+            <h3>Reviewer surface</h3>
+            <p>A deployable search engine should expose chosen move, principal variation, depth, node count, cutoffs, cache hits, evaluation terms, and time budget. Governance starts when the solver tree leaves an inspectable trace.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap mono">
+      <a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <div class="links">
+        <a href="/">home</a>
+        <a href="/school">school</a>
+        <a href="/school/game-search-theory">compat route</a>
+        <a href="/doc/">docs</a>
+        <a href="/glither-wasm">glither wasm</a>
+        <a href="/ai-governance">ai governance</a>
+      </div>
+      <span class="meta">school · adversarial search</span>
+    </div>
+  </footer>
+
+  <script>
+  function setHMExpanded(open){ var b=document.querySelector('.hm-btn'); if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'),open=!o.classList.contains('open'); o.classList.toggle('open', open); s.classList.toggle('open', open); setHMExpanded(open); }
+  function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); setHMExpanded(false); }
+
+  var graphNodes = {
+    S:{x:74,y:178,h:7}, A:{x:210,y:76,h:5}, B:{x:214,y:268,h:4}, C:{x:378,y:74,h:3}, D:{x:386,y:248,h:2}, G:{x:560,y:166,h:0}
+  };
+  var graphEdges = [
+    ['S','A',2],['S','B',1],['A','C',2],['A','D',5],['B','D',2],['C','G',4],['D','G',2],['B','C',6]
+  ];
+  var frontierPlans = {
+    bfs: {title:'BFS', steps:[
+      {closed:['S'], open:['A','B'], g:{S:0,A:1,B:1}, copy:'BFS ignores weights. The first layer after S goes into the frontier.'},
+      {closed:['S','A'], open:['B','C','D'], g:{S:0,A:1,B:1,C:2,D:2}, copy:'A expands before B because BFS follows queue order, not cost.'},
+      {closed:['S','A','B'], open:['C','D'], g:{S:0,A:1,B:1,C:2,D:2}, copy:'B adds no better idea of cost; all depth-two nodes look alike.'},
+      {closed:['S','A','B','C','D','G'], open:[], g:{S:0,A:1,B:1,C:2,D:2,G:3}, copy:'BFS reaches G by shallow depth. That is optimal only when each edge costs one.'}
+    ]},
+    dijkstra: {title:'Dijkstra', steps:[
+      {closed:['S'], open:['B','A'], g:{S:0,A:2,B:1}, copy:'Dijkstra sorts by g, the cheapest known path cost from S.'},
+      {closed:['S','B'], open:['A','D','C'], g:{S:0,A:2,B:1,D:3,C:7}, copy:'B expands before A because cost 1 beats cost 2.'},
+      {closed:['S','B','A','D'], open:['G','C'], g:{S:0,A:2,B:1,D:3,C:4,G:5}, copy:'A improves C to 4, while D gives a goal path with cost 5.'},
+      {closed:['S','B','A','D','C','G'], open:[], g:{S:0,A:2,B:1,D:3,C:4,G:5}, copy:'The first expanded goal is optimal because all edge costs are non-negative.'}
+    ]},
+    astar: {title:'A*', steps:[
+      {closed:['S'], open:['B','A'], g:{S:0,A:2,B:1}, copy:'A* sorts by f = g + h. The heuristic points toward the goal.'},
+      {closed:['S','B'], open:['D','A','C'], g:{S:0,A:2,B:1,D:3,C:7}, copy:'D becomes attractive: g=3, h=2, f=5.'},
+      {closed:['S','B','D'], open:['G','A','C'], g:{S:0,A:2,B:1,D:3,C:7,G:5}, copy:'The goal enters the frontier with f=5, better than the remaining alternatives.'},
+      {closed:['S','B','D','G'], open:['A','C'], g:{S:0,A:2,B:1,D:3,C:7,G:5}, copy:'With an admissible consistent h, expanding G proves the optimal path cost.'}
+    ]}
+  };
+  var frontierMode = 'astar', frontierStep = 0;
+  function drawFrontier(){
+    var plan = frontierPlans[frontierMode], step = plan.steps[frontierStep], svg = document.getElementById('frontier-svg');
+    var html = '<rect width="720" height="360" rx="8" fill="#0f0f10"/>';
+    graphEdges.forEach(function(e){
+      var a=graphNodes[e[0]], b=graphNodes[e[1]];
+      html += '<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="#3a2a18" stroke-width="3"/>';
+      html += '<text x="'+((a.x+b.x)/2)+'" y="'+(((a.y+b.y)/2)-8)+'" fill="#737373" font-size="13" text-anchor="middle">'+e[2]+'</text>';
+    });
+    Object.keys(graphNodes).forEach(function(id){
+      var n=graphNodes[id], closed=step.closed.indexOf(id)>=0, open=step.open.indexOf(id)>=0, g=step.g[id], h=n.h, f=(g===undefined?'-':(frontierMode==='bfs'?g:(frontierMode==='dijkstra'?g:g+h)));
+      var fill=closed?'#1d1812':(open?'#121b1f':'#121212'), stroke=closed?'#d97742':(open?'#7ab8ff':'#2a2a2a');
+      html += '<circle cx="'+n.x+'" cy="'+n.y+'" r="31" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2"/>';
+      html += '<text x="'+n.x+'" y="'+(n.y-3)+'" fill="#f6d7a7" font-size="15" text-anchor="middle">'+id+'</text>';
+      html += '<text x="'+n.x+'" y="'+(n.y+16)+'" fill="#9f9f9f" font-size="10" text-anchor="middle">g|h|f '+(g===undefined?'-':g)+'|'+h+'|'+f+'</text>';
+    });
+    svg.innerHTML = html;
+    document.getElementById('frontier-copy').textContent = step.copy;
+    document.getElementById('frontier-count').textContent = step.closed.length;
+    document.getElementById('frontier-open').textContent = step.open.join(', ') || '-';
+    document.getElementById('frontier-closed').textContent = step.closed.join(', ') || '-';
+    document.querySelectorAll('[data-frontier-mode]').forEach(function(b){ b.classList.toggle('active', b.dataset.frontierMode===frontierMode); });
+  }
+
+  var abOrder = 'best', abStep = 0;
+  var abPlans = {
+    best: [
+      {visited:1, choice:'-', copy:'Start at a max root. Search the most promising checkers move first.', cut:[], vals:['?','?','?','?','7','4','2','9','-1','6']},
+      {visited:4, choice:'A', copy:'Move A backs up to 4, establishing alpha = 4 at the root.', cut:[], vals:['4','4','?','?','7','4','2','9','-1','6']},
+      {visited:6, choice:'A', copy:'At B, min sees 2. Since 2 <= alpha, the rest of B cannot improve max.', cut:['B2'], vals:['4','4','<=2','?','7','4','2','cut','-1','6']},
+      {visited:8, choice:'A', copy:'At C, min sees -1. Another cutoff. Good ordering saves nodes.', cut:['B2','C2'], vals:['4','4','<=2','<=-1','7','4','2','cut','-1','cut']}
+    ],
+    worst: [
+      {visited:1, choice:'-', copy:'Worst-first ordering delays useful bounds, so alpha-beta behaves closer to full minimax.', cut:[], vals:['?','?','?','?','7','4','2','9','-1','6']},
+      {visited:5, choice:'C', copy:'The engine searches a weak move first and establishes only alpha = -1.', cut:[], vals:['-1','?','?','-1','7','4','2','9','-1','6']},
+      {visited:9, choice:'B', copy:'With weak alpha, B must read both leaves before backing up to 2.', cut:[], vals:['2','?','2','-1','7','4','2','9','-1','6']},
+      {visited:13, choice:'A', copy:'Only after reading nearly everything does A prove best at 4.', cut:[], vals:['4','4','2','-1','7','4','2','9','-1','6']}
+    ]
+  };
+  function drawAB(){
+    var s = abPlans[abOrder][abStep], ids=['R','A','B','C','A1','A2','B1','B2','C1','C2'];
+    var pos={R:[360,42],A:[170,132],B:[360,132],C:[550,132],A1:[110,250],A2:[230,250],B1:[300,250],B2:[420,250],C1:[490,250],C2:[610,250]};
+    var edges=[['R','A'],['R','B'],['R','C'],['A','A1'],['A','A2'],['B','B1'],['B','B2'],['C','C1'],['C','C2']];
+    var html='<rect width="720" height="360" rx="8" fill="#0f0f10"/>';
+    edges.forEach(function(e){ var a=pos[e[0]], b=pos[e[1]]; html+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="#3a2a18" stroke-width="2"/>'; });
+    ids.forEach(function(id,i){
+      var p=pos[id], cut=s.cut.indexOf(id)>=0, hot=(id==='R'||id===s.choice), fill=cut?'#111':'#121212', stroke=cut?'#555':(hot?'#d97742':'#2a2a2a');
+      html+='<rect x="'+(p[0]-42)+'" y="'+(p[1]-24)+'" width="84" height="48" rx="8" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2"/>';
+      html+='<text x="'+p[0]+'" y="'+(p[1]-3)+'" fill="'+(cut?'#737373':'#f6d7a7')+'" font-size="13" text-anchor="middle">'+id+'</text>';
+      html+='<text x="'+p[0]+'" y="'+(p[1]+15)+'" fill="'+(cut?'#737373':'#7ab8ff')+'" font-size="12" text-anchor="middle">'+s.vals[i]+'</text>';
+    });
+    document.getElementById('ab-svg').innerHTML=html;
+    document.getElementById('ab-copy').textContent=s.copy;
+    document.getElementById('ab-count').textContent=s.visited;
+    document.getElementById('ab-choice').textContent=s.choice;
+    document.getElementById('ab-order').textContent=abOrder;
+    document.querySelectorAll('[data-order]').forEach(function(b){ b.classList.toggle('active', b.dataset.order===abOrder); });
+  }
+
+  var bStep = 0;
+  var bSteps = [
+    {root:'[-8, 9]', focus:'A', status:'uncertain', copy:'At the start, intervals overlap. No move can be proved best.', vals:['root [-8,9]','A [-2,9]','B [-8,8]','C [-7,6]']},
+    {root:'[-4, 9]', focus:'A', status:'probe A', copy:'The engine tightens A pessimistically. A still could be best, but B is not disproved.', vals:['root [-4,9]','A [3,9]','B [-8,8]','C [-7,6]']},
+    {root:'[3, 9]', focus:'B', status:'disprove', copy:'Now disprove B: if B optimistic drops below A pessimistic, B cannot win.', vals:['root [3,9]','A [3,9]','B [-2,4]','C [-7,6]']},
+    {root:'[3, 7]', focus:'C', status:'A dominates', copy:'C also narrows below A. A dominates because its pessimistic value beats the other optimistic bounds.', vals:['root [3,7]','A [3,7]','B [-2,2]','C [-5,1]']}
+  ];
+  function drawB(){
+    var s=bSteps[bStep], pos={R:[360,55],A:[160,190],B:[360,190],C:[560,190]}, edges=[['R','A'],['R','B'],['R','C']];
+    var html='<rect width="720" height="330" rx="8" fill="#0f0f10"/>';
+    edges.forEach(function(e){ var a=pos[e[0]], b=pos[e[1]]; html+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="#3a2a18" stroke-width="2"/>'; });
+    [['R',s.vals[0]],['A',s.vals[1]],['B',s.vals[2]],['C',s.vals[3]]].forEach(function(pair){
+      var p=pos[pair[0]], hot=pair[0]===s.focus || pair[0]==='R';
+      html+='<rect x="'+(p[0]-82)+'" y="'+(p[1]-28)+'" width="164" height="56" rx="8" fill="#121212" stroke="'+(hot?'#d97742':'#2a2a2a')+'" stroke-width="2"/>';
+      html+='<text x="'+p[0]+'" y="'+(p[1]-3)+'" fill="#f6d7a7" font-size="13" text-anchor="middle">'+pair[0]+'</text>';
+      html+='<text x="'+p[0]+'" y="'+(p[1]+17)+'" fill="#7ab8ff" font-size="13" text-anchor="middle">'+pair[1]+'</text>';
+    });
+    document.getElementById('b-svg').innerHTML=html;
+    document.getElementById('b-copy').textContent=s.copy;
+    document.getElementById('b-root').textContent=s.root;
+    document.getElementById('b-focus').textContent=s.focus;
+    document.getElementById('b-status').textContent=s.status;
+  }
+
+  function drawBoard(){
+    var g=document.getElementById('board-cells'), html='', size=52.5;
+    for(var y=0;y<8;y++) for(var x=0;x<8;x++) html+='<rect x="'+(x*size)+'" y="'+(y*size)+'" width="'+size+'" height="'+size+'" fill="'+(((x+y)%2)?'#1d1812':'#d8c29d')+'"/>';
+    g.innerHTML=html;
+  }
+  document.querySelectorAll('[data-frontier-mode]').forEach(function(b){ b.addEventListener('click', function(){ frontierMode=b.dataset.frontierMode; frontierStep=0; drawFrontier(); }); });
+  document.querySelector('[data-frontier-prev]').addEventListener('click', function(){ frontierStep=Math.max(0,frontierStep-1); drawFrontier(); });
+  document.querySelector('[data-frontier-next]').addEventListener('click', function(){ frontierStep=Math.min(frontierPlans[frontierMode].steps.length-1,frontierStep+1); drawFrontier(); });
+  document.querySelectorAll('[data-order]').forEach(function(b){ b.addEventListener('click', function(){ abOrder=b.dataset.order; abStep=0; drawAB(); }); });
+  document.querySelector('[data-ab-prev]').addEventListener('click', function(){ abStep=Math.max(0,abStep-1); drawAB(); });
+  document.querySelector('[data-ab-next]').addEventListener('click', function(){ abStep=Math.min(abPlans[abOrder].length-1,abStep+1); drawAB(); });
+  document.querySelector('[data-b-prev]').addEventListener('click', function(){ bStep=Math.max(0,bStep-1); drawB(); });
+  document.querySelector('[data-b-next]').addEventListener('click', function(){ bStep=Math.min(bSteps.length-1,bStep+1); drawB(); });
+  document.addEventListener('keydown', function(event){
+    var tag=event.target && event.target.tagName ? event.target.tagName.toLowerCase() : '';
+    if(tag==='input'||tag==='textarea'||event.target.isContentEditable) return;
+    if(event.key==='Escape') closeHM();
+    if(event.altKey && event.key.toLowerCase()==='m'){ event.preventDefault(); toggleHM(); return; }
+    if(event.key.toLowerCase()==='f'){ var modes=['bfs','dijkstra','astar']; frontierMode=modes[(modes.indexOf(frontierMode)+1)%modes.length]; frontierStep=0; drawFrontier(); }
+    if(event.key.toLowerCase()==='m'){ abOrder=abOrder==='best'?'worst':'best'; abStep=0; drawAB(); }
+    if(event.key.toLowerCase()==='b'){ bStep=(bStep+1)%bSteps.length; drawB(); }
+    if(event.key==='ArrowRight'){ frontierStep=Math.min(frontierPlans[frontierMode].steps.length-1,frontierStep+1); abStep=Math.min(abPlans[abOrder].length-1,abStep+1); drawFrontier(); drawAB(); }
+    if(event.key==='ArrowLeft'){ frontierStep=Math.max(0,frontierStep-1); abStep=Math.max(0,abStep-1); drawFrontier(); drawAB(); }
+  });
+  drawBoard(); drawFrontier(); drawAB(); drawB();
+  </script>
+</body>
+</html>

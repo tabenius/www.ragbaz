@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Face Mesh Morphing Techniques — RAGBAZ School</title>
+  <meta name="description" content="A RAGBAZ School article on face points, triangulation, Voronoi intuition, morphing, transforms, and dual-UV texture sampling." />
+  <link rel="icon" href="../../assets/logo-mark.svg" />
+  <link rel="stylesheet" href="../../colors_and_type.css?v=2" />
+  <link rel="stylesheet" href="../article.css" />
+  <script src="../../assets/local-mode.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="wordmark mono" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <nav class="mono" aria-label="RAGBAZ sections">
+        <a href="/">home</a>
+        <details class="nav-group">
+          <summary class="nav-trigger">products</summary>
+          <div class="nav-menu">
+            <a href="/#products">product lines</a>
+            <a href="/#p-governance">ai governance</a>
+            <a href="/#p-matches">matches</a>
+            <a href="/#p-articulate">articulate</a>
+            <a href="/#p-mailroute">mailroute</a>
+            <a href="/#p-baz">baz signals</a>
+            <a href="/completion">completion</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger active">learn</summary>
+          <div class="nav-menu">
+            <a class="active" href="/school">school</a>
+            <a href="/school/vision/face-mesh-morphing-techniques">face lesson</a>
+            <a href="/school/adversarial-search">game search</a>
+            <a href="/doc/">docs</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger">governance</summary>
+          <div class="nav-menu">
+            <a href="/ai-governance">buyer page</a>
+            <a href="/konsonans-ai-governance">formal spec</a>
+            <a href="/doc/products/ai-governance">architecture</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger">demos</summary>
+          <div class="nav-menu">
+            <a href="https://face.ragbaz.cc">face demo</a>
+            <a href="/glither-wasm">glither wasm</a>
+            <a href="/prospects/baz-signal-stack">baz signals</a>
+          </div>
+        </details>
+        <a href="/pricing">pricing</a>
+      </nav>
+      <button class="hm-btn mono" onclick="toggleHM()" aria-label="Open menu" aria-controls="hm-overlay" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay mono" id="hm-overlay" aria-label="RAGBAZ menu">
+    <button class="hm-close" onclick="closeHM()" aria-label="Close menu">✕</button>
+    <div class="hm-head">sections</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <div class="hm-head">learn</div>
+    <a href="/school" class="active" onclick="closeHM()">school</a>
+    <a href="/school/vision/face-mesh-morphing-techniques" class="active" onclick="closeHM()">face lesson</a>
+    <a href="/school/adversarial-search" onclick="closeHM()">game search</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
+    <div class="hm-head">demos</div>
+    <a href="https://face.ragbaz.cc" onclick="closeHM()">face demo</a>
+    <a href="/glither-wasm" onclick="closeHM()">glither wasm</a>
+    <div class="hm-head">governance</div>
+    <a href="/ai-governance" onclick="closeHM()">buyer page</a>
+    <a href="/konsonans-ai-governance" onclick="closeHM()">formal spec</a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="crumbs mono"><a href="/school">school</a><span>computer vision</span></div>
+        <div class="hero-grid">
+          <div>
+            <h1>Face Mesh Morphing Techniques</h1>
+            <p class="lede">Face morphing looks like image blending, but the convincing version is geometry first: stable face points, a shared triangle topology, and texture coordinates that move with the expression.</p>
+          </div>
+          <aside class="summary-panel">
+            <h2 class="mono">lesson map</h2>
+            <ul>
+              <li>face points are normalized landmarks</li>
+              <li>Delaunay triangles avoid skinny faces</li>
+              <li>dual UVs keep both textures anchored</li>
+              <li>transforms make the mesh inspectable</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap article">
+      <nav class="toc mono" aria-label="lesson sections">
+        <a href="#points">face points</a>
+        <a href="#triangles">triangles</a>
+        <a href="#voronoi">voronoi</a>
+        <a href="#morphing">morphing</a>
+        <a href="#uvs">texture UVs</a>
+        <a href="#transforms">transforms</a>
+        <a href="#debugging">debugging</a>
+      </nav>
+      <article class="lesson">
+        <section id="points">
+          <h2>Face Points</h2>
+          <p>A face mesh begins as landmark points. Each point marks a stable semantic place on the face: a mouth corner, eyelid edge, brow ridge, nose bridge, cheek contour, or jaw point.</p>
+          <p>Most browser pipelines store those points in normalized image space so the same data works for any render size.</p>
+          <pre><code>x: 0.0 left  -> 1.0 right
+y: 0.0 top   -> 1.0 bottom
+z: relative depth</code></pre>
+          <p>The critical rule is point-index identity. Point 61 in expression A and point 61 in expression B must mean the same anatomical point, or the morph will twist.</p>
+        </section>
+
+        <section id="triangles">
+          <h2>From Points To Triangles</h2>
+          <p>A renderer cannot draw a cloud of points as a face surface. It needs triangles, and the same triangle list should be reused for every expression.</p>
+          <div class="split">
+            <div class="mini-card"><strong>Stable topology</strong>Triangle indices stay constant between expressions, keeping eyebrows, lips, and jawlines from reconnecting during animation.</div>
+            <div class="mini-card"><strong>Local motion</strong>Each triangle carries nearby texture detail, so a smile can move the mouth without dragging the whole image sheet.</div>
+          </div>
+        </section>
+
+        <section id="voronoi">
+          <h2>Voronoi And Delaunay Intuition</h2>
+          <p>A Voronoi diagram answers: which landmark owns each patch of nearby image space? Its dual, the Delaunay triangulation, connects landmarks so triangle edges tend to avoid long skinny slivers.</p>
+          <p>That matters for faces because skinny triangles stretch texture aggressively. Delaunay-style connectivity gives better local neighborhoods for cheeks, lips, and eyes.</p>
+        </section>
+
+        <section id="morphing">
+          <h2>Morphing Positions</h2>
+          <p>The simplest morph is linear interpolation. At time <code>t</code>, each vertex is somewhere between expression A and expression B.</p>
+          <pre><code>P(t) = A + (B - A) * t</code></pre>
+          <p>When every landmark index is consistent, the whole face appears to change expression. When an index is wrong, a lip vertex may jump into an eyelid or a cheek can fold through the mouth.</p>
+        </section>
+
+        <section id="uvs">
+          <h2>Texture Coordinates And Dual UVs</h2>
+          <p>Geometry motion is only half the trick. The shader also needs to sample each source texture at the correct landmark coordinates. The face viewer keeps two UV attributes: one for expression A and one for expression B.</p>
+          <pre><code>color = mix(textureA(uvA), textureB(uvB), t)</code></pre>
+          <p>This is why the texture follows the face points instead of sliding over a static rectangle. The destination mouth texture is sampled from the destination mouth coordinates, even while the geometry is halfway through the morph.</p>
+        </section>
+
+        <section id="transforms">
+          <h2>Transforms</h2>
+          <p>Normalized image points must be transformed into the coordinate system used by the canvas or Three.js scene. A common mapping centers the face and flips the Y axis so screen coordinates become world coordinates.</p>
+          <pre><code>world_x = (x - 0.5) * 2
+world_y = -(y - 0.5) * 2
+world_z = z * depth_scale</code></pre>
+          <p>Scale, rotation, and translation are then safe to expose as controls because they operate on the mesh after the landmark topology has been built.</p>
+        </section>
+
+        <section id="debugging">
+          <h2>Debugging Checklist</h2>
+          <ul>
+            <li>Draw the points before drawing triangles.</li>
+            <li>Toggle wireframe to inspect topology during the blend.</li>
+            <li>Check the same landmark index on both expressions.</li>
+            <li>Verify UVs against both source images, not just the current geometry.</li>
+            <li>Keep privacy boundaries explicit: this is a morphing demo, not identity verification.</li>
+          </ul>
+          <p class="callout">Open the live surface at <a href="https://face.ragbaz.cc">face.ragbaz.cc</a>, or read the implementation handoff in <a href="/doc/experiments/face-mesh-morphing">the Atlas experiment notes</a>.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap mono">
+      <a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <div class="links">
+        <a href="/">home</a>
+        <a href="/school">school</a>
+        <a href="/school/adversarial-search">game search</a>
+        <a href="/doc/">docs</a>
+        <a href="https://face.ragbaz.cc">face demo</a>
+        <a href="/ai-governance">ai governance</a>
+      </div>
+      <span class="meta">school · computer vision</span>
+    </div>
+  </footer>
+  <script>
+  function setHMExpanded(open){ var b=document.querySelector('.hm-btn'); if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'),open=!o.classList.contains('open'); o.classList.toggle('open', open); s.classList.toggle('open', open); setHMExpanded(open); }
+  function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); setHMExpanded(false); }
+  document.addEventListener('keydown', function(event){
+    var tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || event.target.isContentEditable) return;
+    if (event.key === 'Escape') closeHM();
+    if (event.altKey && event.key.toLowerCase() === 'm') { event.preventDefault(); toggleHM(); }
+  });
+  </script>
+</body>
+</html>
