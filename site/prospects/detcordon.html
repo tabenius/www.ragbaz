@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DetCordon — prospect</title>
-  <meta name="description" content="Containment-first observation for hostile web payloads: disposable sandboxes, isolated network posture, and structured capture of what the payload actually did." />
+  <meta name="description" content="Containment-first observation for hostile web payloads: a disposable, network-isolated victim, a DetectionOnly WAF tap, and a one-way encrypted evidence trail to an audited sink." />
   <link rel="icon" href="/assets/logo-mark.svg" />
   <link rel="stylesheet" href="/colors_and_type.css?v=2" />
   <link rel="stylesheet" href="/prospects/prospect.css" />
@@ -16,28 +16,28 @@
       <section class="prospect-head">
         <div class="kicker mono">05 / detcordon prospect</div>
         <h1 class="hero-title">DetCordon</h1>
-        <p class="hero-copy">Containment-first observation for hostile web payloads: disposable sandboxes, isolated network posture, and structured capture of what the payload actually did.</p>
-        <div class="hero-chips"><span class="chip mono">sandbox</span><span class="chip mono">recorder</span><span class="chip mono">ioc extraction</span></div>
+        <p class="hero-copy">Containment-first observation for hostile web payloads: a disposable, network-isolated victim, a DetectionOnly WAF tap, and a one-way encrypted evidence trail to an audited sink.</p>
+        <div class="hero-chips"><span class="chip mono">waf tap</span><span class="chip mono">firecracker/docker</span><span class="chip mono">evidence provenance</span></div>
       </section>
 
       <section class="status-grid" aria-label="project status">
-        <article class="status-card"><div class="label mono">status</div><div class="value">research</div><div class="subvalue mono">research lane</div><p>Containment-first malware observation — disposable browser and headless runtime sandboxes, network-isolated, I/O recording (DOM, network, filesystem) into structured indicators.</p></article>
-        <article class="status-card"><div class="label mono">completion</div><div class="value">42%</div><div class="status-meter" aria-hidden="true"><span style="width:42%"></span></div><div class="subvalue mono">finished scope progress</div><p>Completion estimate across public surface, working system parts, and remaining implementation depth.</p></article>
-        <article class="status-card"><div class="label mono">current value</div><div class="value">$88k</div><div class="subvalue mono">derived from current completion</div><p>Estimated present studio asset value at the current scope and maturity level.</p></article>
-        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$210k</div><div class="subvalue mono">pricing signal €99–399/mo per node</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
+        <article class="status-card"><div class="label mono">status</div><div class="value">beta</div><div class="subvalue mono">beta lane</div><p>Deliberately-contained detonation environment for web malware (webshells, HTTP-delivered exploits, scanner-driven RCE). A DetectionOnly WAF tap fronts a disposable Docker/Firecracker victim; events and samples flow one-way to an age-encrypted, audited sink on a separate host. 105 passing tests; most buyer-priority P0/P1 work already implemented.</p></article>
+        <article class="status-card"><div class="label mono">completion</div><div class="value">60%</div><div class="status-meter" aria-hidden="true"><span style="width:60%"></span></div><div class="subvalue mono">finished scope progress</div><p>Completion estimate across public surface, working system parts, and remaining implementation depth.</p></article>
+        <article class="status-card"><div class="label mono">current value</div><div class="value">$126k</div><div class="subvalue mono">derived from current completion</div><p>Estimated present studio asset value at the current scope and maturity level.</p></article>
+        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$210k</div><div class="subvalue mono">pricing signal $12,000–$150,000/year (Appliance / Managed Lab / Enterprise)</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
       </section>
       <p class="status-caption">Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.</p>
 
       <section class="prospect-grid">
-        <article class="prospect-card"><h2>What is done</h2><p>The key architectural direction is already clear, which matters more here than pretending the product is later-stage than it is.</p><ul><li>The system is decomposed into sandbox, recorder, analyzer, and feeder roles instead of a vague single black box.</li><li>The public positioning is specific about containment-first execution, I/O capture, and structured evidence rather than generic malware analysis talk.</li><li>DetCordon already sits in the studio lineup as a distinct security product with a defined investigative posture.</li></ul></article>
-<article class="prospect-card"><h2>What is left</h2><p>Most of the value is still ahead because the hard part is turning the architecture into a dependable operator tool.</p><ul><li>Finish repeatable runtime packaging for disposable browser and headless execution lanes.</li><li>Refine the analyst workflow between detonation, evidence packaging, and downstream report/export steps.</li><li>Stabilize indicator taxonomy and report structure so hostile runs produce output another analyst can actually reuse.</li></ul></article>
-<article class="prospect-card"><h2>Commercial frame</h2><p>DetCordon has a strong eventual value ceiling because analysts will pay for safer observation and better evidence handling when the workflow is credible.</p><ul><li>Pricing signal: €99–399/mo per node based on containment capacity and managed analysis posture.</li><li>Best fit: incident-response teams, security consultancies, and internal security groups working with unknown payloads.</li><li>Finished-value estimate assumes repeatable runtime packaging, analyst workflow polish, and export-grade evidence bundles.</li></ul></article>
+        <article class="prospect-card"><h2>What is done</h2><p>The buyer-critical slice is already implemented, not just architected.</p><ul><li>Two-host containment model: DetectionOnly WAF tap plus disposable Docker/Firecracker victim, isolated from an audited evidence sink on a separate host.</li><li>Evidence-grade demo path: one command replays synthetic hostile traffic, produces an age-encrypted sample, and shows events in an operator dashboard.</li><li>105 passing tests, a containment-assurance checklist mapping every non-negotiable rule to generated-artifact evidence, and an authenticated operator dashboard.</li></ul></article>
+<article class="prospect-card"><h2>What is left</h2><p>The remaining work is production-hardening, not core architecture.</p><ul><li>TLS for inter-service event/sample/heartbeat traffic, currently plaintext by design for the demo/pilot stage.</li><li>Broader test coverage on the core HTTP pipeline and VM lifecycle orchestrator.</li><li>Multi-sandbox managed-lab scaling and a real tiered SKU/support-tier offer.</li></ul></article>
+<article class="prospect-card"><h2>Commercial frame</h2><p>This is an enterprise appliance sale, not a self-serve product — pricing and packaging reflect that.</p><ul><li>Pricing signal: $12,000–$150,000/year across Appliance, Managed Lab, and Enterprise tiers.</li><li>Best fit: security researchers, blue teams, and research labs analyzing unknown web payloads under real containment guarantees.</li><li>Next step is a pilot conversation, not a checkout button — request one directly.</li></ul></article>
       </section>
 
       <section class="prospect-note">
-        <p>DetCordon should stay honest about maturity: the concept is strong, but the next leap is making the evidence workflow solid enough that analysts trust it in real cases.</p>
+        <p>DetCordon's diligence-grade proof (containment assurance, buyer demo runbook) already exists — see the docs link below before assuming this is early-stage.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/#p-detcordon">Open product line</a><a class="btn" href="/school/forensics">Open forensics school</a><a class="btn" href="/doc/">Read docs</a>
+          <a class="btn primary" href="mailto:sales@ragbaz.cc?subject=DetCordon%20pilot%20request">Request a pilot</a><a class="btn" href="/#p-detcordon">Open product line</a><a class="btn" href="/school/forensics">Open forensics school</a><a class="btn" href="/doc/products/detcordon">Read docs</a>
         </div>
       </section>
 
