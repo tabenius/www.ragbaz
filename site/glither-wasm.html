@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Glither WASM Components — policy code with a WIT boundary</title>
+  <meta name="description" content="Glither compiles typed policy and strategy rules into WIT-described WebAssembly Components for governed, inspectable WASI host execution." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Glither WASM Components — policy code with a WIT boundary" />
+  <meta property="og:description" content="A public overview of the Glither → WIT → WASI component path: typed rules in, explicit host capabilities out, portable evidence-ready artifacts." />
+  <meta property="og:url" content="https://ragbaz.cc/glither-wasm" />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="icon" href="/assets/logo-mark.svg" />
+  <link rel="stylesheet" href="/colors_and_type.css?v=2" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(900px 480px at 82% -14%, rgba(79, 179, 199, .12), transparent 62%),
+        radial-gradient(760px 520px at 0% 110%, rgba(255, 153, 0, .13), transparent 58%),
+        var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, .92rem + .18vw, 17px);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+    :focus-visible { outline: 2px solid var(--blue-1, #7ab8ff); outline-offset: 3px; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: #15120c;
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; min-height: 56px; }
+    .wordmark {
+      display: flex; align-items: center; gap: .6rem;
+      color: var(--fg-1, #f6d7a7);
+      font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .wordmark img { height: 39px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.05rem; font-size: .82rem; }
+    .bar nav a { color: var(--fg-4, #9f9f9f); }
+    .bar nav a.active, .bar nav a:hover { color: var(--orange-1, #f3c46c); }
+
+    .hero { padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.2rem, 6vw, 4.5rem); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .78fr);
+      gap: clamp(1.5rem, 5vw, 3.5rem);
+      align-items: center;
+    }
+    .eyebrow {
+      color: var(--orange-1, #f3c46c);
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 900px;
+      margin: .55rem 0 0;
+      color: var(--fg-1, #f6d7a7);
+      font-size: clamp(2.55rem, 1.2rem + 5.8vw, 5.4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h1 span { color: var(--blue-1, #7ab8ff); }
+    .lede {
+      max-width: 69ch;
+      margin: 1.25rem 0 0;
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Serif", Georgia, serif;
+      font-size: clamp(1.05rem, 1rem + .35vw, 1.26rem);
+    }
+    .cta { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
+    .btn {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-3, #2d2d2d);
+      border-radius: 8px;
+      padding: .62rem 1rem;
+      background: var(--bg-2, #121212);
+      color: var(--fg-1, #f6d7a7);
+      transition: border-color .15s, color .15s, transform .15s;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--orange-4, #d97742); color: var(--orange-1, #f3c46c); }
+    .btn.primary { background: var(--orange-3, #ff9900); border-color: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); font-weight: 700; }
+    .btn.primary:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); color: var(--fg-on-warm, #1a1208); }
+
+    .terminal {
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(29, 24, 18, .96), rgba(18, 18, 18, .98));
+      padding: clamp(1rem, 3vw, 1.35rem);
+    }
+    .terminal h2 {
+      margin: 0;
+      color: var(--fg-1, #f6d7a7);
+      font-size: 1rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .pipe { display: grid; gap: .55rem; margin-top: 1rem; }
+    .pipe-row {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: .75rem;
+      align-items: start;
+      padding: .78rem;
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: var(--bg-1, #0f0f10);
+    }
+    .pipe-row .mark {
+      width: 36px; height: 36px; display: grid; place-items: center;
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 999px;
+      color: var(--orange-1, #f3c46c);
+      background: var(--bg-elev, #1d1812);
+      font-size: .82rem;
+    }
+    .pipe-row strong { color: var(--blue-1, #7ab8ff); display: block; font-size: .92rem; }
+    .pipe-row span { color: var(--fg-4, #9f9f9f); font-size: .82rem; }
+
+    .band { border-top: 1px solid var(--border-2, #2a2a2a); padding: clamp(2.5rem, 6vw, 4rem) 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 1.5rem; align-items: end; margin-bottom: 1.25rem; }
+    .section-head h2 { margin: 0; color: var(--fg-1, #f6d7a7); font-size: clamp(1.45rem, 1rem + 2vw, 2.3rem); }
+    .section-head p { max-width: 54ch; margin: 0; color: var(--fg-4, #9f9f9f); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+    .card {
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: var(--bg-2, #121212);
+      padding: 1rem;
+    }
+    .card h3 { margin: 0; color: var(--orange-1, #f3c46c); font-size: .98rem; }
+    .card p { margin: .45rem 0 0; color: var(--fg-3, #d4c19a); font-size: .9rem; }
+    .card ul { margin: .7rem 0 0; padding: 0; list-style: none; }
+    .card li { color: var(--fg-4, #9f9f9f); font-size: .84rem; padding: .22rem 0; }
+    .card li::before { content: "> "; color: var(--orange-1, #f3c46c); }
+
+    .journey {
+      display: grid;
+      grid-template-columns: minmax(170px, .4fr) minmax(0, 1fr);
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--bg-1, #0f0f10);
+    }
+    .journey-tabs {
+      display: grid;
+      align-content: start;
+      background: var(--bg-elev, #1d1812);
+      border-right: 1px solid var(--border-2, #2a2a2a);
+    }
+    .journey-tab {
+      border: 0;
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+      background: transparent;
+      color: var(--fg-4, #9f9f9f);
+      padding: .85rem 1rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .journey-tab[aria-selected="true"] { color: var(--orange-1, #f3c46c); background: rgba(255, 153, 0, .08); }
+    .journey-panel { display: none; padding: clamp(1rem, 3vw, 1.35rem); }
+    .journey-panel.active { display: block; }
+    .journey-panel h3 { margin: 0; color: var(--fg-1, #f6d7a7); font-size: clamp(1.2rem, 1rem + .9vw, 1.65rem); }
+    .journey-panel p { color: var(--fg-3, #d4c19a); max-width: 74ch; }
+    .artifact-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      align-items: center;
+      margin-top: 1rem;
+      color: var(--fg-4, #9f9f9f);
+      font-size: .84rem;
+    }
+    .artifact-line span {
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 6px;
+      background: var(--bg-2, #121212);
+      padding: .25rem .5rem;
+    }
+    .artifact-line b { color: var(--orange-1, #f3c46c); font-weight: 500; }
+
+    .note {
+      border-left: 3px solid var(--blue-2, #4fb3c7);
+      background: rgba(79, 179, 199, .08);
+      padding: 1rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      color: var(--fg-3, #d4c19a);
+      font-size: .9rem;
+    }
+    .note strong { color: var(--blue-1, #7ab8ff); }
+    .final {
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 10px;
+      background: var(--bg-elev, #1d1812);
+      padding: clamp(1.2rem, 4vw, 1.8rem);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    .final h2 { margin: 0; color: var(--fg-1, #f6d7a7); }
+    .final p { margin: .35rem 0 0; color: var(--fg-3, #d4c19a); }
+
+    footer { border-top: 1px solid var(--border-2, #2a2a2a); margin-top: clamp(2rem, 5vw, 3rem); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .82rem; }
+    footer .meta { margin-left: auto; color: var(--fg-5, #737373); font-size: .74rem; }
+
+    @media (max-width: 900px) {
+      .hero-grid, .grid-3, .final { grid-template-columns: 1fr; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .bar nav { display: none; }
+      footer .meta { margin-left: 0; width: 100%; }
+    }
+    @media (max-width: 700px) {
+      .journey { grid-template-columns: 1fr; }
+      .journey-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); border-right: 0; }
+      .journey-tab { text-align: center; }
+    }
+    @media (max-width: 540px) {
+      .hero { padding-top: 2.5rem; }
+      .cta .btn, .final .btn { width: 100%; }
+      .journey-tabs { grid-template-columns: 1fr; }
+      .artifact-line span { width: 100%; }
+    }
+  </style>
+  <script src="./assets/local-mode.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="wordmark mono" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <nav class="mono">
+        <a href="/">home</a>
+        <a class="active" href="/glither-wasm">glither wasm</a>
+        <a href="/ai-governance">ai governance</a>
+        <a href="/pricing">pricing</a>
+        <a href="/doc/">docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow mono">Glither / WIT / WASI Components</div>
+          <h1>Compile policy into a <span>sandboxed component</span>.</h1>
+          <p class="lede">Glither is the RAGBAZ rule language for consequential automation. The compiler path turns typed policies and strategies into WIT-described WebAssembly Components so host capabilities are explicit, portable, and reviewable before execution.</p>
+          <div class="cta mono">
+            <a class="btn primary" href="/doc/experiments/glither-wasm-wit-compiler-spec">Read compiler spec</a>
+            <a class="btn" href="/doc/experiments/glither-wasm-component-pilot">Open pilot handoff</a>
+            <a class="btn" href="/doc/experiments/glither-governance">Governance dialect</a>
+          </div>
+        </div>
+        <aside class="terminal" aria-label="compiler path">
+          <h2 class="mono">Compiler path</h2>
+          <div class="pipe">
+            <div class="pipe-row"><div class="mark mono">01</div><div><strong>.glith ruleset</strong><span>Readable policy or strategy source with typed fields and deterministic branches.</span></div></div>
+            <div class="pipe-row"><div class="mark mono">02</div><div><strong>Typed Core IR</strong><span>Normalized declarations, imports, exports, effects, and diagnostic metadata.</span></div></div>
+            <div class="pipe-row"><div class="mark mono">03</div><div><strong>WIT world</strong><span>The host membrane: what the component can receive, emit, and request.</span></div></div>
+            <div class="pipe-row"><div class="mark mono">04</div><div><strong>wasm32-wasip2 component</strong><span>A sandboxed artifact for Wasmtime/WASI hosts and later OCI distribution.</span></div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Why this boundary matters.</h2>
+          <p>Agent gates, mail filters, trading strategies, and reviewer workflows should not depend on invisible callbacks. WIT makes the contract inspectable before the runtime is trusted.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><h3 class="mono">For reviewers</h3><p>Inspect the exported interface and the allowed host calls before approving a runtime.</p><ul><li>WIT contract</li><li>declared effects</li><li>evidence-ready artifacts</li></ul></article>
+          <article class="card"><h3 class="mono">For operators</h3><p>Run policies in a constrained host with explicit inputs, outputs, and failure behavior.</p><ul><li>Wasmtime/WASI host</li><li>fail-closed gates</li><li>portable deployment unit</li></ul></article>
+          <article class="card"><h3 class="mono">For builders</h3><p>Author one rule surface, then generate Rust component code and companion checks from the same source.</p><ul><li>glither.governance</li><li>glither.hft</li><li>Rust and oracle path</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Pilot journey.</h2>
+          <p>The current slice is intentionally narrow: prove the compiler membrane, show the generated artifact, and keep the unfinished runtime claims visible.</p>
+        </div>
+        <div class="journey" data-journey>
+          <div class="journey-tabs" role="tablist" aria-label="Glither pilot stages">
+            <button class="journey-tab mono" type="button" id="stage-source" role="tab" aria-selected="true" aria-controls="panel-source" aria-keyshortcuts="1" data-stage="source">source</button>
+            <button class="journey-tab mono" type="button" id="stage-contract" role="tab" aria-selected="false" aria-controls="panel-contract" aria-keyshortcuts="2" data-stage="contract">contract</button>
+            <button class="journey-tab mono" type="button" id="stage-component" role="tab" aria-selected="false" aria-controls="panel-component" aria-keyshortcuts="3" data-stage="component">component</button>
+            <button class="journey-tab mono" type="button" id="stage-handoff" role="tab" aria-selected="false" aria-controls="panel-handoff" aria-keyshortcuts="4" data-stage="handoff">handoff</button>
+          </div>
+          <section class="journey-panel active" id="panel-source" role="tabpanel" aria-labelledby="stage-source" data-panel="source">
+            <h3>Choose one ruleset.</h3>
+            <p>Start with one governance or strategy file that has a meaningful action boundary. The pilot is strongest when the policy can be explained to a reviewer without reading host code.</p>
+            <div class="artifact-line mono"><b>input</b><span>policy.glith</span><span>sample event</span><span>expected allow / hold / deny result</span></div>
+          </section>
+          <section class="journey-panel" id="panel-contract" role="tabpanel" aria-labelledby="stage-contract" data-panel="contract">
+            <h3>Generate the WIT world.</h3>
+            <p>The WIT output is the contract reviewers can inspect: imports, exports, record types, and declared effect boundaries before a component is admitted to a host.</p>
+            <div class="artifact-line mono"><b>output</b><span>world.wit</span><span>effect list</span><span>diagnostic report</span></div>
+          </section>
+          <section class="journey-panel" id="panel-component" role="tabpanel" aria-labelledby="stage-component" data-panel="component">
+            <h3>Build the component.</h3>
+            <p>The Rust component path is the implementation target for the current slice. OCI distribution and full host conformance remain work-in-progress surfaces, not production guarantees.</p>
+            <div class="artifact-line mono"><b>output</b><span>component.wasm</span><span>manifest</span><span>host fixture</span></div>
+          </section>
+          <section class="journey-panel" id="panel-handoff" role="tabpanel" aria-labelledby="stage-handoff" data-panel="handoff">
+            <h3>Package review evidence.</h3>
+            <p>The useful buyer artifact is not only a binary. It is the source, WIT contract, build log, test fixture, and a short status note that says what is implemented and what is not.</p>
+            <div class="artifact-line mono"><b>packet</b><span>source</span><span>WIT</span><span>component</span><span>status note</span></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="note">
+          <strong>Status boundary.</strong> The Glither component compiler path is an active implementation track. The public promise today is a reviewable design and pilot handoff for WIT/WASI component work; production host admission, registry promotion, and long-running conformance gates are still being hardened.
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap final">
+        <div>
+          <h2>Start with one rule and one host boundary.</h2>
+          <p>The pilot output is a Glither source file, generated WIT, component artifact, and an operator-facing evidence packet.</p>
+        </div>
+        <a class="btn primary mono" href="/doc/experiments/glither-wasm-component-pilot">Open the pilot handoff</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark mono"><img src="/assets/logo-mark.svg" alt="" />RAGBAZ</span>
+      <div class="links mono">
+        <a href="/">home</a>
+        <a href="/doc/experiments/glither-wasm-wit-compiler-spec">compiler spec</a>
+        <a href="/doc/experiments/glither-governance">governance dialect</a>
+        <a href="/prospects/baz-signal-stack">BAZ prospectus</a>
+      </div>
+      <div class="meta mono">glither · wit · wasi component surface</div>
+    </div>
+  </footer>
+  <script>
+    var stageOrder = ["source", "contract", "component", "handoff"];
+    var activeStage = "source";
+    function showStage(stage) {
+      var tabs = Array.prototype.slice.call(document.querySelectorAll("[data-stage]"));
+      var panels = Array.prototype.slice.call(document.querySelectorAll("[data-panel]"));
+      activeStage = stageOrder.indexOf(stage) >= 0 ? stage : "source";
+      tabs.forEach(function(tab){
+        var selected = tab.getAttribute("data-stage") === activeStage;
+        tab.setAttribute("aria-selected", selected ? "true" : "false");
+      });
+      panels.forEach(function(panel){
+        panel.classList.toggle("active", panel.getAttribute("data-panel") === activeStage);
+      });
+    }
+    function moveStage(delta) {
+      var next = (stageOrder.indexOf(activeStage) + delta + stageOrder.length) % stageOrder.length;
+      showStage(stageOrder[next]);
+      var tab = document.querySelector('[data-stage="' + stageOrder[next] + '"]');
+      if (tab) tab.focus();
+    }
+    document.querySelectorAll("[data-stage]").forEach(function(tab){
+      tab.addEventListener("click", function(){ showStage(tab.getAttribute("data-stage")); });
+    });
+    document.addEventListener("keydown", function(event){
+      var tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+      if (tag === "input" || tag === "textarea" || event.target.isContentEditable) return;
+      if (event.key === "ArrowRight" || event.key === "]") { event.preventDefault(); moveStage(1); }
+      if (event.key === "ArrowLeft" || event.key === "[") { event.preventDefault(); moveStage(-1); }
+      if (/^[1-4]$/.test(event.key)) { event.preventDefault(); showStage(stageOrder[Number(event.key) - 1]); }
+    });
+  </script>
+</body>
+</html>

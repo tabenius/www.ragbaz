@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Konsonans AI Governance — govern agent actions before they execute</title>
+  <meta name="description" content="Konsonans AI Governance is a policy gate for AI agents: hold risky tool calls, collect tamper-evident evidence, and give reviewers a defensible operating record." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Konsonans AI Governance — govern agent actions before they execute" />
+  <meta property="og:description" content="A buyer-facing overview of the RAGBAZ AI governance control plane for policy gates, human review, evidence packs, and EU AI Act readiness work." />
+  <meta property="og:url" content="https://ragbaz.cc/ai-governance" />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="icon" href="/assets/logo-mark.svg" />
+  <link rel="stylesheet" href="/colors_and_type.css?v=2" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(980px 480px at 78% -12%, rgba(255, 153, 0, .13), transparent 62%),
+        radial-gradient(900px 520px at 0% 105%, rgba(79, 179, 199, .11), transparent 58%),
+        var(--bg-0, #0a0908);
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Sans", system-ui, sans-serif;
+      font-size: clamp(15px, .92rem + .18vw, 17px);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+    :focus-visible { outline: 2px solid var(--blue-1, #7ab8ff); outline-offset: 3px; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+
+    header.bar {
+      position: sticky; top: 0; z-index: 10;
+      background: #15120c;
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; min-height: 56px; }
+    .wordmark {
+      display: flex; align-items: center; gap: .6rem;
+      color: var(--fg-1, #f6d7a7);
+      font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .wordmark img { height: 39px; width: auto; display: block; }
+    .bar nav { margin-left: auto; display: flex; align-items: center; gap: .95rem; font-size: .82rem; }
+    .bar nav a,
+    .nav-trigger { color: var(--fg-4, #9f9f9f); }
+    .bar nav a.active,
+    .bar nav a:hover,
+    .nav-trigger:hover,
+    .nav-trigger.active,
+    .nav-group[open] .nav-trigger { color: var(--orange-1, #f3c46c); }
+    .nav-group { position: relative; }
+    .nav-trigger {
+      list-style: none;
+      cursor: pointer;
+      outline-offset: 4px;
+      white-space: nowrap;
+    }
+    .nav-trigger::-webkit-details-marker { display: none; }
+    .nav-trigger::after {
+      content: " ↓";
+      color: var(--fg-5, #737373);
+      font-size: .72rem;
+    }
+    .nav-group[open] .nav-trigger::after { content: " ↑"; color: var(--orange-1, #f3c46c); }
+    .nav-menu {
+      position: absolute;
+      top: calc(100% + .9rem);
+      left: 50%;
+      z-index: 12;
+      min-width: 210px;
+      max-height: min(72vh, 520px);
+      overflow-y: auto;
+      padding: .55rem;
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: #15120c;
+      transform: translateX(-50%);
+    }
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      padding: .45rem .55rem;
+      border-radius: 6px;
+      color: var(--fg-3, #d4c19a);
+    }
+    .nav-menu a::after { content: "→"; color: var(--fg-5, #737373); }
+    .nav-menu a:hover { background: var(--bg-2, #121212); }
+    .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); cursor: pointer; display: none; font-size: 1.2rem; line-height: 1; margin-left: auto; padding: 0; }
+    .hm-btn:hover { color: var(--orange-1, #f3c46c); }
+    .hm-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 19;
+      background: rgba(0, 0, 0, .5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+    }
+    .hm-scrim.open { opacity: 1; pointer-events: auto; }
+    .hm-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 20;
+      width: min(86vw, 320px);
+      height: 100vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: #15120c;
+      border-left: 1px solid var(--border-2, #2a2a2a);
+      transform: translateX(100%);
+      transition: transform .2s ease;
+    }
+    .hm-overlay.open { transform: translateX(0); }
+    .hm-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-2, #d8c29d); cursor: pointer; font-size: 1.2rem; }
+    .hm-close:hover { color: var(--orange-1, #f3c46c); }
+    .hm-head { margin-top: .5rem; margin-bottom: .15rem; color: var(--fg-5, #737373); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+    .hm-head:first-of-type { margin-top: 2rem; }
+    .hm-overlay a { display: block; padding: .35rem 0; color: var(--fg-2, #d8c29d); font-size: .85rem; }
+    .hm-overlay a:hover { color: var(--orange-1, #f3c46c); }
+
+    .hero { padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.2rem, 6vw, 4.5rem); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .75fr);
+      gap: clamp(1.5rem, 5vw, 3.5rem);
+      align-items: center;
+    }
+    .eyebrow {
+      color: var(--orange-1, #f3c46c);
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 860px;
+      margin: .55rem 0 0;
+      color: var(--fg-1, #f6d7a7);
+      font-size: clamp(2.6rem, 1.25rem + 6vw, 5.7rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h1 span { color: var(--orange-3, #ff9900); }
+    .lede {
+      max-width: 68ch;
+      margin: 1.25rem 0 0;
+      color: var(--fg-2, #d8c29d);
+      font-family: "Noto Serif", Georgia, serif;
+      font-size: clamp(1.05rem, 1rem + .35vw, 1.26rem);
+    }
+    .cta { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
+    .btn {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-3, #2d2d2d);
+      border-radius: 8px;
+      padding: .62rem 1rem;
+      background: var(--bg-2, #121212);
+      color: var(--fg-1, #f6d7a7);
+      transition: border-color .15s, color .15s, transform .15s;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--orange-4, #d97742); color: var(--orange-1, #f3c46c); }
+    .btn.primary { background: var(--orange-3, #ff9900); border-color: var(--orange-3, #ff9900); color: var(--fg-on-warm, #1a1208); font-weight: 700; }
+    .btn.primary:hover { background: var(--orange-1, #f3c46c); border-color: var(--orange-1, #f3c46c); color: var(--fg-on-warm, #1a1208); }
+
+    .proof-panel {
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(29, 24, 18, .96), rgba(18, 18, 18, .98));
+      padding: clamp(1rem, 3vw, 1.35rem);
+    }
+    .proof-panel h2 {
+      margin: 0;
+      color: var(--fg-1, #f6d7a7);
+      font-size: 1rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .chain { display: grid; gap: .6rem; margin-top: 1rem; }
+    .chain-row {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: .7rem;
+      align-items: start;
+      padding: .75rem;
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: var(--bg-1, #0f0f10);
+    }
+    .chain-row .num {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 999px;
+      color: var(--orange-1, #f3c46c);
+      background: var(--bg-elev, #1d1812);
+      font-size: .78rem;
+    }
+    .chain-row strong { color: var(--blue-1, #7ab8ff); display: block; font-size: .92rem; }
+    .chain-row span { color: var(--fg-4, #9f9f9f); font-size: .82rem; }
+
+    .band { border-top: 1px solid var(--border-2, #2a2a2a); padding: clamp(2.5rem, 6vw, 4rem) 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 1.5rem; align-items: end; margin-bottom: 1.25rem; }
+    .section-head h2 { margin: 0; color: var(--fg-1, #f6d7a7); font-size: clamp(1.45rem, 1rem + 2vw, 2.3rem); }
+    .section-head p { max-width: 54ch; margin: 0; color: var(--fg-4, #9f9f9f); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+    .card {
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: var(--bg-2, #121212);
+      padding: 1rem;
+    }
+    .card h3 { margin: 0; color: var(--orange-1, #f3c46c); font-size: .98rem; }
+    .card p { margin: .45rem 0 0; color: var(--fg-3, #d4c19a); font-size: .9rem; }
+    .card ul { margin: .7rem 0 0; padding: 0; list-style: none; }
+    .card li { color: var(--fg-4, #9f9f9f); font-size: .84rem; padding: .22rem 0; }
+    .card li::before { content: "> "; color: var(--orange-1, #f3c46c); }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: minmax(180px, .75fr) repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--border-2, #2a2a2a);
+      border-left: 1px solid var(--border-2, #2a2a2a);
+      overflow-x: auto;
+    }
+    .matrix div {
+      min-width: 170px;
+      padding: .8rem;
+      border-right: 1px solid var(--border-2, #2a2a2a);
+      border-bottom: 1px solid var(--border-2, #2a2a2a);
+      color: var(--fg-3, #d4c19a);
+      font-size: .86rem;
+    }
+    .matrix .head { color: var(--orange-1, #f3c46c); background: var(--bg-elev, #1d1812); font-weight: 700; }
+    .matrix .rowhead { color: var(--blue-1, #7ab8ff); font-weight: 700; background: var(--bg-2, #121212); }
+
+    .reg-note {
+      border-left: 3px solid var(--blue-2, #4fb3c7);
+      background: rgba(79, 179, 199, .08);
+      padding: 1rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      color: var(--fg-3, #d4c19a);
+      font-size: .9rem;
+    }
+    .reg-note strong { color: var(--blue-1, #7ab8ff); }
+
+    .final {
+      border: 1px solid var(--border-warm, #3a2a18);
+      border-radius: 10px;
+      background: var(--bg-elev, #1d1812);
+      padding: clamp(1.2rem, 4vw, 1.8rem);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    .final h2 { margin: 0; color: var(--fg-1, #f6d7a7); }
+    .final p { margin: .35rem 0 0; color: var(--fg-3, #d4c19a); }
+
+    footer { border-top: 1px solid var(--border-2, #2a2a2a); margin-top: clamp(2rem, 5vw, 3rem); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; padding-top: 2rem; padding-bottom: 3rem; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .82rem; }
+    footer .meta { margin-left: auto; color: var(--fg-5, #737373); font-size: .74rem; }
+
+    @media (max-width: 900px) {
+      .hero-grid, .grid-3, .final { grid-template-columns: 1fr; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .bar nav { display: none; }
+      .hm-btn { display: inline-flex; }
+      footer .meta { margin-left: 0; width: 100%; }
+    }
+    @media (max-width: 540px) {
+      .hero { padding-top: 2.5rem; }
+      .cta .btn, .final .btn { width: 100%; }
+      .matrix { grid-template-columns: 1fr; }
+      .matrix div { min-width: 0; }
+      .matrix .head:not(:first-child) { display: none; }
+    }
+  </style>
+  <script src="./assets/local-mode.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="wordmark mono" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <nav class="mono">
+        <a href="/">home</a>
+        <details class="nav-group">
+          <summary class="nav-trigger">products</summary>
+          <div class="nav-menu">
+            <a href="/#products">product lines</a>
+            <a href="/#p-governance">ai governance</a>
+            <a href="/#p-matches">matches</a>
+            <a href="/#p-articulate">articulate</a>
+            <a href="/#p-mailroute">mailroute</a>
+            <a href="/#p-detcordon">detcordon</a>
+            <a href="/#p-baz">baz signals</a>
+            <a href="/#p-esp32tolk">esp32tolk</a>
+            <a href="/#p-shipwrecks">shipwrecks</a>
+            <a href="/completion">completion</a>
+            <a href="/glossary">glossary</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger">learn</summary>
+          <div class="nav-menu">
+            <a href="/school">school</a>
+            <a href="/doc/">docs</a>
+            <a href="/school/vision/face-mesh-morphing-techniques">face lesson</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger active">governance</summary>
+          <div class="nav-menu">
+            <a class="active" href="/ai-governance">buyer page</a>
+            <a href="/konsonans-ai-governance">formal spec</a>
+            <a href="/doc/products/ai-governance">architecture</a>
+            <a href="/doc/products/ai-governance-pilot">pilot</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger">demos</summary>
+          <div class="nav-menu">
+            <a href="https://face.ragbaz.cc">face demo</a>
+            <a href="/glither-wasm">glither wasm</a>
+            <a href="/prospects/baz-signal-stack">baz signals</a>
+          </div>
+        </details>
+        <a href="/pricing">pricing</a>
+      </nav>
+      <button class="hm-btn mono" onclick="toggleHM()" aria-label="Open menu" aria-controls="hm-overlay" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
+  <div class="hm-overlay mono" id="hm-overlay" aria-label="RAGBAZ menu">
+    <button class="hm-close" onclick="closeHM()" aria-label="Close menu">✕</button>
+    <div class="hm-head">sections</div>
+    <a href="/" onclick="closeHM()">home</a>
+    <a href="/pricing" onclick="closeHM()">pricing</a>
+    <div class="hm-head">products</div>
+    <a href="/#products" onclick="closeHM()">product lines</a>
+    <a href="/#p-governance" onclick="closeHM()">ai governance</a>
+    <a href="/#p-matches" onclick="closeHM()">matches</a>
+    <a href="/#p-articulate" onclick="closeHM()">articulate</a>
+    <a href="/#p-mailroute" onclick="closeHM()">mailroute</a>
+    <a href="/#p-detcordon" onclick="closeHM()">detcordon</a>
+    <a href="/#p-baz" onclick="closeHM()">baz signals</a>
+    <a href="/#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
+    <a href="/#p-shipwrecks" onclick="closeHM()">shipwrecks</a>
+    <a href="/completion" onclick="closeHM()">completion</a>
+    <a href="/glossary" onclick="closeHM()">glossary</a>
+    <div class="hm-head">learn</div>
+    <a href="/school" onclick="closeHM()">school</a>
+    <a href="/doc/" onclick="closeHM()">docs</a>
+    <a href="/school/vision/face-mesh-morphing-techniques" onclick="closeHM()">face lesson</a>
+    <div class="hm-head">governance</div>
+    <a href="/ai-governance" onclick="closeHM()">buyer page</a>
+    <a href="/konsonans-ai-governance" onclick="closeHM()">formal spec</a>
+    <a href="/doc/products/ai-governance" onclick="closeHM()">architecture</a>
+    <a href="/doc/products/ai-governance-pilot" onclick="closeHM()">pilot</a>
+    <div class="hm-head">demos</div>
+    <a href="https://face.ragbaz.cc" onclick="closeHM()">face demo</a>
+    <a href="/glither-wasm" onclick="closeHM()">glither wasm</a>
+    <a href="/prospects/baz-signal-stack" onclick="closeHM()">baz signals</a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow mono">Konsonans AI Governance Platform</div>
+          <h1>Govern agent actions <span>before</span> they execute.</h1>
+          <p class="lede">Konsonans is a control plane for teams deploying AI agents in consequential workflows. It places a policy gate between the agent and its tools, captures evidence as actions happen, and gives human reviewers a fast hold / approve / deny path.</p>
+          <div class="cta mono">
+            <a class="btn primary" href="/prospects/ai-governance">Open prospectus</a>
+            <a class="btn" href="/doc/products/ai-governance">Read architecture</a>
+            <a class="btn" href="/konsonans-ai-governance">Formal spec</a>
+          </div>
+        </div>
+        <aside class="proof-panel" aria-label="governance proof path">
+          <h2 class="mono">Runtime proof path</h2>
+          <div class="chain">
+            <div class="chain-row"><div class="num mono">01</div><div><strong>Tool call enters policy gate</strong><span>Agent class, action, arguments, and risk metadata are evaluated before upstream execution.</span></div></div>
+            <div class="chain-row"><div class="num mono">02</div><div><strong>Gate returns allow, hold, or deny</strong><span>High-risk actions can wait for a named reviewer and an auditable rationale.</span></div></div>
+            <div class="chain-row"><div class="num mono">03</div><div><strong>Evidence pack can be frozen</strong><span>Decision records, hash chain data, and manifests are exported for review and buyer handoff.</span></div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Built for the uncomfortable middle.</h2>
+          <p>Most agent stacks jump from prompt engineering to production operations. Konsonans handles the middle layer where policies, reviewers, runtime evidence, and deployment controls need to agree.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><h3 class="mono">For operators</h3><p>See what agents are trying to do, pause risky actions, and keep the evidence together.</p><ul><li>live approvals queue</li><li>SLA safe-default denial</li><li>release and validation scripts</li></ul></article>
+          <article class="card"><h3 class="mono">For reviewers</h3><p>Review actions with context instead of reconstructing intent from logs after the fact.</p><ul><li>identity-attributed decisions</li><li>rationale capture</li><li>packetized external review</li></ul></article>
+          <article class="card"><h3 class="mono">For builders</h3><p>Use a typed policy surface and WIT-shaped runtime boundary instead of bespoke callbacks.</p><ul><li>glither.governance policy dialect</li><li>Rust / WASM component path</li><li>MCP agent ingress</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>What you get.</h2>
+          <p>A practical governance pilot should demonstrate enforcement, evidence, and reviewer workflow in one run.</p>
+        </div>
+        <div class="matrix mono" role="table" aria-label="Konsonans package matrix">
+          <div class="head">Capability</div><div class="head">Pilot</div><div class="head">Operator</div><div class="head">Assurance</div>
+          <div class="rowhead">Policy gate</div><div>allow / hold / deny rules</div><div>risk-tiered runtime routes</div><div>policy export and review trail</div>
+          <div class="rowhead">Human oversight</div><div>browser approval console</div><div>email or chat review transport</div><div>reviewer attribution and rationale</div>
+          <div class="rowhead">Evidence</div><div>real-workload evidence pack</div><div>release gate and packet checksums</div><div>manifest signing path and verifier</div>
+          <div class="rowhead">Deployment</div><div>single-node demo</div><div>operator runbook</div><div>retention and external validation packet</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="reg-note">
+          <strong>Regulatory note.</strong> This is product positioning, not legal advice. The European Commission's current AI Act implementation pages describe a staged timeline, including transparency obligations from 2 August 2026 and later high-risk application dates for certain areas and product-integrated systems. Konsonans is designed as an evidence and oversight layer that can be mapped to a buyer's actual role, risk classification, and jurisdiction with counsel. <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai">European Commission AI Act timeline</a>.
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap final">
+        <div>
+          <h2>Start with a governed workload.</h2>
+          <p>Bring one agent workflow, one risky tool call, and one reviewer. The pilot output is a traceable run plus a verification packet.</p>
+        </div>
+        <a class="btn primary mono" href="/prospects/ai-governance">Open the governance prospectus</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="wordmark mono"><img src="/assets/logo-mark.svg" alt="" />RAGBAZ</span>
+      <div class="links mono">
+        <a href="/">home</a>
+        <a href="/pricing">pricing</a>
+        <a href="/#products">products</a>
+        <a href="/school">school</a>
+        <a href="/doc/">docs</a>
+        <a href="https://face.ragbaz.cc">face demo</a>
+        <a href="/glither-wasm">glither wasm</a>
+        <a href="/doc/products/ai-governance">architecture</a>
+        <a href="/konsonans-ai-governance">formal specification</a>
+        <a href="/doc/products/ai-governance-pilot">pilot</a>
+      </div>
+      <div class="meta mono">konsonans ai governance · buyer surface</div>
+    </div>
+  </footer>
+  <script>
+function setMenuExpanded(open){
+  var button = document.querySelector('.hm-btn');
+  if (button) button.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+function toggleHM(){
+  var overlay = document.getElementById('hm-overlay');
+  var scrim = document.getElementById('hm-scrim');
+  var open = !overlay.classList.contains('open');
+  overlay.classList.toggle('open', open);
+  scrim.classList.toggle('open', open);
+  setMenuExpanded(open);
+}
+function closeHM(){
+  document.getElementById('hm-overlay').classList.remove('open');
+  document.getElementById('hm-scrim').classList.remove('open');
+  setMenuExpanded(false);
+}
+document.addEventListener('keydown', function(event){
+  var tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : '';
+  if (tag === 'input' || tag === 'textarea' || event.target.isContentEditable) return;
+  if (event.key === 'Escape') closeHM();
+  if (event.altKey && event.key.toLowerCase() === 'm') { event.preventDefault(); toggleHM(); }
+});
+  </script>
+</body>
+</html>

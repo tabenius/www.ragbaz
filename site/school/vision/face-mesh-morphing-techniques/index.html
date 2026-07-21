@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Face Mesh Morphing Techniques - RAGBAZ School</title>
+  <meta name="description" content="A RAGBAZ School lesson on landmarks, Delaunay triangles, Voronoi regions, dual UV maps, interpolation, and transforms for face morphing." />
+  <link rel="icon" href="/assets/logo-mark.svg" />
+  <link rel="stylesheet" href="/colors_and_type.css?v=2" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg-0, #0a0908); color: var(--fg-2, #d8c29d); font-family: "Noto Sans", system-ui, sans-serif; font-size: 16px; line-height: 1.7; }
+    a { color: var(--orange-1, #f3c46c); text-decoration: none; }
+    a:hover { color: var(--orange-3, #ff9900); }
+    .mono { font-family: "Intel One Mono", ui-monospace, monospace; }
+    .wrap { width: min(100% - 2rem, 1120px); margin: 0 auto; }
+    .bar { position: sticky; top: 0; z-index: 20; background: #15120c; border-bottom: 1px solid var(--border-2, #2a2a2a); }
+    .bar .wrap { display: flex; align-items: center; gap: 1rem; min-height: 56px; }
+    .wordmark { display: inline-flex; align-items: center; gap: .6rem; color: var(--fg-1, #f6d7a7); font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+    .wordmark img { display: block; width: auto; height: 39px; }
+    .bar nav { display: flex; align-items: center; gap: .95rem; margin-left: auto; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav > a, .nav-trigger { color: var(--fg-4, #9f9f9f); }
+    .bar nav > a:hover, .nav-trigger:hover, .nav-trigger.active, .nav-group[open] .nav-trigger { color: var(--orange-1, #f3c46c); }
+    .nav-group { position: relative; }
+    .nav-trigger { list-style: none; cursor: pointer; white-space: nowrap; outline-offset: 4px; }
+    .nav-trigger::-webkit-details-marker { display: none; }
+    .nav-trigger::after { content: " ↓"; color: var(--fg-5, #737373); }
+    .nav-menu { position: absolute; top: calc(100% + .9rem); left: 50%; width: 220px; max-height: 72vh; overflow-y: auto; padding: .55rem; background: #15120c; border: 1px solid var(--border-2, #2a2a2a); border-radius: 8px; transform: translateX(-50%); }
+    .nav-menu a { display: flex; justify-content: space-between; gap: .75rem; padding: .42rem .55rem; color: var(--fg-3, #d4c19a); border-radius: 6px; }
+    .nav-menu a::after { content: "→"; color: var(--fg-5, #737373); }
+    .nav-menu a:hover { background: var(--bg-2, #121212); }
+    .mobile-menu { display: none; margin-left: auto; }
+    .mobile-menu summary { color: var(--fg-2, #d8c29d); cursor: pointer; font-size: 1.2rem; list-style: none; }
+    .mobile-menu summary::-webkit-details-marker { display: none; }
+    .mobile-links { position: absolute; top: 56px; right: 0; width: min(86vw, 320px); height: calc(100vh - 56px); padding: 1.25rem; overflow-y: auto; background: #15120c; border-left: 1px solid var(--border-2, #2a2a2a); }
+    .mobile-links strong, .mobile-links a { display: block; }
+    .mobile-links strong { margin: 1rem 0 .2rem; color: var(--fg-5, #737373); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+    .mobile-links a { padding: .32rem 0; color: var(--fg-2, #d8c29d); font-size: .86rem; }
+    .hero { padding: clamp(3rem, 7vw, 5rem) 0 2rem; border-bottom: 1px solid var(--border-2, #2a2a2a); }
+    .eyebrow { color: var(--orange-3, #ff9900); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { max-width: 18ch; margin: .6rem 0 .8rem; color: var(--fg-1, #f6d7a7); font-family: "Intel One Mono", monospace; font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.1; }
+    .lede { max-width: 68ch; margin: 0; color: var(--fg-3, #d4c19a); font-size: 1.05rem; }
+    .lesson-layout { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: clamp(2rem, 6vw, 5rem); padding: 2.5rem 0 5rem; }
+    article { min-width: 0; }
+    article section { padding: 0 0 2rem; scroll-margin-top: 78px; }
+    h2 { margin: 0 0 .65rem; color: var(--fg-1, #f6d7a7); font-family: "Intel One Mono", monospace; font-size: 1.25rem; }
+    p { margin: 0 0 1rem; }
+    code, pre { font-family: "Intel One Mono", ui-monospace, monospace; }
+    code { color: var(--orange-1, #f3c46c); }
+    pre { margin: 1rem 0; padding: 1rem; overflow-x: auto; color: var(--fg-2, #d8c29d); background: #121212; border: 1px solid var(--border-2, #2a2a2a); border-radius: 6px; }
+    table { width: 100%; margin: 1rem 0 1.3rem; border-collapse: collapse; }
+    th, td { padding: .65rem .7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border-2, #2a2a2a); }
+    th { color: var(--fg-1, #f6d7a7); font-family: "Intel One Mono", monospace; font-size: .78rem; }
+    ol { padding-left: 1.4rem; }
+    .toc { position: sticky; top: 82px; align-self: start; padding-left: 1rem; border-left: 1px solid var(--border-2, #2a2a2a); }
+    .toc strong { display: block; margin-bottom: .5rem; color: var(--fg-5, #737373); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+    .toc a { display: block; padding: .25rem 0; color: var(--fg-4, #9f9f9f); font-size: .82rem; }
+    .toc a:hover { color: var(--orange-1, #f3c46c); }
+    .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.4rem; }
+    .actions a { padding: .5rem .75rem; border: 1px solid var(--border-warm, #3a2a18); border-radius: 6px; font-family: "Intel One Mono", monospace; font-size: .78rem; }
+    footer { border-top: 1px solid var(--border-2, #2a2a2a); }
+    footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 2rem 0 3rem; }
+    footer .wordmark img { height: 22px; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 1rem; font-family: "Intel One Mono", monospace; font-size: .8rem; }
+    @media (max-width: 820px) { .bar nav { display: none; } .mobile-menu { display: block; } .lesson-layout { grid-template-columns: 1fr; } .toc { position: static; grid-row: 1; padding: 0 0 1rem; border-left: 0; border-bottom: 1px solid var(--border-2, #2a2a2a); columns: 2; } .toc strong { column-span: all; } }
+    @media (max-width: 520px) { .toc { columns: 1; } table { font-size: .86rem; } th, td { padding: .5rem .4rem; } }
+  </style>
+  <script src="/assets/local-mode.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
+      <nav aria-label="RAGBAZ sections">
+        <a href="/">home</a>
+        <details class="nav-group"><summary class="nav-trigger">products</summary><div class="nav-menu"><a href="/#products">product lines</a><a href="/#p-governance">ai governance</a><a href="/#p-matches">matches</a><a href="/#p-articulate">articulate</a><a href="/#p-mailroute">mailroute</a><a href="/#p-detcordon">detcordon</a><a href="/#p-baz">baz signals</a><a href="/completion">completion</a></div></details>
+        <details class="nav-group"><summary class="nav-trigger active">learn</summary><div class="nav-menu"><a href="/school">school</a><a href="/school/vision/face-mesh-morphing-techniques">face lesson</a><a href="/doc/">docs</a></div></details>
+        <details class="nav-group"><summary class="nav-trigger">governance</summary><div class="nav-menu"><a href="/ai-governance">buyer page</a><a href="/konsonans-ai-governance">formal spec</a><a href="/doc/products/ai-governance">architecture</a><a href="/doc/products/ai-governance-pilot">pilot</a></div></details>
+        <details class="nav-group"><summary class="nav-trigger">demos</summary><div class="nav-menu"><a href="https://face.ragbaz.cc">face demo</a><a href="/glither-wasm">glither wasm</a><a href="/prospects/baz-signal-stack">baz signals</a></div></details>
+        <a href="/pricing">pricing</a>
+      </nav>
+      <details class="mobile-menu"><summary aria-label="Open menu">☰</summary><div class="mobile-links mono"><a href="/">home</a><a href="/pricing">pricing</a><strong>learn</strong><a href="/school">school</a><a href="/school/vision/face-mesh-morphing-techniques">face lesson</a><a href="/doc/">docs</a><strong>governance</strong><a href="/ai-governance">buyer page</a><a href="/konsonans-ai-governance">formal spec</a><strong>demos</strong><a href="https://face.ragbaz.cc">face demo</a><a href="/glither-wasm">glither wasm</a></div></details>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow mono">school / vision / geometry</div>
+        <h1>Face Mesh Morphing Techniques</h1>
+        <p class="lede">Convincing face morphing is geometry first: stable landmarks, shared triangle topology, two texture maps, and one interpolation parameter moving shape and color together.</p>
+        <div class="actions"><a href="https://face.ragbaz.cc">open live viewer</a><a href="/school">all school modules</a></div>
+      </div>
+    </section>
+
+    <div class="wrap lesson-layout">
+      <article>
+        <section id="face-points"><h2>1. Face points</h2><p>A face point, or landmark, is a named coordinate on a stable location such as an eye corner, nostril edge, lip contour, chin, or cheek. Viewer data normalizes each point into image space.</p><pre>x: 0.0 left  -&gt; 1.0 right
+y: 0.0 top   -&gt; 1.0 bottom
+z: relative depth</pre><p>The renderer maps those points into centered Three.js coordinates and flips the image y-axis:</p><pre>world_x = (x - 0.5) * 2
+world_y = -(y - 0.5) * 2
+world_z = z * depth_scale</pre></section>
+        <section id="triangles"><h2>2. From points to triangles</h2><p>Points alone are not a surface. A triangle mesh lets the GPU interpolate position, texture coordinates, and normals. Every expression must use the same triangle list, so a point keeps the same neighbors while the mouth, brow, or cheek moves.</p><table><thead><tr><th>Value</th><th>Purpose</th></tr></thead><tbody><tr><td>position</td><td>Places the surface in space.</td></tr><tr><td>UV</td><td>Selects the matching texture location.</td></tr><tr><td>normal</td><td>Supports lighting and surface inspection.</td></tr></tbody></table></section>
+        <section id="voronoi"><h2>3. Voronoi and Delaunay intuition</h2><p>Voronoi cells describe the image region closest to each landmark. Delaunay triangles connect nearby landmarks into a surface the GPU can draw. The triangle mesh is the rendered structure; Voronoi regions help explain which landmark owns a local deformation.</p><pre>detect landmarks -&gt; build Delaunay triangles -&gt; audit regions with Voronoi intuition</pre><p>A triangle crossing a semantic boundary, such as lip to cheek or eyelid to forehead, produces visible shearing.</p></section>
+        <section id="positions"><h2>4. Morphing positions</h2><p>The basic morph is linear interpolation:</p><pre>P(t) = A + (B - A) * t</pre><table><thead><tr><th>Symbol</th><th>Meaning</th></tr></thead><tbody><tr><td><code>A</code></td><td>Landmark position in the source expression.</td></tr><tr><td><code>B</code></td><td>Matching position in the destination expression.</td></tr><tr><td><code>t</code></td><td>Morph amount from 0 to 1.</td></tr></tbody></table><p>At <code>t = 0.5</code>, every point is halfway between its source and destination. Shared topology keeps every triangle coherent during the transition.</p></section>
+        <section id="uvs"><h2>5. Texture coordinates and dual UVs</h2><p>Moving geometry with fixed texture coordinates smears the face. The viewer therefore carries two UV sets, one for each expression texture.</p><table><thead><tr><th>UV set</th><th>Samples</th></tr></thead><tbody><tr><td><code>uvA</code></td><td>Source texture at source landmark coordinates.</td></tr><tr><td><code>uvB</code></td><td>Destination texture at destination coordinates.</td></tr></tbody></table><pre>color = mix(textureA(uvA), textureB(uvB), t)</pre><p>Geometry and color use the same morph amount, while each image is sampled through the landmarks that belong to it.</p></section>
+        <section id="transforms"><h2>6. Transforms</h2><table><thead><tr><th>Transform</th><th>Purpose</th></tr></thead><tbody><tr><td>normalize points</td><td>Places every image tile in one coordinate frame.</td></tr><tr><td>flip y</td><td>Converts image coordinates to view coordinates.</td></tr><tr><td>scale x and y</td><td>Centers normalized image space in a 3D plane.</td></tr><tr><td>scale z</td><td>Keeps depth visible without tearing the face.</td></tr><tr><td>camera orbit</td><td>Exposes the mesh from different angles.</td></tr></tbody></table><p>Transforms determine whether landmarks line up, whether the face is centered, and whether depth reads as structure instead of noise.</p></section>
+        <section id="debugging"><h2>7. Debugging checklist</h2><ol><li>Confirm both expressions use the same landmark count.</li><li>Verify point indices remain stable between A and B.</li><li>Check that triangles do not cross semantic boundaries.</li><li>Confirm the y-axis orientation.</li><li>Bind each UV set to the correct expression texture.</li><li>Keep z-depth strong enough to show form but weak enough to avoid tearing.</li><li>Inspect wireframe coherence at <code>t = 0</code>, <code>0.5</code>, and <code>1</code>.</li></ol><p>The live viewer exposes A/B selection, the morph slider, random traversal, wireframe, sharpness, orbit, immersive mode, and fullscreen as inspection controls.</p></section>
+        <section id="privacy"><h2>8. Privacy boundary</h2><p>Face landmarks can become biometric data when tied to a real person or identity workflow. These images and meshes are learning assets. A production system needs consent, provenance, retention limits, and a precise statement of whether it performs recognition, verification, or visual transformation only.</p></section>
+      </article>
+      <aside class="toc mono" aria-label="Lesson contents"><strong>on this page</strong><a href="#face-points">1. Face points</a><a href="#triangles">2. Triangles</a><a href="#voronoi">3. Voronoi and Delaunay</a><a href="#positions">4. Positions</a><a href="#uvs">5. Dual UVs</a><a href="#transforms">6. Transforms</a><a href="#debugging">7. Debugging</a><a href="#privacy">8. Privacy</a></aside>
+    </div>
+  </main>
+
+  <footer><div class="wrap"><a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a><nav><a href="/school">school</a><a href="/doc/">docs</a><a href="https://face.ragbaz.cc">face demo</a><a href="/ai-governance">ai governance</a><a href="/pricing">pricing</a></nav></div></footer>
+</body>
+</html>

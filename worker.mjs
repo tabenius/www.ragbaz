@@ -14,6 +14,19 @@ async function syncWorkspaceSnapshot(env) {
   });
 }
 
+function temporarySchoolSlashRedirect(request) {
+  const url = new URL(request.url);
+  if (url.pathname !== "/school/") return null;
+  url.pathname = "/school";
+  return new Response(null, {
+    status: 307,
+    headers: {
+      "cache-control": "no-store",
+      location: `${url.pathname}${url.search}`,
+    },
+  });
+}
+
 function canonicalLegacyPathRedirect(request) {
   const url = new URL(request.url);
   if (url.pathname !== "/tractatus" && url.pathname !== "/tractatus/") return null;
@@ -55,6 +68,8 @@ function canonicalDocHostRedirect(request) {
 export default {
   async fetch(request, env, ctx) {
     if (env?.DB) ctx.waitUntil(recordSiteHit(request, env.DB));
+    const schoolRedirect = temporarySchoolSlashRedirect(request);
+    if (schoolRedirect) return schoolRedirect;
     const legacyRedirect = canonicalLegacyPathRedirect(request);
     if (legacyRedirect) return legacyRedirect;
     const redirect = canonicalDocHostRedirect(request);

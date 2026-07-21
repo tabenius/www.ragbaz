@@ -26,17 +26,60 @@
     .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
     header.bar {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(16,16,16,0.82); backdrop-filter: blur(8px);
+      background: #15120c;
       border-bottom: 1px solid var(--border-2, #2a2a2a);
     }
     .bar .wrap { display: flex; align-items: center; gap: 1rem; height: 56px; }
     .wordmark { display: flex; align-items: center; gap: .6rem; font-family: "Intel One Mono", monospace; font-weight: 600; letter-spacing: .14em; color: var(--fg-1, #f6d7a7); text-transform: uppercase; }
     .bar .wordmark img { height: 39px; width: auto; display: block; }
     footer .wordmark img { height: 22px; width: auto; display: block; }
-    .bar nav { margin-left: auto; display: flex; gap: 1.4rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
-    .bar nav a { color: var(--fg-4, #9f9f9f); }
-    .bar nav a:hover { color: var(--orange-1, #f3c46c); }
-    .bar nav a.active { color: var(--orange-1, #f3c46c); }
+    .bar nav { margin-left: auto; display: flex; align-items: center; gap: .95rem; font-family: "Intel One Mono", monospace; font-size: .82rem; }
+    .bar nav a,
+    .nav-trigger { color: var(--fg-4, #9f9f9f); }
+    .bar nav a:hover,
+    .bar nav a.active,
+    .nav-trigger:hover,
+    .nav-trigger.active,
+    .nav-group[open] .nav-trigger { color: var(--orange-1, #f3c46c); }
+    .nav-group { position: relative; }
+    .nav-trigger {
+      list-style: none;
+      cursor: pointer;
+      outline-offset: 4px;
+      white-space: nowrap;
+    }
+    .nav-trigger::-webkit-details-marker { display: none; }
+    .nav-trigger::after {
+      content: " ↓";
+      color: var(--fg-5, #737373);
+      font-size: .72rem;
+    }
+    .nav-group[open] .nav-trigger::after { content: " ↑"; color: var(--orange-1, #f3c46c); }
+    .nav-menu {
+      position: absolute;
+      top: calc(100% + .9rem);
+      left: 50%;
+      z-index: 12;
+      min-width: 210px;
+      max-height: min(72vh, 520px);
+      overflow-y: auto;
+      padding: .55rem;
+      border: 1px solid var(--border-2, #2a2a2a);
+      border-radius: 8px;
+      background: #15120c;
+      transform: translateX(-50%);
+    }
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      padding: .45rem .55rem;
+      border-radius: 6px;
+      color: var(--fg-3, #d4c19a);
+    }
+    .nav-menu a::after { content: "→"; color: var(--fg-5, #737373); }
+    .nav-menu a:hover { background: var(--bg-2, #121212); }
     .hm-btn { background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; margin-left: auto; display: none; align-items: center; }
     .hm-btn:hover { color: var(--orange-1, #f3c46c); }
     .hm-overlay {
@@ -48,7 +91,8 @@
     .hm-overlay.open { transform: translateX(0); }
     .hm-overlay .hm-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-2, #d8c29d); font-size: 1.2rem; cursor: pointer; }
     .hm-overlay .hm-close:hover { color: var(--orange-1, #f3c46c); }
-    .hm-overlay .hm-head { font-family: "Intel One Mono", monospace; font-size: .7rem; color: var(--fg-5, #737373); text-transform: uppercase; letter-spacing: .12em; margin-top: 2rem; margin-bottom: .15rem; }
+    .hm-overlay .hm-head { font-family: "Intel One Mono", monospace; font-size: .7rem; color: var(--fg-5, #737373); text-transform: uppercase; letter-spacing: .12em; margin-top: .5rem; margin-bottom: .15rem; }
+    .hm-overlay .hm-head:first-of-type { margin-top: 2rem; }
     .hm-overlay a { display: block; padding: .35rem 0; font-family: "Intel One Mono", monospace; font-size: .85rem; color: var(--fg-2, #d8c29d); }
     .hm-overlay a:hover,
     .hm-overlay a.active { color: var(--orange-1, #f3c46c); }
@@ -141,34 +185,93 @@
 <body>
   <header class="bar">
     <div class="wrap">
-      <span class="wordmark"><img src="../assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
       <nav>
         <a href="/">home</a>
+        <details class="nav-group">
+          <summary class="nav-trigger">products</summary>
+          <div class="nav-menu">
+            <a href="/#products">product lines</a>
+            <a href="/#p-governance">ai governance</a>
+            <a href="/#p-matches">matches</a>
+            <a href="/#p-articulate">articulate</a>
+            <a href="/#p-mailroute">mailroute</a>
+            <a href="/#p-detcordon">detcordon</a>
+            <a href="/#p-baz">baz signals</a>
+            <a href="/#p-esp32tolk">esp32tolk</a>
+            <a href="/#p-shipwrecks">shipwrecks</a>
+            <a href="/completion">completion</a>
+            <a href="/glossary">glossary</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger active">learn</summary>
+          <div class="nav-menu">
+            <a class="active" href="/school">school</a>
+            <a href="/doc/">docs</a>
+            <a href="/school/vision/face-mesh-morphing-techniques">face lesson</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger">governance</summary>
+          <div class="nav-menu">
+            <a href="/ai-governance">buyer page</a>
+            <a href="/konsonans-ai-governance">formal spec</a>
+            <a href="/doc/products/ai-governance">architecture</a>
+            <a href="/doc/products/ai-governance-pilot">pilot</a>
+          </div>
+        </details>
+        <details class="nav-group">
+          <summary class="nav-trigger">demos</summary>
+          <div class="nav-menu">
+            <a href="https://face.ragbaz.cc">face demo</a>
+            <a href="/glither-wasm">glither wasm</a>
+            <a href="/prospects/baz-signal-stack">baz signals</a>
+          </div>
+        </details>
         <a href="/pricing">pricing</a>
-        <a href="/#products">products</a>
-        <a href="/school" class="active">school</a>
-        <a href="/doc/">docs</a>
-        <a href="/konsonans-ai-governance">konsonans ai governance</a>
       </nav>
-      <button class="hm-btn mono" onclick="toggleHM()">☰</button>
+      <button class="hm-btn mono" onclick="toggleHM()" aria-label="Open menu" aria-controls="hm-overlay" aria-expanded="false">☰</button>
     </div>
   </header>
 
   <div class="hm-scrim" id="hm-scrim" onclick="closeHM()"></div>
   <div class="hm-overlay" id="hm-overlay">
     <button class="hm-close" onclick="closeHM()">✕</button>
-    <div class="hm-head">navigate</div>
+    <div class="hm-head">sections</div>
     <a href="/" onclick="closeHM()">home</a>
     <a href="/pricing" onclick="closeHM()">pricing</a>
-    <a href="/#products" onclick="closeHM()">products</a>
+    <div class="hm-head">products</div>
+    <a href="/#products" onclick="closeHM()">product lines</a>
+    <a href="/#p-governance" onclick="closeHM()">ai governance</a>
+    <a href="/#p-matches" onclick="closeHM()">matches</a>
+    <a href="/#p-articulate" onclick="closeHM()">articulate</a>
+    <a href="/#p-mailroute" onclick="closeHM()">mailroute</a>
+    <a href="/#p-detcordon" onclick="closeHM()">detcordon</a>
+    <a href="/#p-baz" onclick="closeHM()">baz signals</a>
+    <a href="/#p-esp32tolk" onclick="closeHM()">esp32tolk</a>
+    <a href="/#p-shipwrecks" onclick="closeHM()">shipwrecks</a>
+    <a href="/completion" onclick="closeHM()">completion</a>
+    <a href="/glossary" onclick="closeHM()">glossary</a>
+    <div class="hm-head">learn</div>
     <a href="/school" class="active" onclick="closeHM()">school</a>
     <a href="/doc/" onclick="closeHM()">docs</a>
-    <a href="/konsonans-ai-governance" onclick="closeHM()">konsonans ai governance</a>
+    <a href="/school/vision/face-mesh-morphing-techniques" onclick="closeHM()">face lesson</a>
+    <div class="hm-head">governance</div>
+    <a href="/ai-governance" onclick="closeHM()">buyer page</a>
+    <a href="/konsonans-ai-governance" onclick="closeHM()">formal spec</a>
+    <a href="/doc/products/ai-governance" onclick="closeHM()">architecture</a>
+    <a href="/doc/products/ai-governance-pilot" onclick="closeHM()">pilot</a>
+    <div class="hm-head">demos</div>
+    <a href="https://face.ragbaz.cc" onclick="closeHM()">face demo</a>
+    <a href="/glither-wasm" onclick="closeHM()">glither wasm</a>
+    <a href="/prospects/baz-signal-stack" onclick="closeHM()">baz signals</a>
     <div class="hm-head">modules</div>
     <a href="/school" onclick="closeHM()">overview</a>
     <a href="/school/cellular" onclick="closeHM()">cellular</a>
     <a href="/school/forensics" onclick="closeHM()">forensics</a>
     <a href="/school/hft" onclick="closeHM()">trading</a>
+    <a href="/school/vision/face-mesh-morphing-techniques" onclick="closeHM()">vision</a>
   </div>
 
   <main>
@@ -181,6 +284,7 @@
           <a href="/school/cellular">cellular</a>
           <a href="/school/forensics">forensics</a>
           <a href="/school/hft">trading</a>
+          <a href="/school/vision/face-mesh-morphing-techniques">vision</a>
         </nav>
       </div>
     </section>
@@ -219,6 +323,16 @@
             <p>Reading the tape: live SMA, Bollinger-band, RSI, volume and volatility widgets, the trend-following vs mean-reversion temperaments, and real compilable BAZ.HFT strategies with the CX &rarr; Palantir &rarr; Luna stack.</p>
             <a class="link" href="/school/hft">open module</a>
           </article>
+          <article class="module-card">
+            <div class="module-meta">
+              <span>computer vision</span>
+              <span>landmarks &middot; meshes</span>
+              <span>face.ragbaz.cc</span>
+            </div>
+            <h2>face mesh morphing</h2>
+            <p>Landmarks, Delaunay triangles, dual UV maps, interpolation, transforms, and a practical debugging sequence for expression morphs.</p>
+            <a class="link" href="/school/vision/face-mesh-morphing-techniques">open lesson</a>
+          </article>
 
         </div>
       </div>
@@ -227,20 +341,32 @@
 
   <footer>
     <div class="wrap">
-      <span class="wordmark"><img src="../assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</span>
+      <a class="wordmark" href="/"><img src="/assets/logo-mark.svg" alt="RAGBAZ" />RAGBAZ</a>
       <div class="links">
         <a href="/">home</a>
-        <a href="/school">school</a>
         <a href="/pricing">pricing</a>
+        <a href="/#products">products</a>
+        <a href="/school">school</a>
         <a href="/doc/">docs</a>
-        <a href="/konsonans-ai-governance">konsonans ai governance</a>
+        <a href="https://face.ragbaz.cc">face demo</a>
+        <a href="/glither-wasm">glither wasm</a>
+        <a href="/ai-governance">ai governance</a>
+        <a href="/konsonans-ai-governance">formal spec</a>
+        <a href="/doc/products/ai-governance">architecture</a>
       </div>
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
     </div>
   </footer>
   <script>
-  function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'); o.classList.toggle('open'); s.classList.toggle('open'); }
-  function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); }
+  function setHMExpanded(open){ var b=document.querySelector('.hm-btn'); if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'),open=!o.classList.contains('open'); o.classList.toggle('open', open); s.classList.toggle('open', open); setHMExpanded(open); }
+  function closeHM(){ document.getElementById('hm-overlay').classList.remove('open'); document.getElementById('hm-scrim').classList.remove('open'); setHMExpanded(false); }
+  document.addEventListener('keydown', function(event){
+    var tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || event.target.isContentEditable) return;
+    if (event.key === 'Escape') closeHM();
+    if (event.altKey && event.key.toLowerCase() === 'm') { event.preventDefault(); toggleHM(); }
+  });
   </script>
 </body>
 </html>
