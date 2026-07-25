@@ -907,16 +907,16 @@
         </article>
 
         <article class="prod" id="p-detcordon">
-          <div class="hd"><h3>detcordon</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:60%"></span></span>60% complete</span><span class="st mono">beta</span></div>
+          <div class="hd"><h3>detcordon</h3><span class="st mono">beta</span></div>
           <div class="desc">Unknown payloads are the most dangerous — you cannot safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon fronts a disposable, network-isolated victim with a DetectionOnly WAF tap and ships events and samples one-way to an age-encrypted, audited evidence sink on a separate host — 105 passing tests, most buyer-priority work already implemented. <a class="link" href="/prospects/detcordon">open prospect →</a>  <a class="link" href="/school/forensics">forensics school →</a>  <a class="link" href="/doc/products/detcordon">docs →</a>  <a class="link" href="mailto:sales@ragbaz.cc?subject=DetCordon%20pilot%20request">request a pilot →</a></div>
           <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/detcordon">architecture →</a></summary>
           <div class="comps">
-            <div class="comp"><h4>sandbox</h4><p>hardened browser or headless runtime in a disposable container. no network egress except to capture sinks. memory and filesystem snapshots.</p></div>
-            <div class="comp"><h4>recorder</h4><p>captures all i/o: http requests, dom mutations, canvas reads, clipboard access, storage writes. structured event stream, not just video.</p></div>
-            <div class="comp"><h4>analyzer</h4><p>static and dynamic analysis. payload deobfuscation, call graph extraction, data-flow tracking. ioc and signature generation.</p></div>
-            <div class="comp"><h4>feeder</h4><p>url or attachment ingestion queue. pulls from rss feeds, mailroute buckets, api submissions. dedup and priority scheduling.</p></div>
+            <div class="comp"><h4>waf tap</h4><p>DetectionOnly ingress observes hostile HTTP requests and emits request metadata over a one-way event path without blocking the experiment.</p></div>
+            <div class="comp"><h4>disposable victim</h4><p>Docker and Firecracker backends isolate intentionally vulnerable workloads so each detonation can be discarded and rebuilt.</p></div>
+            <div class="comp"><h4>evidence sink</h4><p>a separate host receives events and samples, age-encrypts captured evidence, and preserves an auditable provenance trail.</p></div>
+            <div class="comp"><h4>operator dashboard</h4><p>authenticated review and export surface for events, samples, containment evidence, and buyer-facing demonstrations.</p></div>
           </div></details>
-          <div class="flow mono"><span class="f-node">feeder</span><span class="f-arr">→</span><span class="f-node">sandbox</span><span class="f-arr">→</span><span class="f-node">recorder</span><span class="f-arr">→</span><span class="f-node">analyzer</span></div>
+          <div class="flow mono"><span class="f-node">hostile-http</span><span class="f-arr">→</span><span class="f-node">waf-tap</span><span class="f-arr">→</span><span class="f-node">disposable-victim</span><span class="f-arr">|</span><span class="f-node">events + samples</span><span class="f-arr">→</span><span class="f-node">evidence-sink</span><span class="f-arr">→</span><span class="f-node">operator-dashboard</span></div>
         </article>
 
         <article class="prod" id="p-esp32tolk">

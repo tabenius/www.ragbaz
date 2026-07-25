@@ -161,6 +161,7 @@ export function generateCompletionHtml(registry, updatedDate) {
       .product-row { padding: .95rem 1rem; }
     }
   </style>
+  <script src="./assets/local-mode.js" defer></script>
 </head>
 <body>
   <header class="bar">

@@ -8,6 +8,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const siteRoot = path.join(repoRoot, "site", "prospects");
 
 const VALUE_CAPTION = "Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.";
+const MATURITY_CAPTION = "Maturity is described qualitatively; no single completion percentage or derived current-value estimate is published.";
 
 export function generateProspectPages() {
   const catalog = readSiteCatalog();
@@ -26,6 +27,21 @@ export function generateProspectPages() {
 function renderProspectPage({ entry, entries, index }) {
   const previous = index > 0 ? entries[index - 1] : null;
   const next = index < entries.length - 1 ? entries[index + 1] : null;
+  const hasCompletionEstimate =
+    entry.completion !== null
+    && entry.completion !== undefined
+    && Number.isFinite(Number(entry.completion));
+  const statusCards = [
+    renderStatusCard("status", entry.tagLabel, `${entry.tagLabel} lane`, entry.value),
+    ...(hasCompletionEstimate
+      ? [
+          renderCompletionCard(entry.completion),
+          renderStatusCard("current value", formatUsdCompact(entry.currentValueUsd), "derived from current completion", "Estimated present studio asset value at the current scope and maturity level."),
+        ]
+      : []),
+    renderStatusCard("finished estimate", formatUsdCompact(entry.finishedValueUsd), `pricing signal ${escHtmlText(entry.pricing)}`, `Target studio asset value at the planned finished scope. Revenue status: ${escHtmlText(entry.revenue)}.`),
+  ].join("\n        ");
+  const statusCaption = hasCompletionEstimate ? VALUE_CAPTION : MATURITY_CAPTION;
 
   return `<!doctype html>
 <html lang="en">
@@ -37,6 +53,7 @@ function renderProspectPage({ entry, entries, index }) {
   <link rel="icon" href="/assets/logo-mark.svg" />
   <link rel="stylesheet" href="/colors_and_type.css?v=2" />
   <link rel="stylesheet" href="/prospects/prospect.css" />
+  <script src="../assets/local-mode.js" defer></script>
 </head>
 <body>
   <main class="prospect-shell">
@@ -49,12 +66,9 @@ function renderProspectPage({ entry, entries, index }) {
       </section>
 
       <section class="status-grid" aria-label="project status">
-        ${renderStatusCard("status", entry.tagLabel, `${entry.tagLabel} lane`, entry.value)}
-        ${renderCompletionCard(entry.completion)}
-        ${renderStatusCard("current value", formatUsdCompact(entry.currentValueUsd), "derived from current completion", "Estimated present studio asset value at the current scope and maturity level.")}
-        ${renderStatusCard("finished estimate", formatUsdCompact(entry.finishedValueUsd), `pricing signal ${escHtmlText(entry.pricing)}`, `Target studio asset value at the planned finished scope. Revenue status: ${escHtmlText(entry.revenue)}.`)}
+        ${statusCards}
       </section>
-      <p class="status-caption">${escHtml(VALUE_CAPTION)}</p>
+      <p class="status-caption">${escHtml(statusCaption)}</p>
 
       <section class="prospect-grid">
         ${(entry.prospect?.cards || []).map(renderCard).join("\n")}
@@ -87,7 +101,7 @@ function renderStatusCard(label, value, subvalue, description) {
 }
 
 function renderCompletionCard(completion) {
-  const safeCompletion = Number.isFinite(Number(completion)) ? Number(completion) : 0;
+  const safeCompletion = Math.min(100, Math.max(0, Number(completion)));
   return `<article class="status-card"><div class="label mono">completion</div><div class="value">${safeCompletion}%</div><div class="status-meter" aria-hidden="true"><span style="width:${safeCompletion}%"></span></div><div class="subvalue mono">finished scope progress</div><p>Completion estimate across public surface, working system parts, and remaining implementation depth.</p></article>`;
 }
 
