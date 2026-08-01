@@ -9,8 +9,11 @@ import {
 } from "../lib/security-school-access.mjs";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const manifestPath = path.join(root, "..", "site", "school", "security", "manifest.json");
+const repoRoot = path.join(root, "..");
+const manifestPath = path.join(repoRoot, "site", "school", "security", "manifest.json");
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+const wrangler = readFileSync(path.join(repoRoot, "wrangler.jsonc"), "utf8");
+const worker = readFileSync(path.join(repoRoot, "worker.mjs"), "utf8");
 const errors = [];
 
 const fail = (message) => errors.push(message);
@@ -97,10 +100,16 @@ assert(!spoofedDecision.allowed, "browser-supplied forwarding headers must not g
 const wildcardIps = configuredSecuritySchoolIps({ SECURITY_SCHOOL_ALLOWED_IPS: "100.64.0.0/10,*" });
 assert(wildcardIps.size === 0, "CIDRs and wildcards must be rejected; configure exact peer or gateway IPs");
 
+assert(wrangler.includes('"run_worker_first"'), "wrangler assets must invoke the Worker before protected assets");
+assert(wrangler.includes('"/school/security"'), "wrangler must protect the Security School root asset path");
+assert(wrangler.includes('"/school/security/*"'), "wrangler must protect all nested Security School assets");
+assert(worker.includes("securitySchoolAccessDecision(request, env)"), "worker must evaluate Security School access before routing");
+assert(worker.indexOf("securitySchoolAccessDecision(request, env)") < worker.indexOf("handler.fetch(request, env, ctx)"), "worker access decision must run before the OpenNext handler");
+
 if (errors.length) {
   console.error("security-library: policy validation failed");
   for (const error of errors) console.error(`  - ${error}`);
   process.exit(1);
 }
 
-console.log(`security-library: validated ${collectionIds.size} private-network defensive collection(s), ${objectUris.size} unique URI(s), and fail-closed VPN IP access`);
+console.log(`security-library: validated ${collectionIds.size} private-network defensive collection(s), ${objectUris.size} unique URI(s), worker-first asset routing, and fail-closed VPN IP access`);
