@@ -1,17 +1,108 @@
 (function () {
   "use strict";
 
-  if (location.protocol !== "file:") return;
-
+  var isLocalFile = location.protocol === "file:";
   var normalized = location.pathname.replace(/\\/g, "/");
   var marker = "/site/";
   var idx = normalized.lastIndexOf(marker);
-  if (idx === -1) return;
-
-  var relFile = normalized.slice(idx + marker.length);
+  var relFile = idx === -1 ? "" : normalized.slice(idx + marker.length);
   var relDir = relFile.replace(/[^/]*$/, "");
   var depth = relDir.split("/").filter(Boolean).length;
   var prefix = depth ? "../".repeat(depth) : "./";
+
+  function assetPath(path) {
+    return isLocalFile && idx !== -1 ? prefix + path : "/" + path;
+  }
+
+  function installDetCordonStyles() {
+    if (document.getElementById("detcordon-brand-styles")) return;
+
+    var style = document.createElement("style");
+    style.id = "detcordon-brand-styles";
+    style.textContent = [
+      ".detcordon-featured .featured-panel{background:linear-gradient(180deg,rgba(0,31,50,.98),rgba(0,18,31,.99));border-color:rgba(228,87,61,.42)}",
+      ".detcordon-featured .featured-panel-icon{width:5.4rem;height:5.4rem;padding:0;overflow:hidden;border-color:rgba(228,87,61,.42);background:#001c2e;box-shadow:none}",
+      ".detcordon-featured .featured-panel-icon img{display:block;width:100%;height:100%;object-fit:cover}",
+      ".detcordon-featured .featured-panel .label,.detcordon-featured .featured-panel li::before,.detcordon-featured .featured-panel .link{color:#e4573d}",
+      ".detcordon-product{position:relative;overflow:hidden;border-color:rgba(228,87,61,.38)!important;background:linear-gradient(120deg,rgba(0,31,50,.76),rgba(18,18,18,.98) 62%)!important}",
+      ".detcordon-product::after{content:\"\";position:absolute;right:-2.5rem;bottom:-3.2rem;width:15rem;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(228,87,61,.12),transparent 68%);pointer-events:none}",
+      ".detcordon-product>.hd,.detcordon-product>.desc,.detcordon-product>details,.detcordon-product>.flow{position:relative;z-index:1}",
+      ".detcordon-product .hd{align-items:center;justify-content:flex-start;gap:.7rem}",
+      ".detcordon-product .hd h3{margin-right:auto;color:#e4573d}",
+      ".detcordon-card-mark{display:block;width:2.8rem;height:2.8rem;object-fit:cover;border:1px solid rgba(228,87,61,.38);border-radius:7px;background:#001c2e}",
+      ".detcordon-card-link{display:inline-flex;flex:none;border-radius:7px}",
+      ".detcordon-card-link:focus-visible{outline:2px solid #e4573d;outline-offset:3px}",
+      ".detcordon-prospect-head{grid-template-columns:minmax(0,1fr) minmax(250px,420px);align-items:center;gap:clamp(1.5rem,5vw,4rem);padding:clamp(1.2rem,3vw,2rem);margin-bottom:1.5rem;border:1px solid rgba(228,87,61,.4);border-radius:12px;background:linear-gradient(120deg,rgba(0,31,50,.98),rgba(0,18,31,.99));overflow:hidden}",
+      ".detcordon-prospect-head>.kicker,.detcordon-prospect-head>.hero-title,.detcordon-prospect-head>.hero-copy,.detcordon-prospect-head>.hero-chips{grid-column:1}",
+      ".detcordon-prospect-head>.hero-title{color:#f2e7df}",
+      ".detcordon-prospect-head>.kicker,.detcordon-prospect-head .chip{color:#e4573d}",
+      ".detcordon-prospect-head .chip{border-color:rgba(228,87,61,.38);background:rgba(0,18,31,.76)}",
+      ".detcordon-prospect-visual{grid-column:2;grid-row:1/5;display:block;align-self:stretch;min-height:300px;border-left:1px solid rgba(228,87,61,.22)}",
+      ".detcordon-prospect-visual img{display:block;width:100%;height:100%;object-fit:contain}",
+      ".detcordon-prospect-visual:focus-visible{outline:2px solid #e4573d;outline-offset:-4px}",
+      "@media(max-width:760px){.detcordon-prospect-head{grid-template-columns:1fr}.detcordon-prospect-head>.kicker,.detcordon-prospect-head>.hero-title,.detcordon-prospect-head>.hero-copy,.detcordon-prospect-head>.hero-chips,.detcordon-prospect-visual{grid-column:1}.detcordon-prospect-visual{grid-row:auto;min-height:0;max-width:430px;width:100%;margin:.5rem auto 0;border-left:0;border-top:1px solid rgba(228,87,61,.22)}}",
+      "@media(max-width:540px){.detcordon-featured .featured-panel-icon{width:4.5rem;height:4.5rem}.detcordon-card-mark{width:2.35rem;height:2.35rem}}"
+    ].join("");
+    document.head.appendChild(style);
+  }
+
+  function createBrandImage(src, className, alt) {
+    var image = document.createElement("img");
+    image.src = src;
+    image.className = className;
+    image.alt = alt || "";
+    image.decoding = "async";
+    return image;
+  }
+
+  function applyDetCordonBranding() {
+    installDetCordonStyles();
+
+    var markSrc = assetPath("assets/detcordon-mark.svg");
+    var lockupSrc = assetPath("assets/detcordon-lockup.svg");
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-featured-slide]"), function (slide) {
+      var kicker = slide.querySelector(".featured-kicker");
+      if (!kicker || kicker.textContent.toLowerCase().indexOf("detcordon") === -1) return;
+      slide.classList.add("detcordon-featured");
+      var icon = slide.querySelector(".featured-panel-icon");
+      if (!icon || icon.querySelector("img")) return;
+      icon.textContent = "";
+      icon.appendChild(createBrandImage(markSrc, "", ""));
+    });
+
+    var product = document.getElementById("p-detcordon");
+    if (product) {
+      product.classList.add("detcordon-product");
+      var heading = product.querySelector(".hd");
+      if (heading && !heading.querySelector(".detcordon-card-mark")) {
+        var link = document.createElement("a");
+        link.className = "detcordon-card-link";
+        link.href = isLocalFile && idx !== -1 ? prefix + "prospects/detcordon.html" : "/prospects/detcordon";
+        link.setAttribute("aria-label", "Open the DetCordon prospect");
+        link.appendChild(createBrandImage(markSrc, "detcordon-card-mark", ""));
+        heading.insertBefore(link, heading.firstChild);
+      }
+    }
+
+    var heroTitle = document.querySelector(".prospect-head .hero-title");
+    var prospectHead = heroTitle && heroTitle.textContent.trim().toLowerCase() === "detcordon"
+      ? heroTitle.closest(".prospect-head")
+      : null;
+    if (prospectHead && !prospectHead.querySelector(".detcordon-prospect-visual")) {
+      prospectHead.classList.add("detcordon-prospect-head");
+      var visual = document.createElement("a");
+      visual.className = "detcordon-prospect-visual";
+      visual.href = isLocalFile && idx !== -1 ? prefix + "index.html#p-detcordon" : "/#p-detcordon";
+      visual.setAttribute("aria-label", "DetCordon product line on RAGBAZ");
+      visual.appendChild(createBrandImage(lockupSrc, "", "DetCordon cryptographic containment seal"));
+      prospectHead.appendChild(visual);
+    }
+  }
+
+  applyDetCordonBranding();
+
+  if (!isLocalFile || idx === -1) return;
 
   function hasExtension(path) {
     return /\.[a-z0-9]+$/i.test(path);
@@ -89,6 +180,6 @@
       event.preventDefault();
       location.href = next;
     },
-    true,
+    true
   );
 })();
