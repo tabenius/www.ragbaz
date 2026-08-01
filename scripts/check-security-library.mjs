@@ -16,10 +16,13 @@ const wrangler = readFileSync(path.join(repoRoot, "wrangler.jsonc"), "utf8");
 const worker = readFileSync(path.join(repoRoot, "worker.mjs"), "utf8");
 const packageJson = readFileSync(path.join(repoRoot, "package.json"), "utf8");
 const syncPublic = readFileSync(path.join(repoRoot, "scripts", "sync-public.mjs"), "utf8");
+const publicationAugmenter = readFileSync(path.join(repoRoot, "scripts", "augment-security-publications.mjs"), "utf8");
 const securityIndex = readFileSync(path.join(repoRoot, "site", "school", "security", "index.html"), "utf8");
 const interactiveCss = readFileSync(path.join(repoRoot, "site", "school", "security", "interactive.css"), "utf8");
 const widgetEntry = readFileSync(path.join(repoRoot, "site", "school", "security", "react-widgets.entry.js"), "utf8");
 const pilotProspect = readFileSync(path.join(repoRoot, "site", "school", "security", "detcordon", "self-hosted-pilot", "index.html"), "utf8");
+const robberyArticle = readFileSync(path.join(repoRoot, "site", "school", "security", "on-digital-robbery", "index.html"), "utf8");
+const robberyOverrides = readFileSync(path.join(repoRoot, "site", "school", "security", "on-digital-robbery", "interactive-overrides.css"), "utf8");
 const detcordonProspect = readFileSync(path.join(repoRoot, "site", "prospects", "detcordon.html"), "utf8");
 const errors = [];
 
@@ -79,6 +82,8 @@ for (const protectedPath of [
   "/school/security",
   "/school/security/manifest.json",
   "/school/security/react-widgets.js",
+  "/school/security/on-digital-robbery",
+  "/school/security/on-digital-robbery/interactive-overrides.css",
   "/school/security/detcordon/self-hosted-pilot",
   "/school/security/detcordon/self-hosted-pilot/prospect.css",
   "/school/cellular",
@@ -103,6 +108,7 @@ assert(emptyDecision.protected && !emptyDecision.allowed, "missing IP configurat
 for (const protectedUrl of [
   "https://ragbaz.cc/school/security/",
   "https://ragbaz.cc/school/security/react-widgets.js",
+  "https://ragbaz.cc/school/security/on-digital-robbery/",
   "https://ragbaz.cc/school/security/detcordon/self-hosted-pilot",
   "https://ragbaz.cc/school/cellular/",
   "https://ragbaz.cc/prospects/detcordon",
@@ -167,7 +173,21 @@ for (const requiredPilotText of [
   assert(pilotProspect.includes(requiredPilotText), `self-hosted pilot prospect is missing: ${requiredPilotText}`);
 }
 
-const browserSurface = `${securityIndex}\n${pilotProspect}\n${widgetEntry}`.toLowerCase();
+for (const requiredRobberyText of [
+  'data-label="On Digital Robbery navigation"',
+  'id="reading-settings"',
+  'id="publication-state-explorer"',
+  'data-react-widget="publication-states"',
+  'id="document-tree"',
+  '../react-widgets.js',
+  'Self-hosted pilot prospect',
+]) {
+  assert(robberyArticle.includes(requiredRobberyText), `On Digital Robbery interactive reader is missing: ${requiredRobberyText}`);
+}
+assert(robberyOverrides.includes(".article-reading-settings"), "On Digital Robbery must style its responsive reading-settings panel");
+assert(publicationAugmenter.includes("On Digital Robbery navigation"), "nested publication augmenter must install the shared React navigation shell");
+
+const browserSurface = `${securityIndex}\n${pilotProspect}\n${robberyArticle}\n${widgetEntry}`.toLowerCase();
 for (const remoteRuntime of ["unpkg.com", "cdn.jsdelivr.net", "esm.sh", "cdnjs.cloudflare.com", "react.development.js"]) {
   assert(!browserSurface.includes(remoteRuntime), `security publication must not load a remote JavaScript runtime: ${remoteRuntime}`);
 }
@@ -176,6 +196,7 @@ assert(widgetEntry.includes('from "react-dom/client"'), "React widget entry must
 assert(interactiveCss.includes("--rx-topbar-height: 70px"), "interactive top navigation must use a comfortable 70px desktop bar");
 assert(interactiveCss.includes("@media (max-width: 760px)"), "interactive publication styles must include a mobile breakpoint");
 assert(interactiveCss.includes("@media (min-width: 1600px)"), "interactive publication styles must include a large-screen breakpoint");
+assert(packageJson.indexOf("augment-security-publications.mjs") < packageJson.indexOf("build-security-react-widgets.mjs"), "nested HTML augmentation must run before React widget bundling");
 assert(packageJson.indexOf("build-security-react-widgets.mjs") < packageJson.indexOf("check-security-library.mjs"), "React widget bundle must be built before security publication validation");
 assert(syncPublic.includes('entry.name.endsWith(".entry.js")'), "sync-public must withhold unbundled React entry source files");
 
@@ -203,4 +224,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`security-library: validated ${collectionIds.size} private-network collection(s), ${objectUris.size} unique URI(s), responsive React publication widgets, self-hosted pilot prospect, full DetCordon prospect retention, worker-first routing, and fail-closed VPN access`);
+console.log(`security-library: validated ${collectionIds.size} private-network collection(s), ${objectUris.size} unique URI(s), responsive React navigation across every /school/security HTML page, interactive publication widgets, self-hosted pilot economics, full DetCordon prospect retention, worker-first routing, and fail-closed VPN access`);
