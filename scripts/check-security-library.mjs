@@ -77,6 +77,9 @@ for (const protectedPath of [
   "/prospects/detcordon",
   "/prospects/detcordon.html",
   "/prospects/detcordon/technical/asset.json",
+  "/doc/products/detcordon",
+  "/doc/products/detcordon/",
+  "/doc/products/detcordon.html",
 ]) {
   assert(isSecuritySchoolPath(protectedPath), `${protectedPath} must be protected`);
 }
@@ -93,6 +96,7 @@ for (const protectedUrl of [
   "https://ragbaz.cc/school/cellular/",
   "https://ragbaz.cc/prospects/detcordon",
   "https://ragbaz.cc/prospects/detcordon.html",
+  "https://ragbaz.cc/doc/products/detcordon",
 ]) {
   const allowedDecision = securitySchoolAccessDecision(
     new Request(protectedUrl, { headers: { "cf-connecting-ip": "100.100.10.10" } }),
@@ -137,6 +141,9 @@ for (const routePattern of [
   '"/prospects/detcordon"',
   '"/prospects/detcordon.html"',
   '"/prospects/detcordon/*"',
+  '"/doc/products/detcordon"',
+  '"/doc/products/detcordon.html"',
+  '"/doc/products/detcordon/*"',
 ]) {
   assert(wrangler.includes(routePattern), `wrangler must run the Worker first for ${routePattern}`);
 }
