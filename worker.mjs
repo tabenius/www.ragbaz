@@ -2,6 +2,11 @@
 import handler from "./.open-next/worker.js";
 
 import { recordSiteHit } from "./lib/site-traffic.mjs";
+import {
+  applySecuritySchoolResponseHeaders,
+  securitySchoolAccessDecision,
+  securitySchoolDeniedResponse,
+} from "./lib/security-school-access.mjs";
 import { refreshWorkspaceSnapshotFromUpstream } from "./lib/workspace-upstream.mjs";
 
 async function syncWorkspaceSnapshot(env) {
@@ -67,6 +72,11 @@ function canonicalDocHostRedirect(request) {
 
 export default {
   async fetch(request, env, ctx) {
+    const securitySchoolAccess = securitySchoolAccessDecision(request, env);
+    if (securitySchoolAccess.protected && !securitySchoolAccess.allowed) {
+      return securitySchoolDeniedResponse();
+    }
+
     if (env?.DB) ctx.waitUntil(recordSiteHit(request, env.DB));
     const schoolRedirect = temporarySchoolSlashRedirect(request);
     if (schoolRedirect) return schoolRedirect;
@@ -74,7 +84,11 @@ export default {
     if (legacyRedirect) return legacyRedirect;
     const redirect = canonicalDocHostRedirect(request);
     if (redirect) return redirect;
-    return handler.fetch(request, env, ctx);
+
+    const response = await handler.fetch(request, env, ctx);
+    return securitySchoolAccess.protected
+      ? applySecuritySchoolResponseHeaders(response)
+      : response;
   },
 
   async scheduled(_event, env, ctx) {
