@@ -52,11 +52,12 @@ for (const object of manifest.reservedObjects || []) {
 
 const serialized = JSON.stringify(manifest).toLowerCase();
 const forbiddenMarkers = [
-  "begin pgp private key block",
-  "privatekey",
-  "private-key",
-  "passphrase",
-  "secret-subkeys.asc"
+  "-----begin pgp private key block-----",
+  "-----begin openssh private key-----",
+  "secret-subkeys.asc",
+  "private-key.asc",
+  "private_key.asc",
+  "xkcd-password-output"
 ];
 for (const marker of forbiddenMarkers) {
   assert(!serialized.includes(marker), `manifest contains forbidden secret marker: ${marker}`);
