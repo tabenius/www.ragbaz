@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="detcordon-signal-red" data-font="variable-sans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>RAGBAZ Security School</title>
+  <meta name="description" content="A local-first, object-addressable reader for RAGBAZ security research and school material." />
+  <link rel="icon" href="../../assets/detcordon-mark.svg" />
+  <link rel="stylesheet" href="./reader.css" />
+  <script src="../../assets/local-mode.js" defer></script>
+  <script src="./reader.js" type="module"></script>
+</head>
+<body>
+  <a class="skip-link" href="#library-main">Skip to library</a>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="RAGBAZ home">
+      <img src="../../assets/detcordon-mark.svg" alt="" width="42" height="42" />
+      <span>
+        <strong>RAGBAZ</strong>
+        <small>Security School</small>
+      </span>
+    </a>
+
+    <div class="topbar-actions">
+      <button class="icon-button" id="tree-toggle" type="button" aria-expanded="false" aria-controls="object-tree">
+        <span aria-hidden="true">☰</span>
+        <span class="sr-only">Open object tree</span>
+      </button>
+      <button class="icon-button" id="settings-toggle" type="button" aria-expanded="false" aria-controls="reader-settings">
+        <span aria-hidden="true">◐</span>
+        <span class="sr-only">Open reader settings</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="edge-ornament edge-ornament--left" aria-hidden="true"></div>
+  <div class="edge-ornament edge-ornament--right" aria-hidden="true"></div>
+
+  <main id="library-main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-emblem">
+        <img src="../../assets/detcordon-mark.svg" alt="DetCordon signal-red emblem" />
+      </div>
+      <p class="eyebrow">CRYPTO-OBJECT READER · LOCAL-FIRST POLICY</p>
+      <h1 id="hero-title">Security knowledge should reveal its boundaries before it reveals its depth.</h1>
+      <p class="hero-copy">
+        Cellular identity, Android FinTech, containment, evasion detection, and DetCordon research are arranged as addressable objects. Public material remains readable. PoC and implementation-depth slots are reserved for one owner reader only and contain no payloads or keys.
+      </p>
+      <div class="hero-actions">
+        <a class="primary-action" href="#collections">Explore public collections</a>
+        <button class="secondary-action" id="show-policy" type="button">Inspect access policy</button>
+      </div>
+      <dl class="hero-stats" aria-label="Library status">
+        <div><dt>Owner reader</dt><dd>ragbaz@proton.me</dd></div>
+        <div><dt>Restricted objects</dt><dd>Reserved · none created</dd></div>
+        <div><dt>Client key storage</dt><dd>Forbidden by policy</dd></div>
+      </dl>
+    </section>
+
+    <section class="reader-note" id="policy-note" hidden>
+      <div>
+        <p class="eyebrow">CURRENT SECURITY POSTURE</p>
+        <h2>No restricted key exists yet.</h2>
+        <p>The interface models classification, navigation, and a future local-helper handoff. It does not import private keys, persist passphrases, cache plaintext, or simulate access to material that does not exist.</p>
+      </div>
+      <button class="close-note" type="button" aria-label="Close policy note">×</button>
+    </section>
+
+    <section class="section-block" id="collections" aria-labelledby="collections-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DOCUMENT FAMILIES</p>
+          <h2 id="collections-title">The security school library</h2>
+        </div>
+        <p>Cards and the edge tree are generated from <code>manifest.json</code>, so titles, states, links, and classifications do not drift apart.</p>
+      </div>
+      <div class="collection-grid" id="collection-grid" aria-live="polite">
+        <div class="loading-card">Loading object manifest…</div>
+      </div>
+    </section>
+
+    <section class="section-block section-block--restricted" id="restricted" aria-labelledby="restricted-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">OWNER-ONLY RESERVED SPACE</p>
+          <h2 id="restricted-title">PoC and implementation-depth objects</h2>
+        </div>
+        <p>These cards are policy markers, not encrypted payloads. They remain visibly locked until content is deliberately created, reviewed, fingerprint-bound, and encrypted.</p>
+      </div>
+      <div class="restricted-grid" id="restricted-grid"></div>
+      <div class="unlock-status" id="unlock-status" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <aside class="object-tree" id="object-tree" aria-label="Security object tree" aria-hidden="true">
+    <div class="tree-header">
+      <div>
+        <p class="eyebrow">OBJECT TREE</p>
+        <strong>crypto://ragbaz-security/</strong>
+      </div>
+      <button class="icon-button" id="tree-close" type="button" aria-label="Close object tree">×</button>
+    </div>
+    <nav id="tree-nav" aria-label="Object navigation"></nav>
+  </aside>
+  <button class="tree-edge-tab" id="tree-edge-tab" type="button" aria-label="Open object tree">
+    <span aria-hidden="true">‹</span>
+  </button>
+
+  <aside class="reader-settings" id="reader-settings" aria-label="Reader settings" aria-hidden="true">
+    <div class="tree-header">
+      <div>
+        <p class="eyebrow">LOCAL READER SETTINGS</p>
+        <strong>Saved only on this device</strong>
+      </div>
+      <button class="icon-button" id="settings-close" type="button" aria-label="Close reader settings">×</button>
+    </div>
+
+    <label>
+      Theme
+      <select id="theme-select"></select>
+    </label>
+
+    <label>
+      Reading font
+      <select id="font-select">
+        <option value="variable-sans">Variable Sans</option>
+        <option value="literary-serif">Literary Serif</option>
+        <option value="technical-mono">Technical Mono</option>
+      </select>
+    </label>
+
+    <label>
+      Reading width
+      <input id="width-range" type="range" min="58" max="88" step="2" value="72" />
+      <output id="width-output" for="width-range">72ch</output>
+    </label>
+
+    <label class="check-row">
+      <input id="reduced-effects" type="checkbox" />
+      Reduce ornament and motion
+    </label>
+
+    <button class="secondary-action settings-reset" id="settings-reset" type="button">Reset local settings</button>
+    <p class="settings-footnote">Only theme, typography, width, reduced effects, and tree fold state use local storage. Key material and decrypted content are excluded.</p>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <footer class="site-footer">
+    <img src="../../assets/detcordon-mark.svg" alt="" width="34" height="34" />
+    <div>
+      <strong>RAGBAZ Labs · Security School</strong>
+      <a href="mailto:ragbaz@proton.me">ragbaz@proton.me</a>
+    </div>
+    <p>Public shell · owner-only restricted policy · no private keys provisioned</p>
+  </footer>
+
+  <noscript>
+    <div class="noscript">This source-driven reader needs JavaScript to load its local manifest and render the object tree. Public source pages remain directly accessible.</div>
+  </noscript>
+</body>
+</html>
