@@ -4,10 +4,12 @@
   "library": {
     "id": "ragbaz-security-school",
     "title": "RAGBAZ Security School",
-    "subtitle": "Public courses and defensive research on cellular identity, payment systems, containment, and evidence",
+    "subtitle": "Defensive research on cellular identity, payment systems, containment, and evidence",
     "baseUri": "crypto://ragbaz-security",
-    "publicationMode": "public-only",
+    "publicationMode": "private-network-only",
     "securityPolicy": {
+      "networkAccess": "netbird-or-tailscale-ip-allowlist",
+      "denyByDefault": true,
       "encryptedObjectsPublished": false,
       "unlockInterfaceEnabled": false,
       "clientKeyMaterialAccepted": false,
@@ -27,53 +29,53 @@
       "id": "cellular-school",
       "title": "Mobile Subscriber-Identity Security",
       "subtitle": "SIM, eSIM/RSP, SMS, MMS, APDU, cellular generations, and covert-channel analysis",
-      "summary": "A public field reference to subscriber identity, message provenance, smart-card boundaries, radio generations, and defensive incident response.",
+      "summary": "A defensive field reference to subscriber identity, message provenance, smart-card boundaries, radio generations, and incident response.",
       "status": "published",
-      "classification": "public",
+      "classification": "network-restricted-defensive",
       "href": "/school/cellular/",
       "uri": "crypto://ragbaz-security/cellular-school/document",
       "children": [
-        { "id": "sim-uicc", "title": "SIM and UICC", "classification": "public" },
-        { "id": "esim-rsp", "title": "eSIM and remote SIM provisioning", "classification": "public" },
-        { "id": "sms", "title": "SMS and TPDU structure", "classification": "public" },
-        { "id": "mms", "title": "MMS, MMSC, and WAP Push", "classification": "public" },
-        { "id": "apdu", "title": "APDU and smart-card boundaries", "classification": "public" },
-        { "id": "sim-toolkit", "title": "SIM Toolkit", "classification": "public" },
-        { "id": "radio-generations", "title": "2G / 3G / 4G / 5G", "classification": "public" },
-        { "id": "covert-channels", "title": "Covert-channel detection and response", "classification": "public" }
+        { "id": "sim-uicc", "title": "SIM and UICC", "classification": "defensive" },
+        { "id": "esim-rsp", "title": "eSIM and remote SIM provisioning", "classification": "defensive" },
+        { "id": "sms", "title": "SMS and TPDU structure", "classification": "defensive" },
+        { "id": "mms", "title": "MMS, MMSC, and WAP Push", "classification": "defensive" },
+        { "id": "apdu", "title": "APDU and smart-card boundaries", "classification": "defensive" },
+        { "id": "sim-toolkit", "title": "SIM Toolkit", "classification": "defensive" },
+        { "id": "radio-generations", "title": "2G / 3G / 4G / 5G", "classification": "defensive" },
+        { "id": "covert-channels", "title": "Covert-channel detection and response", "classification": "defensive" }
       ]
     },
     {
       "id": "android-fintech",
       "title": "On Digital Robbery",
       "subtitle": "Android wallets, SoftPOS, NFC/EMV, attestation, and privilege boundaries",
-      "summary": "A public defensive edition describing trust boundaries, transaction routing, runtime integrity, and layered countermeasures without operational attack procedures.",
+      "summary": "A defensive edition describing trust boundaries, transaction routing, runtime integrity, and layered countermeasures without operational attack procedures.",
       "status": "published",
-      "classification": "public",
+      "classification": "network-restricted-defensive",
       "href": "/school/security/on-digital-robbery/",
       "uri": "crypto://ragbaz-security/on-digital-robbery/document",
       "children": [
-        { "id": "threat-landscape", "title": "Threat landscape", "classification": "public" },
-        { "id": "privilege-rings", "title": "Privilege rings and trust boundaries", "classification": "public" },
-        { "id": "payment-paradigms", "title": "Wallet and terminal payment paradigms", "classification": "public" },
-        { "id": "transaction-routing", "title": "Transaction routing", "classification": "public" },
-        { "id": "attestation", "title": "Attestation and runtime integrity", "classification": "public" },
-        { "id": "defensive-matrix", "title": "Defensive control matrix", "classification": "public" }
+        { "id": "threat-landscape", "title": "Threat landscape", "classification": "defensive" },
+        { "id": "privilege-rings", "title": "Privilege rings and trust boundaries", "classification": "defensive" },
+        { "id": "payment-paradigms", "title": "Wallet and terminal payment paradigms", "classification": "defensive" },
+        { "id": "transaction-routing", "title": "Transaction routing", "classification": "defensive" },
+        { "id": "attestation", "title": "Attestation and runtime integrity", "classification": "defensive" },
+        { "id": "defensive-matrix", "title": "Defensive control matrix", "classification": "defensive" }
       ]
     },
     {
       "id": "detcordon",
       "title": "DetCordon",
       "subtitle": "Containment-first observation, evidence routing, and operator surfaces",
-      "summary": "The public DetCordon architectural prospectus covering containment boundaries, evidence provenance, and operator-facing controls.",
+      "summary": "The DetCordon architectural prospectus covering containment boundaries, evidence provenance, and operator-facing controls.",
       "status": "published",
-      "classification": "public",
+      "classification": "network-restricted-defensive",
       "href": "/prospects/detcordon.html",
       "uri": "crypto://ragbaz-security/detcordon/document",
       "children": [
-        { "id": "containment-model", "title": "Containment model", "classification": "public" },
-        { "id": "evidence-routing", "title": "Evidence routing", "classification": "public" },
-        { "id": "operator-surfaces", "title": "Operator surfaces", "classification": "public" }
+        { "id": "containment-model", "title": "Containment model", "classification": "defensive" },
+        { "id": "evidence-routing", "title": "Evidence routing", "classification": "defensive" },
+        { "id": "operator-surfaces", "title": "Operator surfaces", "classification": "defensive" }
       ]
     }
   ]
