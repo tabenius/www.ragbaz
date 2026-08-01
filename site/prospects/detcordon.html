@@ -3,39 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DetCordon — prospect</title>
-  <meta name="description" content="Containment-first observation for hostile web payloads: a disposable, network-isolated victim, a DetectionOnly WAF tap, and a one-way encrypted evidence trail to an audited sink." />
+  <title>DetCordon — public prospect</title>
+  <meta name="description" content="DetCordon is a containment-first research platform for observing untrusted workloads while preserving evidence integrity, operator accountability, and clear trust boundaries." />
   <link rel="icon" href="/assets/logo-mark.svg" />
   <link rel="stylesheet" href="/colors_and_type.css?v=2" />
   <link rel="stylesheet" href="/prospects/prospect.css" />
   <script src="../assets/local-mode.js" defer></script>
 </head>
-<body>
+<body data-clearance="public-overview" data-public-safe="true">
   <main class="prospect-shell">
     <div class="wrap">
       <section class="prospect-head">
-        <div class="kicker mono">05 / detcordon prospect</div>
+        <div class="kicker mono">05 / detcordon public prospect</div>
         <h1 class="hero-title">DetCordon</h1>
-        <p class="hero-copy">Containment-first observation for hostile web payloads: a disposable, network-isolated victim, a DetectionOnly WAF tap, and a one-way encrypted evidence trail to an audited sink.</p>
-        <div class="hero-chips"><span class="chip mono">waf tap</span><span class="chip mono">firecracker/docker</span><span class="chip mono">evidence provenance</span></div>
+        <p class="hero-copy">Containment-first observation for security teams that need to study untrusted workloads without confusing research access with production trust. DetCordon separates observation, disposable execution, evidence handling, and operator accountability into explicit boundaries.</p>
+        <div class="hero-chips"><span class="chip mono">containment assurance</span><span class="chip mono">evidence provenance</span><span class="chip mono">operator controls</span></div>
       </section>
 
       <section class="status-grid" aria-label="project status">
-        <article class="status-card"><div class="label mono">status</div><div class="value">beta</div><div class="subvalue mono">beta lane</div><p>Deliberately-contained detonation environment for web malware (webshells, HTTP-delivered exploits, scanner-driven RCE). A DetectionOnly WAF tap fronts a disposable Docker/Firecracker victim; events and samples flow one-way to an age-encrypted, audited sink on a separate host. 105 passing tests; most buyer-priority P0/P1 work already implemented.</p></article>
-        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$210k</div><div class="subvalue mono">pricing signal Illustrative, tiered (Self-Hosted / Managed Pilot / Managed Production) — final rates agreed per engagement</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
+        <article class="status-card"><div class="label mono">status</div><div class="value">private beta</div><div class="subvalue mono">public-safe overview</div><p>The buyer-critical path is implemented and under hardening. This public edition deliberately omits implementation-sensitive detector logic, boundary indicators, response thresholds, and technical material that could shorten the route from research concept to misuse.</p></article>
+        <article class="status-card"><div class="label mono">commercial frame</div><div class="value">engagement-led</div><div class="subvalue mono">self-hosted / managed pilot / production</div><p>DetCordon is positioned as an enterprise and research-lab capability rather than a self-serve offensive tool. Scope, assurance requirements, and technical disclosure are agreed per engagement.</p></article>
       </section>
-      <p class="status-caption">Maturity is described qualitatively; no single completion percentage or derived current-value estimate is published.</p>
+      <p class="status-caption">This page explains outcomes and assurance boundaries. Deeper editions are released only to appropriate blue-team, research-lab, or public-sector audiences.</p>
 
       <section class="prospect-grid">
-        <article class="prospect-card"><h2>What is done</h2><p>The buyer-critical slice is already implemented, not just architected.</p><ul><li>Two-host containment model: DetectionOnly WAF tap plus disposable Docker/Firecracker victim, isolated from an audited evidence sink on a separate host.</li><li>Evidence-grade demo path: one command replays synthetic hostile traffic, produces an age-encrypted sample, and shows events in an operator dashboard.</li><li>105 passing tests, a containment-assurance checklist mapping every non-negotiable rule to generated-artifact evidence, and an authenticated operator dashboard.</li></ul></article>
-<article class="prospect-card"><h2>What is left</h2><p>The remaining work is production-hardening, not core architecture.</p><ul><li>TLS for inter-service event/sample/heartbeat traffic, currently plaintext by design for the demo/pilot stage.</li><li>Broader test coverage on the core HTTP pipeline and VM lifecycle orchestrator.</li><li>Multi-sandbox managed-lab scaling and a real tiered SKU/support-tier offer.</li></ul></article>
-<article class="prospect-card"><h2>Commercial frame</h2><p>This is an enterprise appliance sale, not a self-serve product — pricing and packaging reflect that.</p><ul><li>Pricing signal: illustrative only at this stage — Self-Hosted License, Managed Pilot, and Managed Production tiers, with final rates agreed per engagement.</li><li>Best fit: security researchers, blue teams, and research labs analyzing unknown web payloads under real containment guarantees.</li><li>Next step is a pilot conversation, not a checkout button — request one directly.</li></ul></article>
+        <article class="prospect-card"><h2>What it provides</h2><p>A governed environment for examining suspicious or unknown material while preserving separation between the observed workload and retained evidence.</p><ul><li>Explicit containment and evidence-trust boundaries.</li><li>Disposable execution with reproducible synthetic demonstrations.</li><li>Auditable operator workflows and provenance-oriented reporting.</li></ul></article>
+        <article class="prospect-card"><h2>What is being hardened</h2><p>The remaining work concerns operational assurance and scale rather than the basic product thesis.</p><ul><li>Transport and deployment hardening for production environments.</li><li>Broader lifecycle and regression coverage.</li><li>Managed-lab scaling, tenant controls, and support packaging.</li></ul></article>
+        <article class="prospect-card"><h2>Who it is for</h2><p>DetCordon is intended for defenders who must investigate risky material under documented rules of engagement.</p><ul><li>Enterprise blue teams and SecOps groups.</li><li>Vetted security research and malware-analysis laboratories.</li><li>Public-sector and critical-infrastructure security programmes.</li></ul></article>
       </section>
 
       <section class="prospect-note">
-        <p>DetCordon's diligence-grade proof (containment assurance, buyer demo runbook) already exists — see the docs link below before assuming this is early-stage.</p>
+        <p>Technical disclosure is tiered. The public edition stays intentionally non-instructional; enterprise-blue, security-lab, and government briefings are handled separately according to purpose, clearance, and contractual safeguards.</p>
         <div class="cta-row">
-          <a class="btn primary" href="mailto:sales@ragbaz.cc?subject=DetCordon%20pilot%20request">Request a pilot</a><a class="btn" href="/#p-detcordon">Open product line</a><a class="btn" href="/school/forensics">Open forensics school</a><a class="btn" href="/doc/products/detcordon">Read docs</a>
+          <a class="btn primary" href="mailto:sales@ragbaz.cc?subject=DetCordon%20technical%20briefing%20request">Request a technical briefing</a><a class="btn" href="/#p-detcordon">Open product line</a><a class="btn" href="/school/forensics">Open forensics school</a>
         </div>
       </section>
 
