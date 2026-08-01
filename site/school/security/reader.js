@@ -13,8 +13,6 @@ const settings = document.querySelector("#reader-settings");
 const scrim = document.querySelector("#scrim");
 const treeNav = document.querySelector("#tree-nav");
 const collectionGrid = document.querySelector("#collection-grid");
-const restrictedGrid = document.querySelector("#restricted-grid");
-const unlockStatus = document.querySelector("#unlock-status");
 const themeSelect = document.querySelector("#theme-select");
 const fontSelect = document.querySelector("#font-select");
 const widthRange = document.querySelector("#width-range");
@@ -29,7 +27,7 @@ function safeStorageGet(key) {
 }
 
 function safeStorageSet(key, value) {
-  try { localStorage.setItem(key, value); } catch { /* reader settings remain ephemeral */ }
+  try { localStorage.setItem(key, value); } catch { /* settings remain ephemeral */ }
 }
 
 function safeStorageRemove(key) {
@@ -84,10 +82,6 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function statusLabel(status) {
-  return String(status).replaceAll("-", " ");
-}
-
 function renderThemes() {
   themeSelect.replaceChildren();
   for (const theme of manifest.themes) {
@@ -108,18 +102,13 @@ function renderCollections() {
     card.id = `collection-${collection.id}`;
     card.dataset.classification = collection.classification;
 
-    const children = collection.children.map(child => {
-      const reserved = child.state === "reserved-no-content" || child.classification.includes("controlled");
-      return `<li class="${reserved ? "is-reserved" : ""}">${escapeHtml(child.title)} <small>· ${escapeHtml(child.classification)}</small></li>`;
-    }).join("");
-
-    const link = collection.href
-      ? `<a class="go-link" href="${escapeHtml(collection.href)}">Go to collection →</a>`
-      : `<span class="status-pill">Not published</span>`;
+    const children = collection.children
+      .map(child => `<li>${escapeHtml(child.title)} <small>· ${escapeHtml(child.classification)}</small></li>`)
+      .join("");
 
     card.innerHTML = `
       <div class="card-top">
-        <span class="status-pill">${escapeHtml(statusLabel(collection.status))}</span>
+        <span class="status-pill">${escapeHtml(collection.status)}</span>
         <span class="status-pill">${escapeHtml(collection.classification)}</span>
       </div>
       <h3>${escapeHtml(collection.title)}</h3>
@@ -127,40 +116,16 @@ function renderCollections() {
       <p class="card-summary">${escapeHtml(collection.summary)}</p>
       <p class="object-uri">${escapeHtml(collection.uri)}</p>
       <ul class="child-list">${children}</ul>
-      <div class="card-actions">${link}</div>
+      <div class="card-actions"><a class="go-link" href="${escapeHtml(collection.href)}">Open collection →</a></div>
     `;
 
     collectionGrid.append(card);
   }
 }
 
-function renderRestricted() {
-  restrictedGrid.replaceChildren();
-
-  for (const object of manifest.reservedObjects) {
-    const card = document.createElement("article");
-    card.className = "restricted-card";
-    card.id = `restricted-${object.id}`;
-    card.dataset.objectId = object.id;
-    card.innerHTML = `
-      <div class="lock-mark" aria-hidden="true">◇</div>
-      <p class="eyebrow">${escapeHtml(object.classification)}</p>
-      <h3>${escapeHtml(object.title)}</h3>
-      <p>${escapeHtml(object.note)}</p>
-      <p class="object-uri">${escapeHtml(object.uri)}</p>
-      <p><strong>Authorized reader:</strong> ${escapeHtml(object.authorizedReaders.join(", "))}</p>
-      <button class="secondary-action unlock-button" type="button" data-object-id="${escapeHtml(object.id)}">Request local unlock</button>
-    `;
-    restrictedGrid.append(card);
-  }
-}
-
 function readTreeState() {
-  try {
-    return JSON.parse(safeStorageGet(STORAGE.treeState) || "{}");
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(safeStorageGet(STORAGE.treeState) || "{}"); }
+  catch { return {}; }
 }
 
 function writeTreeState() {
@@ -179,7 +144,7 @@ function renderTree() {
     const group = document.createElement("details");
     group.className = "tree-group";
     group.dataset.id = collection.id;
-    group.open = saved[collection.id] ?? collection.status === "published";
+    group.open = saved[collection.id] ?? true;
 
     const summary = document.createElement("summary");
     summary.textContent = collection.title;
@@ -197,8 +162,7 @@ function renderTree() {
 
     for (const child of collection.children) {
       const childRow = document.createElement("span");
-      const reserved = child.state === "reserved-no-content" || child.classification.includes("controlled");
-      childRow.className = `tree-child${reserved ? " is-reserved" : ""}`;
+      childRow.className = "tree-child";
       childRow.textContent = child.title;
       children.append(childRow);
     }
@@ -207,25 +171,6 @@ function renderTree() {
     group.addEventListener("toggle", writeTreeState);
     treeNav.append(group);
   }
-
-  const reservedGroup = document.createElement("details");
-  reservedGroup.className = "tree-group";
-  reservedGroup.dataset.id = "reserved";
-  reservedGroup.open = saved.reserved ?? true;
-  reservedGroup.innerHTML = `<summary>Owner-only reserved objects</summary><div class="tree-children"></div>`;
-  const reservedChildren = reservedGroup.querySelector(".tree-children");
-
-  for (const object of manifest.reservedObjects) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "tree-link";
-    button.dataset.target = `restricted-${object.id}`;
-    button.textContent = object.title;
-    reservedChildren.append(button);
-  }
-
-  reservedGroup.addEventListener("toggle", writeTreeState);
-  treeNav.append(reservedGroup);
 }
 
 function scrollToTarget(id) {
@@ -237,26 +182,6 @@ function scrollToTarget(id) {
     [{ outlineColor: "transparent" }, { outlineColor: "var(--accent)" }, { outlineColor: "transparent" }],
     { duration: 900, easing: "ease-out" }
   );
-}
-
-function requestUnlock(objectId) {
-  const object = manifest.reservedObjects.find(item => item.id === objectId);
-  if (!object) return;
-
-  if (!object.exists || object.state === "reserved-no-content") {
-    unlockStatus.textContent = "No ciphertext or decryption key exists for this reserved object. The UI is enforcing the current owner-only policy without fabricating content.";
-    return;
-  }
-
-  unlockStatus.textContent = "Waiting for a local RAGBAZ reader helper. No key material will be persisted by this page.";
-  window.dispatchEvent(new CustomEvent("ragbaz:crypto-unlock-request", {
-    detail: {
-      objectId: object.id,
-      uri: object.uri,
-      ciphertext: object.ciphertext,
-      authorizedReaders: [...object.authorizedReaders]
-    }
-  }));
 }
 
 function bindEvents() {
@@ -272,8 +197,9 @@ function bindEvents() {
   });
 
   document.querySelector("#show-policy")?.addEventListener("click", () => {
-    document.querySelector("#policy-note").hidden = false;
-    document.querySelector("#policy-note").scrollIntoView({ behavior: "smooth", block: "center" });
+    const note = document.querySelector("#policy-note");
+    note.hidden = false;
+    note.scrollIntoView({ behavior: body.classList.contains("reduced-effects") ? "auto" : "smooth", block: "center" });
   });
   document.querySelector(".close-note")?.addEventListener("click", () => {
     document.querySelector("#policy-note").hidden = true;
@@ -282,11 +208,6 @@ function bindEvents() {
   treeNav.addEventListener("click", event => {
     const control = event.target.closest("[data-target]");
     if (control) scrollToTarget(control.dataset.target);
-  });
-
-  restrictedGrid.addEventListener("click", event => {
-    const button = event.target.closest(".unlock-button");
-    if (button) requestUnlock(button.dataset.objectId);
   });
 
   themeSelect.addEventListener("change", () => {
@@ -310,13 +231,6 @@ function bindEvents() {
     Object.values(STORAGE).forEach(safeStorageRemove);
     applySettings();
     renderTree();
-  });
-
-  window.addEventListener("ragbaz:crypto-unlock-result", event => {
-    const detail = event.detail || {};
-    unlockStatus.textContent = detail.ok
-      ? `Local helper accepted ${detail.objectId || "the object"}. Rendering remains the helper's responsibility.`
-      : `Local helper refused the request${detail.reason ? `: ${detail.reason}` : "."}`;
   });
 }
 
@@ -348,12 +262,10 @@ async function init() {
 
     renderThemes();
     renderCollections();
-    renderRestricted();
     renderTree();
     setupActiveNavigation();
   } catch (error) {
     collectionGrid.innerHTML = `<div class="loading-card">Could not load the local object manifest: ${escapeHtml(error.message)}</div>`;
-    restrictedGrid.replaceChildren();
   }
 }
 
