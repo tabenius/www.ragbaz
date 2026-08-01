@@ -14,6 +14,7 @@ const manifestPath = path.join(repoRoot, "site", "school", "security", "manifest
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 const wrangler = readFileSync(path.join(repoRoot, "wrangler.jsonc"), "utf8");
 const worker = readFileSync(path.join(repoRoot, "worker.mjs"), "utf8");
+const detcordonProspect = readFileSync(path.join(repoRoot, "site", "prospects", "detcordon.html"), "utf8");
 const errors = [];
 
 const fail = (message) => errors.push(message);
@@ -35,7 +36,6 @@ const objectUris = new Set();
 for (const collection of manifest.collections || []) {
   assert(!collectionIds.has(collection.id), `duplicate collection id: ${collection.id}`);
   collectionIds.add(collection.id);
-
   assert(collection.status === "published", `${collection.id}: status must be published`);
   assert(collection.classification === "network-restricted-defensive", `${collection.id}: classification must remain network-restricted-defensive`);
   assert(String(collection.href || "").startsWith("/"), `${collection.id}: href must be site-root-relative`);
@@ -69,21 +69,37 @@ for (const marker of [
   assert(!serialized.includes(marker), `manifest contains forbidden restricted-release marker: ${marker}`);
 }
 
-assert(isSecuritySchoolPath("/school/security"), "root Security School path must be protected");
-assert(isSecuritySchoolPath("/school/security/manifest.json"), "Security School assets must be protected");
-assert(!isSecuritySchoolPath("/school/cellular/"), "the existing cellular route must not be accidentally gated by this prefix rule");
+for (const protectedPath of [
+  "/school/security",
+  "/school/security/manifest.json",
+  "/school/cellular",
+  "/school/cellular/",
+  "/prospects/detcordon",
+  "/prospects/detcordon.html",
+  "/prospects/detcordon/technical/asset.json",
+]) {
+  assert(isSecuritySchoolPath(protectedPath), `${protectedPath} must be protected`);
+}
+assert(!isSecuritySchoolPath("/prospects/mailroute"), "unrelated prospect routes must remain outside this gate");
 
 const emptyDecision = securitySchoolAccessDecision(
-  new Request("https://ragbaz.cc/school/security/", { headers: { "cf-connecting-ip": "100.100.10.10" } }),
+  new Request("https://ragbaz.cc/prospects/detcordon", { headers: { "cf-connecting-ip": "100.100.10.10" } }),
   {},
 );
 assert(emptyDecision.protected && !emptyDecision.allowed, "missing IP configuration must fail closed");
 
-const allowedDecision = securitySchoolAccessDecision(
-  new Request("https://ragbaz.cc/school/security/", { headers: { "cf-connecting-ip": "100.100.10.10" } }),
-  { TAILSCALE_ALLOWED_IPS: "100.100.10.10" },
-);
-assert(allowedDecision.allowed, "an exact configured Tailscale IP must be allowed");
+for (const protectedUrl of [
+  "https://ragbaz.cc/school/security/",
+  "https://ragbaz.cc/school/cellular/",
+  "https://ragbaz.cc/prospects/detcordon",
+  "https://ragbaz.cc/prospects/detcordon.html",
+]) {
+  const allowedDecision = securitySchoolAccessDecision(
+    new Request(protectedUrl, { headers: { "cf-connecting-ip": "100.100.10.10" } }),
+    { TAILSCALE_ALLOWED_IPS: "100.100.10.10" },
+  );
+  assert(allowedDecision.allowed, `${protectedUrl} must allow an exact configured Tailscale IP`);
+}
 
 const netbirdDecision = securitySchoolAccessDecision(
   new Request("https://ragbaz.cc/school/security/manifest.json", { headers: { "cf-connecting-ip": "100.88.4.9" } }),
@@ -92,7 +108,7 @@ const netbirdDecision = securitySchoolAccessDecision(
 assert(netbirdDecision.allowed, "an exact configured NetBird IP must be allowed");
 
 const spoofedDecision = securitySchoolAccessDecision(
-  new Request("https://ragbaz.cc/school/security/", { headers: { "x-forwarded-for": "100.100.10.10" } }),
+  new Request("https://ragbaz.cc/prospects/detcordon", { headers: { "x-forwarded-for": "100.100.10.10" } }),
   { TAILSCALE_ALLOWED_IPS: "100.100.10.10" },
 );
 assert(!spoofedDecision.allowed, "browser-supplied forwarding headers must not grant access");
@@ -100,10 +116,31 @@ assert(!spoofedDecision.allowed, "browser-supplied forwarding headers must not g
 const wildcardIps = configuredSecuritySchoolIps({ SECURITY_SCHOOL_ALLOWED_IPS: "100.64.0.0/10,*" });
 assert(wildcardIps.size === 0, "CIDRs and wildcards must be rejected; configure exact peer or gateway IPs");
 
+for (const requiredProspectText of [
+  "DetectionOnly WAF tap",
+  "Docker/Firecracker victim",
+  "105 passing tests",
+  "age-encrypted",
+  "TLS for inter-service event/sample/heartbeat traffic",
+  "Multi-sandbox managed-lab scaling",
+]) {
+  assert(detcordonProspect.includes(requiredProspectText), `full DetCordon prospect content is missing: ${requiredProspectText}`);
+}
+assert(!detcordonProspect.includes("public-safe overview"), "DetCordon prospect must not be a redacted public-safe edition");
+
 assert(wrangler.includes('"run_worker_first"'), "wrangler assets must invoke the Worker before protected assets");
-assert(wrangler.includes('"/school/security"'), "wrangler must protect the Security School root asset path");
-assert(wrangler.includes('"/school/security/*"'), "wrangler must protect all nested Security School assets");
-assert(worker.includes("securitySchoolAccessDecision(request, env)"), "worker must evaluate Security School access before routing");
+for (const routePattern of [
+  '"/school/security"',
+  '"/school/security/*"',
+  '"/school/cellular"',
+  '"/school/cellular/*"',
+  '"/prospects/detcordon"',
+  '"/prospects/detcordon.html"',
+  '"/prospects/detcordon/*"',
+]) {
+  assert(wrangler.includes(routePattern), `wrangler must run the Worker first for ${routePattern}`);
+}
+assert(worker.includes("securitySchoolAccessDecision(request, env)"), "worker must evaluate protected publication access before routing");
 assert(worker.indexOf("securitySchoolAccessDecision(request, env)") < worker.indexOf("handler.fetch(request, env, ctx)"), "worker access decision must run before the OpenNext handler");
 
 if (errors.length) {
@@ -112,4 +149,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`security-library: validated ${collectionIds.size} private-network defensive collection(s), ${objectUris.size} unique URI(s), worker-first asset routing, and fail-closed VPN IP access`);
+console.log(`security-library: validated ${collectionIds.size} private-network collection(s), ${objectUris.size} unique URI(s), full DetCordon prospect retention, worker-first routing, and fail-closed VPN access`);
