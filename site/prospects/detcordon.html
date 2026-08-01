@@ -3,46 +3,117 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DetCordon — prospect</title>
-  <meta name="description" content="Containment-first observation for hostile web payloads: a disposable, network-isolated victim, a DetectionOnly WAF tap, and a one-way encrypted evidence trail to an audited sink." />
-  <link rel="icon" href="/assets/logo-mark.svg" />
+  <title>DetCordon — containment readiness</title>
+  <meta name="description" content="DetCordon containment, evidence, trust posture, and pilot integration architecture for blue teams and security research labs." />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="icon" href="/assets/detcordon-mark.svg" />
   <link rel="stylesheet" href="/colors_and_type.css?v=2" />
   <link rel="stylesheet" href="/prospects/prospect.css" />
   <script src="../assets/local-mode.js" defer></script>
+  <style>
+    .prospect-head { position: relative; overflow: hidden; }
+    .brand-lockup { width: min(560px, 92%); margin: 1.5rem 0 1rem; display: block; }
+    .disclosure { margin-top: 1.25rem; padding: .8rem 1rem; border: 1px solid var(--border-warm, #3a2a18); border-radius: 8px; background: rgba(255,153,0,.05); color: var(--fg-3, #d4c19a); }
+    .section { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
+    .section-head { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 1.5rem; align-items: end; margin-bottom: 1.25rem; }
+    .section-head h2 { margin: 0; color: var(--fg-1, #f6d7a7); font-size: clamp(1.55rem, 1.1rem + 2vw, 2.7rem); }
+    .section-head p { margin: 0; color: var(--fg-4, #9f9f9f); }
+    .posture-grid, .architecture-grid, .audience-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+    .posture, .arch-card, .audience-card { border: 1px solid var(--border-2, #2a2a2a); border-radius: 10px; background: var(--bg-2, #121212); padding: 1.15rem; }
+    .posture strong, .arch-card strong, .audience-card strong { color: var(--fg-1, #f6d7a7); }
+    .posture .mode { color: var(--orange-1, #f3c46c); letter-spacing: .08em; text-transform: uppercase; font-size: .75rem; }
+    .posture p, .arch-card p, .audience-card p { margin: .6rem 0 0; color: var(--fg-3, #d4c19a); }
+    .posture.recommended { border-color: var(--border-warm, #3a2a18); background: linear-gradient(180deg, rgba(29,24,18,.96), rgba(18,18,18,.98)); }
+    .flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--border-2, #2a2a2a); border-radius: 10px; overflow: hidden; background: var(--bg-2, #121212); }
+    .flow-step { padding: 1.1rem; border-right: 1px solid var(--border-2, #2a2a2a); }
+    .flow-step:last-child { border-right: 0; }
+    .flow-step .n { display: block; color: var(--orange-1, #f3c46c); font-size: .72rem; margin-bottom: .45rem; }
+    .flow-step strong { color: var(--fg-1, #f6d7a7); }
+    .flow-step p { margin: .45rem 0 0; color: var(--fg-4, #9f9f9f); font-size: .88rem; }
+    .readiness { display: grid; gap: .65rem; }
+    .readiness-row { display: grid; grid-template-columns: minmax(145px,.45fr) minmax(0,1.4fr) auto; align-items: center; gap: 1rem; padding: .9rem 1rem; border: 1px solid var(--border-2, #2a2a2a); border-radius: 8px; background: var(--bg-2, #121212); }
+    .readiness-row strong { color: var(--fg-1, #f6d7a7); }
+    .readiness-row span { color: var(--fg-4, #9f9f9f); }
+    .state { padding: .18rem .5rem; border-radius: 999px; border: 1px solid var(--border-warm, #3a2a18); color: var(--orange-1, #f3c46c) !important; font-size: .72rem; white-space: nowrap; }
+    .integration-note { margin-top: .8rem; color: var(--fg-5, #737373); font-size: .82rem; }
+    @media (max-width: 800px) {
+      .section-head, .posture-grid, .architecture-grid, .audience-grid, .flow { grid-template-columns: 1fr; }
+      .flow-step { border-right: 0; border-bottom: 1px solid var(--border-2, #2a2a2a); }
+      .flow-step:last-child { border-bottom: 0; }
+      .readiness-row { grid-template-columns: 1fr; gap: .35rem; }
+      .state { justify-self: start; }
+    }
+  </style>
 </head>
 <body>
   <main class="prospect-shell">
     <div class="wrap">
       <section class="prospect-head">
-        <div class="kicker mono">05 / detcordon prospect</div>
-        <h1 class="hero-title">DetCordon</h1>
-        <p class="hero-copy">Containment-first observation for hostile web payloads: a disposable, network-isolated victim, a DetectionOnly WAF tap, and a one-way encrypted evidence trail to an audited sink.</p>
-        <div class="hero-chips"><span class="chip mono">waf tap</span><span class="chip mono">firecracker/docker</span><span class="chip mono">evidence provenance</span></div>
+        <div class="kicker mono">RAGBAZ Labs / DetCordon</div>
+        <img class="brand-lockup" src="/assets/detcordon-lockup.svg" alt="DetCordon" />
+        <h1 class="hero-title">Contain first. Decide with evidence.</h1>
+        <p class="hero-copy">A controlled detonation and observation system for hostile web workloads, built around explicit trust posture, disposable execution, bounded ingress, and evidence continuity.</p>
+        <div class="hero-chips"><span class="chip mono">boundary assurance</span><span class="chip mono">explicit trust modes</span><span class="chip mono">evidence provenance</span><span class="chip mono">operator governed</span></div>
+        <p class="disclosure"><strong>Public integration view.</strong> This page explains the operational contract and pilot architecture without publishing detection internals, classifier composition, enforcement recipes, or sensitive deployment details.</p>
       </section>
 
-      <section class="status-grid" aria-label="project status">
-        <article class="status-card"><div class="label mono">status</div><div class="value">beta</div><div class="subvalue mono">beta lane</div><p>Deliberately-contained detonation environment for web malware (webshells, HTTP-delivered exploits, scanner-driven RCE). A DetectionOnly WAF tap fronts a disposable Docker/Firecracker victim; events and samples flow one-way to an age-encrypted, audited sink on a separate host. 105 passing tests; most buyer-priority P0/P1 work already implemented.</p></article>
-        <article class="status-card"><div class="label mono">finished estimate</div><div class="value">$210k</div><div class="subvalue mono">pricing signal Illustrative, tiered (Self-Hosted / Managed Pilot / Managed Production) — final rates agreed per engagement</div><p>Target studio asset value at the planned finished scope. Revenue status: pre-revenue.</p></article>
-      </section>
-      <p class="status-caption">Maturity is described qualitatively; no single completion percentage or derived current-value estimate is published.</p>
-
-      <section class="prospect-grid">
-        <article class="prospect-card"><h2>What is done</h2><p>The buyer-critical slice is already implemented, not just architected.</p><ul><li>Two-host containment model: DetectionOnly WAF tap plus disposable Docker/Firecracker victim, isolated from an audited evidence sink on a separate host.</li><li>Evidence-grade demo path: one command replays synthetic hostile traffic, produces an age-encrypted sample, and shows events in an operator dashboard.</li><li>105 passing tests, a containment-assurance checklist mapping every non-negotiable rule to generated-artifact evidence, and an authenticated operator dashboard.</li></ul></article>
-<article class="prospect-card"><h2>What is left</h2><p>The remaining work is production-hardening, not core architecture.</p><ul><li>TLS for inter-service event/sample/heartbeat traffic, currently plaintext by design for the demo/pilot stage.</li><li>Broader test coverage on the core HTTP pipeline and VM lifecycle orchestrator.</li><li>Multi-sandbox managed-lab scaling and a real tiered SKU/support-tier offer.</li></ul></article>
-<article class="prospect-card"><h2>Commercial frame</h2><p>This is an enterprise appliance sale, not a self-serve product — pricing and packaging reflect that.</p><ul><li>Pricing signal: illustrative only at this stage — Self-Hosted License, Managed Pilot, and Managed Production tiers, with final rates agreed per engagement.</li><li>Best fit: security researchers, blue teams, and research labs analyzing unknown web payloads under real containment guarantees.</li><li>Next step is a pilot conversation, not a checkout button — request one directly.</li></ul></article>
-      </section>
-
-      <section class="prospect-note">
-        <p>DetCordon's diligence-grade proof (containment assurance, buyer demo runbook) already exists — see the docs link below before assuming this is early-stage.</p>
-        <div class="cta-row">
-          <a class="btn primary" href="mailto:sales@ragbaz.cc?subject=DetCordon%20pilot%20request">Request a pilot</a><a class="btn" href="/#p-detcordon">Open product line</a><a class="btn" href="/school/forensics">Open forensics school</a><a class="btn" href="/doc/products/detcordon">Read docs</a>
+      <section class="section" id="effective-protection">
+        <div class="section-head"><h2>Effective protection is a computed state</h2><p>A selected policy is not presented as active protection until the required identity, transport, tenant, evidence, and audit conditions are satisfied.</p></div>
+        <div class="posture-grid">
+          <article class="posture"><span class="mode mono">legacy</span><p>Compatibility posture for controlled migration. Existing topology and payload allow-list behavior remain explicit.</p></article>
+          <article class="posture recommended"><span class="mode mono">shadow</span><p>Recommended pilot observation posture. Identity and policy decisions are recorded, but do not alter the write outcome.</p></article>
+          <article class="posture"><span class="mode mono">enforce</span><p>Fail-closed posture. Startup is refused unless tenant policy and authenticated transport prerequisites are complete.</p></article>
         </div>
       </section>
 
-      <nav class="pager">
-        <a href="/prospects/mailroute">← previous prospect: mailroute</a>
-        <a href="/prospects/school-topics">next prospect: ragbaz school topics →</a>
-      </nav>
+      <section class="section" id="readiness">
+        <div class="section-head"><h2>Pilot readiness surface</h2><p>The operator dashboard will calculate blockers and remediation from effective runtime configuration. Tenant views receive the same protection explanation in read-only form.</p></div>
+        <div class="readiness">
+          <div class="readiness-row"><strong>Trust posture</strong><span>Explicit <span class="mono">legacy | shadow | enforce</span>; never inferred or auto-upgraded.</span><span class="state mono">contract defined</span></div>
+          <div class="readiness-row"><strong>Tenant identity</strong><span>Canonical tenant and sandbox identity must agree with authenticated transport identity.</span><span class="state mono">integration lane</span></div>
+          <div class="readiness-row"><strong>Ingress transport</strong><span>Local Unix credential transport and remote authenticated transport are represented separately.</span><span class="state mono">separate gates</span></div>
+          <div class="readiness-row"><strong>Evidence path</strong><span>Events and samples reach the audited sink without treating a UI save as runtime activation.</span><span class="state mono">verify receipt</span></div>
+          <div class="readiness-row"><strong>Operator authority</strong><span>Configuration mutation is authenticated, attributable, validated, atomic, and audit logged.</span><span class="state mono">admin only</span></div>
+        </div>
+        <p class="integration-note mono">Illustrative readiness model — deliberately disconnected from production telemetry until the authenticated control-plane API is deployed.</p>
+      </section>
+
+      <section class="section" id="integration-architecture">
+        <div class="section-head"><h2>Integration architecture</h2><p>The public site explains posture and readiness. The authenticated dashboard owns operational state. The evidence plane remains downstream and independently auditable.</p></div>
+        <div class="flow">
+          <div class="flow-step"><span class="n mono">01</span><strong>Public product surface</strong><p>Doctrine, pilot fit, disclosure-safe capability, and pilot request.</p></div>
+          <div class="flow-step"><span class="n mono">02</span><strong>Authenticated console</strong><p>Role-derived operator or tenant view; no public runtime controls.</p></div>
+          <div class="flow-step"><span class="n mono">03</span><strong>Policy compiler</strong><p>Validated desired state becomes a versioned, attributable policy artifact.</p></div>
+          <div class="flow-step"><span class="n mono">04</span><strong>Runtime boundary</strong><p>Ingress and workload execution apply the selected trust contract.</p></div>
+          <div class="flow-step"><span class="n mono">05</span><strong>Evidence plane</strong><p>Receipts, events, samples, and readiness attestations support review.</p></div>
+        </div>
+        <div class="architecture-grid" style="margin-top:.8rem">
+          <article class="arch-card"><strong>Desired state</strong><p>Versioned configuration, tenant mapping, trust mode, and transport requirements. A save is a proposal until validation and activation succeed.</p></article>
+          <article class="arch-card"><strong>Effective state</strong><p>Read-only runtime report: active policy revision, satisfied prerequisites, blockers, degradation, and last verified receipt.</p></article>
+          <article class="arch-card"><strong>Evidence state</strong><p>Append-oriented records that link policy identity, runtime decision, containment outcome, and exported evidence without exposing sensitive detector internals.</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="roles">
+        <div class="section-head"><h2>One truth, role-specific authority</h2><p>The same effective-protection model is rendered at different levels of control. Authorization is enforced server-side, not by greyed-out controls alone.</p></div>
+        <div class="audience-grid">
+          <article class="audience-card"><strong>Operator</strong><p>Sees blockers, remediation, policy revision, activation status, evidence continuity, and audited configuration actions.</p></article>
+          <article class="audience-card"><strong>Tenant</strong><p>Sees what protects the assigned workload, what is operator-managed, and a read-only configuration summary. Managed SaaS offers no mutation path.</p></article>
+          <article class="audience-card"><strong>Research lab</strong><p>Sees experiment boundaries, declared posture, evidence export status, and reproducibility context without access to cross-tenant or platform control.</p></article>
+        </div>
+      </section>
+
+      <section class="prospect-note section">
+        <p>The next implementation slice connects dashboard configuration to a typed readiness evaluator, then exposes a sanitized effective-state contract to the role-specific surfaces. It does not place operational configuration on the public website.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="mailto:sales@ragbaz.cc?subject=DetCordon%20managed%20pilot">Request a managed pilot</a>
+          <a class="btn" href="mailto:sales@ragbaz.cc?subject=DetCordon%20self-host%20waiting%20list">Join Self-Host Waiting List</a>
+          <a class="btn" href="/doc/products/detcordon">Read architecture docs</a>
+          <a class="btn" href="/#p-detcordon">Back to product line</a>
+        </div>
+      </section>
+
+      <nav class="pager"><a href="/">← ragbaz.cc</a><a href="/school/forensics">forensics school →</a></nav>
     </div>
   </main>
 </body>
