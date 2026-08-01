@@ -1,4 +1,4 @@
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -6,6 +6,7 @@ import { prospectEntries, readSiteCatalog } from "../../../../metadata/src/site-
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const siteRoot = path.join(repoRoot, "site", "prospects");
+const maintainedProspectRoot = path.join(repoRoot, "content", "prospects");
 
 const VALUE_CAPTION = "Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.";
 const MATURITY_CAPTION = "Maturity is described qualitatively; no single completion percentage or derived current-value estimate is published.";
@@ -19,7 +20,10 @@ export function generateProspectPages() {
   });
 
   for (const [index, entry] of entries.entries()) {
-    const html = renderProspectPage({ entry, entries, index });
+    const maintainedPath = path.join(maintainedProspectRoot, `${entry.prospect.slug}.html`);
+    const html = existsSync(maintainedPath)
+      ? readFileSync(maintainedPath, "utf8")
+      : renderProspectPage({ entry, entries, index });
     writeFileSync(path.join(siteRoot, `${entry.prospect.slug}.html`), html, "utf8");
   }
 }
