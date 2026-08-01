@@ -103,13 +103,10 @@ function writeOriginMetadata() {
     transport: "tailscale-serve",
     originNode: {
       name: "konsonans",
-      tailscaleIp: "100.102.135.43",
       localBackend: "http://127.0.0.1:8788",
+      addressSource: "host-local private-origin.env",
     },
-    approvedReaders: [
-      { name: "mo", tailscaleIp: "100.89.213.14" },
-      { name: "quux1tab", tailscaleIp: "100.101.117.57" },
-    ],
+    approvedReaderNodes: ["mo", "quux1tab"],
     protectedPrefixes: [
       "/school/security",
       "/school/cellular",
