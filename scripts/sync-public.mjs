@@ -27,6 +27,7 @@ mkdirSync(pub, { recursive: true });
 
 let copied = 0;
 let gated = 0;
+let sourceOnly = 0;
 function walk(rel) {
   for (const entry of readdirSync(path.join(site, rel), { withFileTypes: true })) {
     const relPath = path.join(rel, entry.name);
@@ -35,6 +36,10 @@ function walk(rel) {
       walk(relPath);
     } else if (entry.name.endsWith(".html")) {
       // HTML is served by the app router, not as a static asset.
+    } else if (entry.name.endsWith(".entry.js")) {
+      // Build-only browser entry points are bundled before this step. Never
+      // copy their unminified source alongside the generated browser bundle.
+      sourceOnly += 1;
     } else if (isGated(norm)) {
       gated += 1; // withheld from public; gated route serves it
     } else {
@@ -97,5 +102,5 @@ writeFileSync(
 );
 
 console.log(
-  `sync-public: copied ${copied} site asset(s) + ${embeddedDocsFiles} embedded doc file(s) to public/; embedded ${gatedFiles.length} gated file(s)`,
+  `sync-public: copied ${copied} site asset(s) + ${embeddedDocsFiles} embedded doc file(s) to public/; embedded ${gatedFiles.length} gated file(s); withheld ${sourceOnly} build entry source(s)`,
 );
