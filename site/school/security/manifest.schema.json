@@ -1,40 +1,33 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ragbaz.cc/school/security/manifest.schema.json",
-  "title": "RAGBAZ Security School Manifest",
+  "title": "RAGBAZ Security School Public Manifest",
   "type": "object",
-  "required": ["version", "library", "themes", "collections", "reservedObjects"],
+  "required": ["version", "library", "themes", "collections"],
   "properties": {
-    "version": { "type": "integer", "minimum": 1 },
+    "version": { "const": 1 },
     "library": {
       "type": "object",
-      "required": ["id", "title", "baseUri", "ownerReader", "restrictedPolicy"],
+      "required": ["id", "title", "baseUri", "publicationMode", "securityPolicy"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
+        "id": { "const": "ragbaz-security-school" },
         "title": { "type": "string", "minLength": 1 },
         "subtitle": { "type": "string" },
-        "baseUri": { "type": "string", "pattern": "^crypto://" },
-        "ownerReader": { "const": "ragbaz@proton.me" },
-        "restrictedPolicy": {
+        "baseUri": { "const": "crypto://ragbaz-security" },
+        "publicationMode": { "const": "public-only" },
+        "securityPolicy": {
           "type": "object",
-          "required": ["state", "authorizedReaders", "privateKeyProvisioned", "clientKeyPersistence", "plaintextCache", "unlockTransport"],
+          "required": ["encryptedObjectsPublished", "unlockInterfaceEnabled", "clientKeyMaterialAccepted", "persistentPlaintextStorage"],
           "properties": {
-            "state": { "enum": ["reserved-no-content", "active"] },
-            "authorizedReaders": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 1,
-              "items": { "const": "ragbaz@proton.me" }
-            },
-            "privateKeyProvisioned": { "type": "boolean" },
-            "clientKeyPersistence": { "const": "forbidden" },
-            "plaintextCache": { "const": "forbidden" },
-            "unlockTransport": { "const": "local-helper-event-only" }
+            "encryptedObjectsPublished": { "const": false },
+            "unlockInterfaceEnabled": { "const": false },
+            "clientKeyMaterialAccepted": { "const": false },
+            "persistentPlaintextStorage": { "const": false }
           },
           "additionalProperties": false
         }
       },
-      "additionalProperties": true
+      "additionalProperties": false
     },
     "themes": {
       "type": "array",
@@ -51,11 +44,8 @@
     },
     "collections": {
       "type": "array",
+      "minItems": 1,
       "items": { "$ref": "#/$defs/collection" }
-    },
-    "reservedObjects": {
-      "type": "array",
-      "items": { "$ref": "#/$defs/reservedObject" }
     }
   },
   "$defs": {
@@ -65,49 +55,27 @@
       "properties": {
         "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
         "title": { "type": "string", "minLength": 1 },
-        "classification": { "type": "string", "minLength": 1 },
-        "state": { "type": "string" }
+        "classification": { "const": "public" }
       },
       "additionalProperties": false
     },
     "collection": {
       "type": "object",
-      "required": ["id", "title", "subtitle", "summary", "status", "classification", "uri", "children"],
+      "required": ["id", "title", "subtitle", "summary", "status", "classification", "href", "uri", "children"],
       "properties": {
         "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
         "title": { "type": "string", "minLength": 1 },
         "subtitle": { "type": "string" },
         "summary": { "type": "string" },
-        "status": { "type": "string" },
-        "classification": { "type": "string" },
-        "href": { "type": "string" },
+        "status": { "const": "published" },
+        "classification": { "const": "public" },
+        "href": { "type": "string", "pattern": "^/" },
         "uri": { "type": "string", "pattern": "^crypto://ragbaz-security/" },
         "children": {
           "type": "array",
+          "minItems": 1,
           "items": { "$ref": "#/$defs/child" }
         }
-      },
-      "additionalProperties": false
-    },
-    "reservedObject": {
-      "type": "object",
-      "required": ["id", "title", "uri", "classification", "state", "exists", "authorizedReaders", "recipientFingerprints", "ciphertext", "note"],
-      "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-        "title": { "type": "string" },
-        "uri": { "type": "string", "pattern": "^crypto://ragbaz-security/" },
-        "classification": { "enum": ["controlled-poc", "restricted-implementation"] },
-        "state": { "const": "reserved-no-content" },
-        "exists": { "const": false },
-        "authorizedReaders": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 1,
-          "items": { "const": "ragbaz@proton.me" }
-        },
-        "recipientFingerprints": { "type": "array", "maxItems": 0 },
-        "ciphertext": { "type": "null" },
-        "note": { "type": "string" }
       },
       "additionalProperties": false
     }
