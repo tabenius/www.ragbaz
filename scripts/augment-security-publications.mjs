@@ -40,7 +40,11 @@ if (!html.includes('id="document-tree"')) {
 writeFileSync(robberyPath, html);
 
 let pilotHtml = readFileSync(pilotPath, "utf8");
-if (!pilotHtml.includes('class="prospect-edge-cloud prospect-edge-cloud--left"')) {
+const cloudStyleMarker = "prospect-edge-cloud--left";
+if (!pilotHtml.includes(cloudStyleMarker)) {
+  const cloudStyle = `  <style id="tibetan-cloud-edge-ornaments">\n    .prospect-edge-cloud{position:fixed;z-index:1;top:var(--rx-topbar-height,70px);bottom:0;width:clamp(72px,8vw,150px);opacity:.22;pointer-events:none;background:url('/school/security/assets/tibetan-clouds.svg') center top/100% auto repeat-y;filter:saturate(.72) contrast(1.04);mask-image:linear-gradient(to bottom,transparent 0,#000 8%,#000 90%,transparent 100%)}\n    .prospect-edge-cloud--left{left:clamp(-58px,-3vw,-24px)}\n    .prospect-edge-cloud--right{right:clamp(-58px,-3vw,-24px);transform:scaleX(-1)}\n    .prospect-main,.dc-topbar{position:relative;z-index:2}\n    @media(max-width:900px){.prospect-edge-cloud{width:84px;opacity:.15}.prospect-edge-cloud--left{left:-52px}.prospect-edge-cloud--right{right:-52px}}\n    @media(max-width:560px){.prospect-edge-cloud{width:68px;opacity:.1}.prospect-edge-cloud--left{left:-48px}.prospect-edge-cloud--right{right:-48px}}\n    @media(prefers-reduced-motion:reduce){.prospect-edge-cloud{background-attachment:scroll}}\n  </style>\n`;
+  pilotHtml = pilotHtml.replace("</head>", `${cloudStyle}</head>`);
+
   const ornamentMarkup = `  <div class="prospect-edge-cloud prospect-edge-cloud--left" aria-hidden="true"></div>\n  <div class="prospect-edge-cloud prospect-edge-cloud--right" aria-hidden="true"></div>\n\n`;
   const headerMarker = '  <header class="dc-topbar">';
   if (!pilotHtml.includes(headerMarker)) throw new Error("DetCordon pilot topbar marker not found");
@@ -48,4 +52,4 @@ if (!pilotHtml.includes('class="prospect-edge-cloud prospect-edge-cloud--left"')
   writeFileSync(pilotPath, pilotHtml);
 }
 
-console.log("security-publications: augmented nested security pages with shared React navigation, state explorer, and Tibetan cloud edge ornaments");
+console.log("security-publications: augmented nested security pages with shared React navigation, state explorer, and Tibetan cloud drawings ornamenting both page edges");
