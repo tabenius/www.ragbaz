@@ -3,7 +3,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
-const webpack = require("next/dist/compiled/webpack/webpack");
+const webpackBundle = require("next/dist/compiled/webpack/webpack");
+if (typeof webpackBundle.init === "function") webpackBundle.init();
+const webpack = webpackBundle.webpack || webpackBundle;
+
+if (typeof webpack !== "function") {
+  throw new TypeError("Next's bundled webpack compiler is unavailable");
+}
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..");
@@ -33,6 +39,7 @@ const compiler = webpack({
 const stats = await new Promise((resolve, reject) => {
   compiler.run((error, result) => {
     if (error) return reject(error);
+    if (!result) return reject(new Error("Webpack returned no compilation result"));
     resolve(result);
   });
 });
