@@ -14,6 +14,10 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",
+    "run_worker_first": [
+      "/school/security",
+      "/school/security/*",
+    ],
   },
   "vars": {
     "APP_URL": "https://ragbaz.cc",
@@ -49,7 +53,8 @@
     },
   },
   // Secrets (set with `wrangler secret put`): RESEND_API_KEY, SESSION_SECRET,
-  // GRAPHQL_SYNC_KEY, WORKSPACE_GRAPHQL_UPSTREAM_KEY
+  // GRAPHQL_SYNC_KEY, WORKSPACE_GRAPHQL_UPSTREAM_KEY,
+  // TAILSCALE_ALLOWED_IPS, NETBIRD_ALLOWED_IPS, SECURITY_SCHOOL_ALLOWED_IPS
   "d1_databases": [
     {
       "binding": "DB",
