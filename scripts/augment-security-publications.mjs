@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, "..");
-const robberyPath = path.join(repoRoot, "site", "school", "security", "on-digital-robbery", "index.html");
+const securityRoot = path.join(repoRoot, "site", "school", "security");
+const robberyPath = path.join(securityRoot, "on-digital-robbery", "index.html");
+const pilotPath = path.join(securityRoot, "detcordon", "self-hosted-pilot", "index.html");
 
 let html = readFileSync(robberyPath, "utf8");
 
@@ -36,4 +38,14 @@ if (!html.includes('id="document-tree"')) {
 }
 
 writeFileSync(robberyPath, html);
-console.log("security-publications: augmented On Digital Robbery with shared React navigation and state explorer");
+
+let pilotHtml = readFileSync(pilotPath, "utf8");
+if (!pilotHtml.includes('class="prospect-edge-cloud prospect-edge-cloud--left"')) {
+  const ornamentMarkup = `  <div class="prospect-edge-cloud prospect-edge-cloud--left" aria-hidden="true"></div>\n  <div class="prospect-edge-cloud prospect-edge-cloud--right" aria-hidden="true"></div>\n\n`;
+  const headerMarker = '  <header class="dc-topbar">';
+  if (!pilotHtml.includes(headerMarker)) throw new Error("DetCordon pilot topbar marker not found");
+  pilotHtml = pilotHtml.replace(headerMarker, `${ornamentMarkup}${headerMarker}`);
+  writeFileSync(pilotPath, pilotHtml);
+}
+
+console.log("security-publications: augmented nested security pages with shared React navigation, state explorer, and Tibetan cloud edge ornaments");
