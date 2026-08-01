@@ -19,6 +19,9 @@
       "/school/security/*",
       "/school/cellular",
       "/school/cellular/*",
+      "/prospects/detcordon",
+      "/prospects/detcordon.html",
+      "/prospects/detcordon/*",
     ],
   },
   "vars": {
