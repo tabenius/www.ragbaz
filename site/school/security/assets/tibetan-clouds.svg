@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 520" role="img" aria-labelledby="title desc">
+  <title id="title">Tibetan-inspired cloud ornament</title>
+  <desc id="desc">Abstract repeating linework used as a decorative edge motif.</desc>
+  <g fill="none" stroke="#e4573d" stroke-linecap="round" stroke-linejoin="round">
+    <path opacity=".42" stroke-width="3" d="M18 28c30 22 53-10 80 8 24 16 18 48-3 57-22 9-43-14-30-31 12-16 37-5 47 13 13 23 5 52-18 66-29 18-66 2-67-27-1-24 27-40 47-27 20 13 17 45-8 53-34 11-60 42-43 76 17 35 65 35 84 4 17-28-1-68-36-71-31-3-56 32-41 58 13 24 47 22 58-2 10-22-6-48-31-51-27-4-48 26-38 50 12 29 48 37 71 20 26-20 23-61-4-80"/>
+    <path opacity=".28" stroke-width="2" d="M34 5c16 24 53 19 67-4m-84 83c23 3 41 18 45 40m17 80c22-2 45 11 52 32m-103 54c22-1 45 14 50 36m-39 87c18-5 39 4 50 20"/>
+    <path opacity=".32" stroke-width="2.4" d="M150 80c18 4 34 22 30 42-4 19-27 32-43 20-16-12-12-39 6-47 22-10 51 7 56 32 5 26-15 54-40 56-28 2-50-31-34-55"/>
+    <path opacity=".22" stroke-width="1.8" d="M145 251c21-7 47 7 54 30 8 26-12 55-38 57-25 2-47-23-39-47 8-23 40-33 57-14 16 18 6 51-17 57"/>
+    <path opacity=".38" stroke-width="3" d="M26 424c25-15 60-4 70 23 10 26-9 59-37 61-27 2-52-25-43-51 8-25 42-37 61-17 18 19 7 54-18 61"/>
+  </g>
+</svg>
