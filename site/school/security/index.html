@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <title>RAGBAZ Security School</title>
-  <meta name="description" content="A local-first, object-addressable reader for RAGBAZ security research and school material." />
+  <meta name="description" content="A public, local-first, object-addressable reader for RAGBAZ security research and school material." />
   <link rel="icon" href="../../assets/detcordon-mark.svg" />
   <link rel="stylesheet" href="./reader.css" />
   <script src="../../assets/local-mode.js" defer></script>
@@ -43,54 +43,69 @@
       <div class="hero-emblem">
         <img src="../../assets/detcordon-mark.svg" alt="DetCordon signal-red emblem" />
       </div>
-      <p class="eyebrow">CRYPTO-OBJECT READER · LOCAL-FIRST POLICY</p>
+      <p class="eyebrow">PUBLIC SECURITY LIBRARY · OBJECT-ADDRESSABLE</p>
       <h1 id="hero-title">Security knowledge should reveal its boundaries before it reveals its depth.</h1>
       <p class="hero-copy">
-        Cellular identity, Android FinTech, containment, evasion detection, and DetCordon research are arranged as addressable objects. Public material remains readable. PoC and implementation-depth slots are reserved for one owner reader only and contain no payloads or keys.
+        Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This first release contains public defensive material only: Cellular School, a public edition of <em>On Digital Robbery</em>, and the DetCordon architectural prospectus.
       </p>
       <div class="hero-actions">
         <a class="primary-action" href="#collections">Explore public collections</a>
-        <button class="secondary-action" id="show-policy" type="button">Inspect access policy</button>
+        <button class="secondary-action" id="show-policy" type="button">Inspect publication policy</button>
       </div>
       <dl class="hero-stats" aria-label="Library status">
-        <div><dt>Owner reader</dt><dd>ragbaz@proton.me</dd></div>
-        <div><dt>Restricted objects</dt><dd>Reserved · none created</dd></div>
-        <div><dt>Client key storage</dt><dd>Forbidden by policy</dd></div>
+        <div><dt>Published collections</dt><dd>3</dd></div>
+        <div><dt>Encrypted objects</dt><dd>None in this release</dd></div>
+        <div><dt>Client key handling</dt><dd>Disabled</dd></div>
       </dl>
     </section>
 
     <section class="reader-note" id="policy-note" hidden>
       <div>
-        <p class="eyebrow">CURRENT SECURITY POSTURE</p>
-        <h2>No restricted key exists yet.</h2>
-        <p>The interface models classification, navigation, and a future local-helper handoff. It does not import private keys, persist passphrases, cache plaintext, or simulate access to material that does not exist.</p>
+        <p class="eyebrow">CURRENT PUBLICATION POSTURE</p>
+        <h2>Public objects only.</h2>
+        <p>The current site does not publish encrypted objects, accept decryption keys, expose an unlock interface, or persist sensitive material. Theme, typography, reading width, reduced effects, and tree fold state are the only local preferences.</p>
       </div>
-      <button class="close-note" type="button" aria-label="Close policy note">×</button>
+      <button class="close-note" type="button" aria-label="Close publication note">×</button>
     </section>
 
     <section class="section-block" id="collections" aria-labelledby="collections-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">DOCUMENT FAMILIES</p>
-          <h2 id="collections-title">The security school library</h2>
+          <p class="eyebrow">PUBLISHED DOCUMENT FAMILIES</p>
+          <h2 id="collections-title">The RAGBAZ Security School library</h2>
         </div>
-        <p>Cards and the edge tree are generated from <code>manifest.json</code>, so titles, states, links, and classifications do not drift apart.</p>
+        <p>Cards and the edge tree are generated from <code>manifest.json</code>, so titles, links, classifications, and object identities stay aligned.</p>
       </div>
       <div class="collection-grid" id="collection-grid" aria-live="polite">
-        <div class="loading-card">Loading object manifest…</div>
+        <div class="loading-card">Loading public object manifest…</div>
       </div>
     </section>
 
-    <section class="section-block section-block--restricted" id="restricted" aria-labelledby="restricted-title">
+    <section class="section-block" aria-labelledby="model-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">OWNER-ONLY RESERVED SPACE</p>
-          <h2 id="restricted-title">PoC and implementation-depth objects</h2>
+          <p class="eyebrow">PUBLICATION MODEL</p>
+          <h2 id="model-title">One library, independently addressable objects</h2>
         </div>
-        <p>These cards are policy markers, not encrypted payloads. They remain visibly locked until content is deliberately created, reviewed, fingerprint-bound, and encrypted.</p>
+        <p>The public release already uses stable <code>crypto://ragbaz-security/…</code> identifiers even though every published object is currently open.</p>
       </div>
-      <div class="restricted-grid" id="restricted-grid"></div>
-      <div class="unlock-status" id="unlock-status" role="status" aria-live="polite"></div>
+      <div class="collection-grid">
+        <article class="collection-card">
+          <div class="card-top"><span class="status-pill">public</span></div>
+          <h3>Course and article objects</h3>
+          <p class="card-summary">Each document family can be divided into sections, lessons, figures, references, and downloadable assets without changing the outward URL structure.</p>
+        </article>
+        <article class="collection-card">
+          <div class="card-top"><span class="status-pill">local-first</span></div>
+          <h3>Reader preferences</h3>
+          <p class="card-summary">Theme, font, reading width, reduced motion, and navigation fold state stay on the reader’s device. No content key is requested or stored.</p>
+        </article>
+        <article class="collection-card">
+          <div class="card-top"><span class="status-pill">source-driven</span></div>
+          <h3>Single manifest</h3>
+          <p class="card-summary">The visible cards and right-edge object tree use the same manifest, reducing drift between publication metadata and navigation.</p>
+        </article>
+      </div>
     </section>
   </main>
 
@@ -143,7 +158,7 @@
     </label>
 
     <button class="secondary-action settings-reset" id="settings-reset" type="button">Reset local settings</button>
-    <p class="settings-footnote">Only theme, typography, width, reduced effects, and tree fold state use local storage. Key material and decrypted content are excluded.</p>
+    <p class="settings-footnote">Only display preferences and tree fold state use local storage.</p>
   </aside>
 
   <div class="scrim" id="scrim" hidden></div>
@@ -154,11 +169,11 @@
       <strong>RAGBAZ Labs · Security School</strong>
       <a href="mailto:ragbaz@proton.me">ragbaz@proton.me</a>
     </div>
-    <p>Public shell · owner-only restricted policy · no private keys provisioned</p>
+    <p>Public defensive edition · object-addressable reader</p>
   </footer>
 
   <noscript>
-    <div class="noscript">This source-driven reader needs JavaScript to load its local manifest and render the object tree. Public source pages remain directly accessible.</div>
+    <div class="noscript">This source-driven reader needs JavaScript to load its local manifest and render the object tree. The linked public source pages remain directly accessible.</div>
   </noscript>
 </body>
 </html>
