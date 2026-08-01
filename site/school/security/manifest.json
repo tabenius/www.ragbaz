@@ -1,0 +1,138 @@
+{
+  "$schema": "./manifest.schema.json",
+  "version": 1,
+  "library": {
+    "id": "ragbaz-security-school",
+    "title": "RAGBAZ Security School",
+    "subtitle": "Cellular identity, payment systems, containment, evasion detection, and defensive research",
+    "baseUri": "crypto://ragbaz-security",
+    "ownerReader": "ragbaz@proton.me",
+    "restrictedPolicy": {
+      "state": "reserved-no-content",
+      "authorizedReaders": ["ragbaz@proton.me"],
+      "privateKeyProvisioned": false,
+      "clientKeyPersistence": "forbidden",
+      "plaintextCache": "forbidden",
+      "unlockTransport": "local-helper-event-only"
+    }
+  },
+  "themes": [
+    { "id": "ragbaz-gruvbox-slate", "label": "RAGBAZ Gruvbox Slate" },
+    { "id": "detcordon-signal-red", "label": "DetCordon Signal Red" },
+    { "id": "tufte-darkgray-mokia", "label": "Tufte Darkgray Mokia" },
+    { "id": "arctic-cipher-blue", "label": "Arctic Cipher Blue" },
+    { "id": "monastic-oxide", "label": "Monastic Oxide" },
+    { "id": "phosphor-night-ops", "label": "Phosphor Night Ops" }
+  ],
+  "collections": [
+    {
+      "id": "cellular-school",
+      "title": "Mobile Subscriber-Identity Security",
+      "subtitle": "SIM, eSIM/RSP, SMS, MMS, APDU, cellular generations, and covert channels",
+      "summary": "The existing RAGBAZ cellular school is the first public collection in the object library.",
+      "status": "published",
+      "classification": "public",
+      "href": "/school/cellular/",
+      "uri": "crypto://ragbaz-security/cellular-school/document",
+      "children": [
+        { "id": "sim-uicc", "title": "SIM and UICC", "classification": "public" },
+        { "id": "esim-rsp", "title": "eSIM and remote SIM provisioning", "classification": "public" },
+        { "id": "sms", "title": "SMS and TPDU structure", "classification": "public" },
+        { "id": "mms", "title": "MMS, MMSC, and WAP Push", "classification": "public" },
+        { "id": "apdu", "title": "APDU and smart-card commands", "classification": "public" },
+        { "id": "sim-toolkit", "title": "SIM Toolkit", "classification": "public" },
+        { "id": "radio-generations", "title": "2G / 3G / 4G / 5G", "classification": "public" },
+        { "id": "covert-channels", "title": "Covert channels and defensive analysis", "classification": "public" },
+        { "id": "cellular-labs", "title": "Controlled laboratories", "classification": "controlled-poc", "state": "reserved-no-content" }
+      ]
+    },
+    {
+      "id": "android-fintech",
+      "title": "On Digital Robbery",
+      "subtitle": "Android wallets, SoftPOS, NFC/EMV, attestation, and privilege boundaries",
+      "summary": "A source-driven technical monograph prepared for migration into independently addressable objects.",
+      "status": "migration-planned",
+      "classification": "public-with-reserved-controlled-objects",
+      "uri": "crypto://ragbaz-security/on-digital-robbery/document",
+      "children": [
+        { "id": "threat-landscape", "title": "Threat landscape", "classification": "public" },
+        { "id": "privilege-rings", "title": "Privilege rings", "classification": "public" },
+        { "id": "emv-nfc", "title": "EMV and NFC", "classification": "public" },
+        { "id": "attestation", "title": "Attestation and runtime integrity", "classification": "public" },
+        { "id": "fintech-poc", "title": "Red-team PoC mechanics", "classification": "controlled-poc", "state": "reserved-no-content" }
+      ]
+    },
+    {
+      "id": "containment-evasion",
+      "title": "Containment & Evasion",
+      "subtitle": "DetCordon red-team curriculum and defensive detector labs",
+      "summary": "Planned DocBin migration for timing checks, hypervisor artifacts, anti-debugging, Android checks, and breakout indicators.",
+      "status": "source-recovery-required",
+      "classification": "public-with-reserved-controlled-labs",
+      "uri": "crypto://ragbaz-security/containment-evasion/document",
+      "children": [
+        { "id": "timing-checks", "title": "Timing checks", "classification": "public" },
+        { "id": "hypervisor-artifacts", "title": "Hypervisor artifacts", "classification": "public" },
+        { "id": "anti-debug", "title": "Anti-debugging", "classification": "public" },
+        { "id": "android-detection", "title": "Android emulator, root, and Frida detection", "classification": "public" },
+        { "id": "breakout-indicators", "title": "Container and VM breakout indicators", "classification": "public" },
+        { "id": "student-labs", "title": "Student labs and fixtures", "classification": "controlled-poc", "state": "reserved-no-content" }
+      ]
+    },
+    {
+      "id": "security-boundaries",
+      "title": "Security Boundaries: Evasion vs. Detection",
+      "subtitle": "Coverage, containment assurance, transparency, and false-positive tensions",
+      "summary": "A draft research letter from DocBin planned for source-preserving migration.",
+      "status": "migration-planned",
+      "classification": "draft-private-source",
+      "uri": "crypto://ragbaz-security/security-boundaries-evasion-vs-detection/document",
+      "children": [
+        { "id": "training-vs-specification", "title": "Operator training vs. adversary specification", "classification": "draft" },
+        { "id": "transparency-vs-detection", "title": "Transparency vs. escape-detection surface", "classification": "draft" },
+        { "id": "coverage-vs-false-positives", "title": "Android coverage vs. false positives", "classification": "draft" }
+      ]
+    },
+    {
+      "id": "detcordon",
+      "title": "DetCordon",
+      "subtitle": "Containment-first observation, evidence routing, and operator surfaces",
+      "summary": "The public DetCordon prospectus remains the outward-facing architectural entry point.",
+      "status": "published",
+      "classification": "public",
+      "href": "/prospects/detcordon.html",
+      "uri": "crypto://ragbaz-security/detcordon/document",
+      "children": [
+        { "id": "containment-model", "title": "Containment model", "classification": "public" },
+        { "id": "evidence-routing", "title": "Evidence routing", "classification": "public" },
+        { "id": "operator-surfaces", "title": "Operator surfaces", "classification": "public" }
+      ]
+    }
+  ],
+  "reservedObjects": [
+    {
+      "id": "owner-poc-reserved",
+      "title": "Owner-only PoC material",
+      "uri": "crypto://ragbaz-security/reserved/owner-poc",
+      "classification": "controlled-poc",
+      "state": "reserved-no-content",
+      "exists": false,
+      "authorizedReaders": ["ragbaz@proton.me"],
+      "recipientFingerprints": [],
+      "ciphertext": null,
+      "note": "No PoC or implementation-depth object currently exists. No decryption key should be generated until the first such object is approved."
+    },
+    {
+      "id": "owner-implementation-reserved",
+      "title": "Owner-only implementation-depth material",
+      "uri": "crypto://ragbaz-security/reserved/implementation",
+      "classification": "restricted-implementation",
+      "state": "reserved-no-content",
+      "exists": false,
+      "authorizedReaders": ["ragbaz@proton.me"],
+      "recipientFingerprints": [],
+      "ciphertext": null,
+      "note": "Implementation-depth material is exceptional, manually approved, and absent from the library."
+    }
+  ]
+}
