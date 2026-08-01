@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="detcordon-signal-red" data-font="literary-serif">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+  <title>On Digital Robbery — Defensive Edition</title>
+  <meta name="description" content="A network-restricted defensive monograph on Android FinTech trust boundaries, SoftPOS, NFC/EMV, attestation, and layered controls." />
+  <link rel="icon" href="../../../assets/detcordon-mark.svg" />
+  <style>
+    :root {
+      --bg: #061018;
+      --surface: #0a2230;
+      --surface-2: #0d2a39;
+      --text: #e8e3da;
+      --muted: #93a7b0;
+      --heading: #f4ebdd;
+      --accent: #e4573d;
+      --accent-soft: rgba(228, 87, 61, .16);
+      --border: #29495a;
+      --gold: #b97a45;
+      --measure: 72ch;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "EB Garamond", Iowan Old Style, Palatino Linotype, Book Antiqua, Palatino, Georgia, serif;
+      --mono: "IBM Plex Mono", "DejaVu Sans Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    html[data-theme="ragbaz-gruvbox-slate"] { --bg:#17191c; --surface:#202328; --surface-2:#292d33; --text:#e3d7c1; --muted:#a69c8d; --heading:#f1e5cc; --accent:#d65d0e; --border:#4a4741; --gold:#d79921; }
+    html[data-theme="detcordon-signal-red"] { --bg:#061018; --surface:#0a2230; --surface-2:#0d2a39; --text:#e8e3da; --muted:#93a7b0; --heading:#f4ebdd; --accent:#e4573d; --border:#29495a; --gold:#b97a45; }
+    html[data-theme="tufte-darkgray-mokia"] { --bg:#181818; --surface:#232323; --surface-2:#2d2d2d; --text:#e7e2d8; --muted:#aaa49a; --heading:#f4efe6; --accent:#d36b55; --border:#48443f; --gold:#ba8d5c; }
+    html[data-theme="arctic-cipher-blue"] { --bg:#07131c; --surface:#0b2432; --surface-2:#103242; --text:#dcecf2; --muted:#91acb8; --heading:#f0fbff; --accent:#63b6d6; --border:#285467; --gold:#d2a76c; }
+    html[data-theme="monastic-oxide"] { --bg:#15100f; --surface:#241916; --surface-2:#30201b; --text:#e7d8c8; --muted:#ad9989; --heading:#f4e7d7; --accent:#c95d42; --border:#55382e; --gold:#b88a55; }
+    html[data-theme="phosphor-night-ops"] { --bg:#020805; --surface:#07130d; --surface-2:#0b1c13; --text:#c8e8d1; --muted:#7fa58b; --heading:#e6ffed; --accent:#6ed98a; --border:#214a2e; --gold:#c6a15d; }
+    html[data-font="variable-sans"] body { font-family: var(--sans); }
+    html[data-font="literary-serif"] body { font-family: var(--serif); }
+    html[data-font="technical-mono"] body { font-family: var(--mono); }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body { margin:0; color:var(--text); background:radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--surface-2) 75%, transparent), transparent 42%), var(--bg); line-height:1.65; }
+    a { color:var(--accent); }
+    .skip { position:fixed; top:-5rem; left:1rem; z-index:99; background:var(--accent); color:var(--bg); padding:.7rem 1rem; }
+    .skip:focus { top:1rem; }
+    .cloud { position:fixed; z-index:0; top:0; bottom:0; width:10rem; opacity:.24; pointer-events:none; background:url("../assets/tibetan-clouds.svg") center/100% auto repeat-y; }
+    .cloud.left { left:-2.8rem; }
+    .cloud.right { right:-2.8rem; transform:scaleX(-1); }
+    .topbar { position:sticky; top:0; z-index:30; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.75rem clamp(1rem,4vw,3rem); background:color-mix(in srgb, var(--bg) 88%, transparent); border-bottom:1px solid var(--border); backdrop-filter:blur(18px); }
+    .brand { display:flex; align-items:center; gap:.75rem; color:var(--heading); text-decoration:none; font-family:var(--sans); }
+    .brand img { width:2.5rem; height:2.5rem; }
+    .brand strong,.brand small { display:block; }
+    .brand small { color:var(--muted); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; }
+    .controls { display:flex; gap:.55rem; align-items:center; font-family:var(--sans); }
+    .controls select,.controls input { color:var(--text); background:var(--surface); border:1px solid var(--border); border-radius:.45rem; padding:.45rem .55rem; }
+    .controls label { display:grid; gap:.2rem; color:var(--muted); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; }
+    .layout { position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:clamp(2rem,5vw,5rem); width:min(94rem, calc(100% - 2rem)); margin:0 auto; padding:clamp(2rem,6vw,5rem) 0 7rem; }
+    article { min-width:0; }
+    .cover { min-height:calc(100vh - 8rem); display:grid; place-items:center; text-align:center; padding:3rem 0 5rem; border-bottom:1px solid var(--border); }
+    .cover img { width:clamp(9rem,24vw,16rem); filter:drop-shadow(0 0 2.5rem color-mix(in srgb, var(--accent) 25%, transparent)); }
+    .eyebrow { margin:1.2rem 0 .6rem; color:var(--accent); font-family:var(--mono); font-size:.76rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+    h1,h2,h3 { color:var(--heading); line-height:1.05; text-wrap:balance; }
+    h1 { margin:.4rem auto 1rem; max-width:13ch; font-size:clamp(3.6rem,10vw,8rem); }
+    h2 { margin:0 0 1.1rem; font-size:clamp(2.1rem,5vw,4.2rem); }
+    h3 { margin:0 0 .55rem; font-family:var(--sans); font-size:1.05rem; }
+    .subtitle { max-width:64ch; margin:0 auto; color:var(--muted); font-family:var(--sans); font-size:clamp(1rem,2vw,1.25rem); }
+    .badges { display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:1.6rem; }
+    .badge { padding:.45rem .8rem; border:1px solid var(--accent); border-radius:999px; background:var(--accent-soft); color:var(--heading); font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }
+    .lede { max-width:var(--measure); margin:2.5rem auto 0; color:var(--text); font-size:clamp(1.18rem,2.2vw,1.55rem); }
+    .publication-note { max-width:var(--measure); margin:3rem auto; padding:1.3rem 1.5rem; background:var(--surface); border:1px solid var(--accent); border-radius:.8rem; }
+    .publication-note strong { color:var(--accent); font-family:var(--sans); }
+    section.content { max-width:var(--measure); margin:0 auto; padding:clamp(3.5rem,7vw,6.5rem) 0; border-bottom:1px solid var(--border); scroll-margin-top:6rem; }
+    section.content p { margin:0 0 1.1rem; }
+    .object-uri { color:var(--muted); font-family:var(--mono); font-size:.72rem; overflow-wrap:anywhere; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; margin:1.5rem 0; }
+    .card { padding:1.15rem; background:linear-gradient(145deg,var(--surface),var(--surface-2)); border:1px solid var(--border); border-radius:.8rem; }
+    .card p { color:var(--muted); font-family:var(--sans); font-size:.94rem; }
+    .ring { border-left:.24rem solid var(--accent); }
+    .flow { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.5rem; align-items:center; margin:2rem 0; }
+    .flow div { position:relative; padding:1rem .6rem; text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:.6rem; font-family:var(--sans); font-size:.78rem; }
+    .flow div:not(:last-child)::after { content:"→"; position:absolute; right:-.65rem; top:50%; transform:translateY(-50%); z-index:2; color:var(--accent); font-weight:800; }
+    table { width:100%; border-collapse:collapse; margin:1.5rem 0; font-family:var(--sans); font-size:.9rem; }
+    th,td { padding:.8rem; vertical-align:top; border:1px solid var(--border); text-align:left; }
+    th { background:var(--accent-soft); color:var(--heading); }
+    td { background:color-mix(in srgb,var(--surface) 88%,transparent); }
+    .redaction { display:grid; gap:.75rem; padding:1.4rem; background:repeating-linear-gradient(135deg,var(--surface),var(--surface) 12px,var(--surface-2) 12px,var(--surface-2) 24px); border:1px dashed var(--accent); border-radius:.8rem; }
+    .redaction strong { color:var(--accent); font-family:var(--mono); text-transform:uppercase; letter-spacing:.1em; }
+    .tree { position:sticky; top:6rem; align-self:start; max-height:calc(100vh - 8rem); overflow:auto; padding:1rem; background:color-mix(in srgb,var(--surface) 94%,transparent); border:1px solid var(--border); border-radius:.9rem; font-family:var(--sans); }
+    .tree .root { color:var(--accent); font-family:var(--mono); font-size:.7rem; overflow-wrap:anywhere; }
+    .tree ol { list-style:none; margin:1rem 0 0; padding:0; display:grid; gap:.4rem; }
+    .tree a { display:block; padding:.5rem .6rem; color:color-mix(in srgb,var(--accent) 55%,var(--muted)); text-decoration:none; border-radius:.4rem; }
+    .tree a:hover,.tree a:focus { color:var(--accent); background:var(--accent-soft); }
+    footer { max-width:var(--measure); margin:4rem auto 0; padding:2rem 0; text-align:center; color:var(--muted); font-family:var(--sans); }
+    @media (max-width: 980px) {
+      .layout { display:block; }
+      .tree { position:relative; top:auto; margin:0 auto 2rem; max-width:var(--measure); }
+      .tree ol { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 720px) {
+      .controls label:nth-child(3) { display:none; }
+      .grid,.flow { grid-template-columns:1fr; }
+      .flow div:not(:last-child)::after { content:"↓"; right:auto; left:50%; top:auto; bottom:-1rem; transform:translateX(-50%); }
+      .tree ol { grid-template-columns:1fr; }
+      h1 { font-size:clamp(3rem,18vw,5.2rem); }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#threat-landscape">Skip to text</a>
+  <div class="cloud left" aria-hidden="true"></div><div class="cloud right" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="../"><img src="../../../assets/detcordon-mark.svg" alt="" /><span><strong>RAGBAZ</strong><small>Security School</small></span></a>
+    <div class="controls" aria-label="Reading settings">
+      <label>Theme<select id="theme"><option value="detcordon-signal-red">Signal Red</option><option value="ragbaz-gruvbox-slate">Gruvbox Slate</option><option value="tufte-darkgray-mokia">Tufte Darkgray</option><option value="arctic-cipher-blue">Arctic Cipher</option><option value="monastic-oxide">Monastic Oxide</option><option value="phosphor-night-ops">Phosphor Night</option></select></label>
+      <label>Font<select id="font"><option value="literary-serif">Literary Serif</option><option value="variable-sans">Variable Sans</option><option value="technical-mono">Technical Mono</option></select></label>
+      <label>Width<input id="measure" type="range" min="58" max="88" step="2" value="72" /></label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <article>
+      <section class="cover">
+        <div>
+          <img src="../../../assets/detcordon-mark.svg" alt="DetCordon containment seal" />
+          <p class="eyebrow">Network-restricted defensive edition</p>
+          <h1>On Digital Robbery</h1>
+          <p class="subtitle">Android wallets, SoftPOS, NFC/EMV, hardware attestation, transaction routing, and privilege boundaries—reframed as defensive architecture rather than operational instruction.</p>
+          <div class="badges"><span class="badge">No PoC</span><span class="badge">No executable fixtures</span><span class="badge">NetBird / Tailscale only</span></div>
+          <p class="lede">The modern Android device can be a consumer wallet, a merchant terminal, and an untrusted compute node at the same time. Effective assurance therefore depends on where each security promise is enforced, what a more privileged layer can observe, and how device evidence is correlated with backend behavior.</p>
+        </div>
+      </section>
+
+      <div class="publication-note"><strong>Publication boundary.</strong> This edition deliberately excludes raw command sequences, exploitation procedures, relay implementation details, bypass recipes, offensive bills of materials, downloadable tooling, and all proof-of-concept mechanics. It preserves only the architectural and defensive reasoning needed to understand the trust model.</div>
+
+      <section class="content" id="threat-landscape">
+        <p class="eyebrow">01 · Threat landscape</p><h2>From dedicated terminals to hostile general-purpose devices</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/threat-landscape</p>
+        <p>Payment acceptance has moved from dedicated hardware toward commercial Android devices that combine radio interfaces, user applications, hardware-backed key services, merchant software, and general-purpose operating-system components. The result is a larger and more fluid attack surface, but also a richer set of defensive signals.</p>
+        <div class="grid">
+          <div class="card"><h3>Legacy assurance</h3><p>Dedicated terminals relied heavily on physical tamper controls, constrained operating environments, and static trust assumptions.</p></div>
+          <div class="card"><h3>Current assurance</h3><p>SoftPOS and mobile wallets add tokenization, hardware-backed attestation, secure elements, hypervisor protections, and continuous backend risk analysis.</p></div>
+          <div class="card"><h3>New exposure</h3><p>Security decisions now cross application, kernel, hypervisor, trusted execution, radio, user-interface, and cloud boundaries.</p></div>
+          <div class="card"><h3>Defensive response</h3><p>No single device signal should stand alone. Boot state, runtime behavior, timing, transaction context, and backend observations must reinforce one another.</p></div>
+        </div>
+      </section>
+
+      <section class="content" id="privilege-rings">
+        <p class="eyebrow">02 · Privilege rings</p><h2>Security promises inherit the authority of the layer below</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/privilege-rings</p>
+        <p>An application can protect its own logic only within the guarantees provided by the kernel, hypervisor, and hardware trust environment. Lower layers can observe or modify what higher layers treat as private.</p>
+        <div class="grid">
+          <div class="card ring"><h3>Hardware trust environment</h3><p>Secure enclaves and trusted execution environments hold sensitive keys, counters, and attestation material outside the main operating system.</p></div>
+          <div class="card ring"><h3>Hypervisor</h3><p>Stage-2 memory controls can constrain a compromised kernel and protect selected code or page-table invariants.</p></div>
+          <div class="card ring"><h3>Kernel</h3><p>The kernel controls drivers, process memory, system calls, and radio plumbing, making runtime integrity essential to application trust.</p></div>
+          <div class="card ring"><h3>Application space</h3><p>Wallets, merchant apps, accessibility services, overlays, and SDK logic remain subject to the authority of the operating system below them.</p></div>
+        </div>
+        <p><strong>Defensive rule:</strong> application obfuscation, anti-debugging, and memory hygiene are useful friction, but they are not substitutes for trustworthy lower-ring enforcement and backend anomaly detection.</p>
+      </section>
+
+      <section class="content" id="payment-paradigms">
+        <p class="eyebrow">03 · Payment paradigms</p><h2>Phone as wallet and phone as terminal are different trust problems</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/payment-paradigms</p>
+        <table>
+          <thead><tr><th>Dimension</th><th>Consumer wallet</th><th>SoftPOS merchant terminal</th></tr></thead>
+          <tbody>
+            <tr><td>Primary role</td><td>Represents a payer using tokenized credentials.</td><td>Accepts payment on commercial off-the-shelf hardware.</td></tr>
+            <tr><td>Main trust boundary</td><td>Credential provisioning, wallet integrity, and transaction authorization.</td><td>Device integrity, secure merchant input, reader behavior, and attestation.</td></tr>
+            <tr><td>Defensive emphasis</td><td>Short-lived credentials, cryptographic transaction state, and account risk signals.</td><td>Runtime integrity, protected input, transaction timing, and behavioral telemetry.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="content" id="transaction-routing">
+        <p class="eyebrow">04 · Transaction routing</p><h2>A payment crosses technical and institutional boundaries</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/transaction-routing</p>
+        <div class="flow" aria-label="Simplified transaction flow"><div>Card or wallet</div><div>SoftPOS device</div><div>Acquirer gateway</div><div>Payment scheme</div><div>Issuer systems</div></div>
+        <p>A local compromise can affect what is displayed, collected, signed, timed, or forwarded before the transaction reaches an issuer. Defensive interpretation should correlate device evidence with server-side authorization context instead of treating the handset as a self-authenticating witness.</p>
+      </section>
+
+      <section class="content" id="attestation">
+        <p class="eyebrow">05 · Attestation</p><h2>Boot integrity is evidence, not perpetual runtime proof</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/attestation</p>
+        <p>Attestation can prove that a recognized key signed a statement about measured device state. It does not automatically prove that the workload remains uncompromised after measurement, nor that the measured environment and the active workload are contextually identical.</p>
+        <div class="grid">
+          <div class="card"><h3>Measurement gap</h3><p>A boot-time result may remain valid even when later runtime behavior diverges. Continuous signals are needed to close that temporal gap.</p></div>
+          <div class="card"><h3>Context binding</h3><p>Backend verification should bind attestation to session, timing, device behavior, transaction state, and environmental evidence.</p></div>
+        </div>
+      </section>
+
+      <section class="content" id="defensive-matrix">
+        <p class="eyebrow">06 · Defensive matrix</p><h2>Layer controls so that one weak signal cannot decide the transaction</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/defensive-matrix</p>
+        <table>
+          <thead><tr><th>Risk surface</th><th>Defensive response</th></tr></thead>
+          <tbody>
+            <tr><td>Runtime state diverges from boot measurement</td><td>Combine measured boot with hypervisor enforcement, memory-safety features, continuous telemetry, and server-side behavioral analysis.</td></tr>
+            <tr><td>Attestation lacks workload context</td><td>Bind claims to fresh nonces, session identity, transaction timing, device behavior, and risk-scoring evidence.</td></tr>
+            <tr><td>Merchant input is exposed to UI services</td><td>Use secure-input controls, randomized layouts where appropriate, strict accessibility policy, and transaction-side anomaly checks.</td></tr>
+            <tr><td>Local device becomes an unreliable witness</td><td>Correlate independent issuer, acquirer, scheme, network, and device signals; fail closed when evidence conflicts.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="content" id="removed-material">
+        <p class="eyebrow">07 · Deliberately absent</p><h2>The operational path is not part of this release</h2>
+        <p class="object-uri">crypto://ragbaz-security/on-digital-robbery/section/removed-material</p>
+        <div class="redaction"><strong>Not published</strong><span>Proof-of-concept mechanics</span><span>Raw payment-command sequences and sensitive traces</span><span>Exploit or relay implementation instructions</span><span>Offensive tooling, fixtures, scripts, and downloadable laboratories</span><span>Implementation-depth material of any kind</span></div>
+      </section>
+
+      <footer>RAGBAZ Labs · Security School · Defensive architecture edition<br /><a href="mailto:ragbaz@proton.me">ragbaz@proton.me</a></footer>
+    </article>
+
+    <aside class="tree" aria-label="Document object tree">
+      <p class="eyebrow">Object tree</p><p class="root">crypto://ragbaz-security/on-digital-robbery/</p>
+      <ol>
+        <li><a href="#threat-landscape">01 · Threat landscape</a></li>
+        <li><a href="#privilege-rings">02 · Privilege rings</a></li>
+        <li><a href="#payment-paradigms">03 · Payment paradigms</a></li>
+        <li><a href="#transaction-routing">04 · Transaction routing</a></li>
+        <li><a href="#attestation">05 · Attestation</a></li>
+        <li><a href="#defensive-matrix">06 · Defensive matrix</a></li>
+        <li><a href="#removed-material">07 · Not published</a></li>
+      </ol>
+    </aside>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const theme = document.querySelector('#theme');
+    const font = document.querySelector('#font');
+    const measure = document.querySelector('#measure');
+    const read = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
+    const write = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
+    theme.value = read('ragbaz.security.theme', 'detcordon-signal-red');
+    font.value = read('ragbaz.security.font', 'literary-serif');
+    measure.value = read('ragbaz.security.readerWidth', '72');
+    root.dataset.theme = theme.value;
+    root.dataset.font = font.value;
+    root.style.setProperty('--measure', `${measure.value}ch`);
+    theme.addEventListener('change', () => { root.dataset.theme = theme.value; write('ragbaz.security.theme', theme.value); });
+    font.addEventListener('change', () => { root.dataset.font = font.value; write('ragbaz.security.font', font.value); });
+    measure.addEventListener('input', () => { root.style.setProperty('--measure', `${measure.value}ch`); write('ragbaz.security.readerWidth', measure.value); });
+  </script>
+</body>
+</html>

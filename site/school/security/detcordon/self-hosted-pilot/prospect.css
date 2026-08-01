@@ -1,0 +1,77 @@
+html { scroll-behavior: smooth; }
+body.prospect {
+  margin: 0;
+  color: #f5efe6;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(34, 86, 113, .36), transparent 42rem),
+    linear-gradient(180deg, #06131b 0%, #03080d 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+body.prospect * { box-sizing: border-box; }
+body.prospect a { color: inherit; }
+.prospect-shell { width: min(1380px, calc(100% - 32px)); margin: 0 auto; }
+.prospect-main { padding-bottom: 80px; }
+.prospect-section { scroll-margin-top: 88px; padding: clamp(64px, 9vw, 120px) 0; border-bottom: 1px solid rgba(228,87,61,.14); }
+.prospect-section:first-child { padding-top: clamp(56px, 8vw, 96px); }
+.prospect-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); gap: clamp(28px, 6vw, 88px); align-items: center; min-height: calc(100vh - 70px); }
+.prospect-eyebrow { margin: 0 0 16px; color: #e4573d; font: 700 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; }
+.prospect h1 { max-width: 14ch; margin: 0; font-size: clamp(50px, 8vw, 112px); line-height: .92; letter-spacing: -.055em; }
+.prospect h2 { max-width: 17ch; margin: 0; font-size: clamp(34px, 5vw, 68px); line-height: 1; letter-spacing: -.04em; }
+.prospect h3 { margin: 0; }
+.prospect-lead { max-width: 66ch; margin: 26px 0 0; color: #a9bac2; font-size: clamp(17px, 2vw, 23px); line-height: 1.65; }
+.prospect-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.prospect-button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid rgba(228,87,61,.42); border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 13px; }
+.prospect-button.primary { color: #071018; border-color: #e4573d; background: #e4573d; }
+.prospect-button:hover, .prospect-button:focus-visible { outline: 2px solid rgba(228,87,61,.45); outline-offset: 3px; }
+.price-card { position: relative; overflow: hidden; padding: clamp(24px, 4vw, 42px); border: 1px solid rgba(228,87,61,.35); border-radius: 24px; background: linear-gradient(145deg, rgba(228,87,61,.09), rgba(7,24,34,.92)); box-shadow: 0 30px 120px rgba(0,0,0,.38); }
+.price-card::before { content: ""; position: absolute; inset: auto -20% -45% 20%; height: 260px; background: radial-gradient(circle, rgba(228,87,61,.24), transparent 68%); pointer-events: none; }
+.price-card > * { position: relative; }
+.price-card .price { display: block; margin: 12px 0 6px; color: #f5efe6; font-size: clamp(52px, 8vw, 92px); line-height: 1; letter-spacing: -.05em; }
+.price-card .term { color: #e4573d; font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; }
+.price-card ul { display: grid; gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; color: #b4c3ca; }
+.price-card li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; line-height: 1.5; }
+.price-card li::before { content: "◆"; color: #e4573d; font-size: 9px; margin-top: 5px; }
+.section-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .65fr); gap: 24px; align-items: end; margin-bottom: clamp(28px, 5vw, 54px); }
+.section-heading p:last-child { margin: 0; color: #8fa4ae; line-height: 1.65; }
+.prospect-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.prospect-card { min-height: 220px; padding: 22px; border: 1px solid rgba(228,87,61,.18); border-radius: 16px; background: rgba(7,20,29,.74); }
+.prospect-card .index { color: #e4573d; font: 700 10px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; }
+.prospect-card h3 { margin-top: 32px; font-size: 20px; }
+.prospect-card p { color: #91a7b1; line-height: 1.6; }
+.pilot-band { display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden; border: 1px solid rgba(228,87,61,.2); border-radius: 18px; background: rgba(7,20,29,.75); }
+.pilot-band div { min-height: 140px; padding: 22px; border-right: 1px solid rgba(228,87,61,.15); }
+.pilot-band div:last-child { border-right: 0; }
+.pilot-band span { display: block; color: #8fa4ae; font: 700 10px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; }
+.pilot-band strong { display: block; margin-top: 18px; font-size: clamp(20px, 3vw, 32px); }
+.scope-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+.scope-panel { padding: 24px; border: 1px solid rgba(228,87,61,.2); border-radius: 16px; background: rgba(7,20,29,.72); }
+.scope-panel h3 { font-size: 18px; }
+.scope-panel ul { display: grid; gap: 10px; margin: 18px 0 0; padding-left: 20px; color: #9db0b9; line-height: 1.55; }
+.scope-panel.excluded { border-color: rgba(145,167,177,.2); }
+.progress-intro { max-width: 74ch; color: #9db0b9; line-height: 1.7; margin-bottom: 26px; }
+.git-preface { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; margin-bottom: 22px; }
+.git-preface p { max-width: 68ch; color: #91a7b1; line-height: 1.6; }
+.footer-note { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; padding: 32px 0 0; color: #788e98; font-size: 12px; }
+.footer-note a { color: #e4573d; }
+@media (max-width: 1050px) {
+  .prospect-hero, .section-heading { grid-template-columns: 1fr; }
+  .prospect-hero { min-height: auto; padding-block: 46px; }
+  .price-card { max-width: 700px; }
+  .prospect-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pilot-band { grid-template-columns: repeat(2, 1fr); }
+  .pilot-band div:nth-child(2) { border-right: 0; }
+  .pilot-band div:nth-child(-n+2) { border-bottom: 1px solid rgba(228,87,61,.15); }
+}
+@media (max-width: 700px) {
+  .prospect-shell { width: min(100% - 22px, 1380px); }
+  .prospect-section { padding-block: 58px; }
+  .prospect-grid, .scope-grid, .pilot-band { grid-template-columns: 1fr; }
+  .prospect-card { min-height: 0; }
+  .pilot-band div { min-height: 112px; border-right: 0; border-bottom: 1px solid rgba(228,87,61,.15); }
+  .pilot-band div:last-child { border-bottom: 0; }
+  .git-preface { grid-template-columns: 1fr; }
+}
+@media (min-width: 1600px) {
+  .prospect-shell { width: min(1500px, calc(100% - 72px)); }
+  .prospect-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

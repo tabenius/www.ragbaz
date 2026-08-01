@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ragbaz.cc/school/security/manifest.schema.json",
+  "title": "RAGBAZ Security School Private-Network Manifest",
+  "type": "object",
+  "required": ["version", "library", "themes", "collections"],
+  "properties": {
+    "version": { "const": 1 },
+    "library": {
+      "type": "object",
+      "required": ["id", "title", "baseUri", "publicationMode", "securityPolicy"],
+      "properties": {
+        "id": { "const": "ragbaz-security-school" },
+        "title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string" },
+        "baseUri": { "const": "crypto://ragbaz-security" },
+        "publicationMode": { "const": "private-network-only" },
+        "securityPolicy": {
+          "type": "object",
+          "required": ["networkAccess", "denyByDefault", "encryptedObjectsPublished", "unlockInterfaceEnabled", "clientKeyMaterialAccepted", "persistentPlaintextStorage"],
+          "properties": {
+            "networkAccess": { "const": "netbird-or-tailscale-ip-allowlist" },
+            "denyByDefault": { "const": true },
+            "encryptedObjectsPublished": { "const": false },
+            "unlockInterfaceEnabled": { "const": false },
+            "clientKeyMaterialAccepted": { "const": false },
+            "persistentPlaintextStorage": { "const": false }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "label": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "collections": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/collection" }
+    }
+  },
+  "$defs": {
+    "child": {
+      "type": "object",
+      "required": ["id", "title", "classification"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "classification": { "const": "defensive" }
+      },
+      "additionalProperties": false
+    },
+    "collection": {
+      "type": "object",
+      "required": ["id", "title", "subtitle", "summary", "status", "classification", "href", "uri", "children"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string" },
+        "summary": { "type": "string" },
+        "status": { "const": "published" },
+        "classification": { "const": "network-restricted-defensive" },
+        "href": { "type": "string", "pattern": "^/" },
+        "uri": { "type": "string", "pattern": "^crypto://ragbaz-security/" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/child" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
