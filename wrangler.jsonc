@@ -17,6 +17,8 @@
     "run_worker_first": [
       "/school/security",
       "/school/security/*",
+      "/school/cellular",
+      "/school/cellular/*",
     ],
   },
   "vars": {
