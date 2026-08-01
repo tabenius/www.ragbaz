@@ -14,6 +14,12 @@ const manifestPath = path.join(repoRoot, "site", "school", "security", "manifest
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 const wrangler = readFileSync(path.join(repoRoot, "wrangler.jsonc"), "utf8");
 const worker = readFileSync(path.join(repoRoot, "worker.mjs"), "utf8");
+const packageJson = readFileSync(path.join(repoRoot, "package.json"), "utf8");
+const syncPublic = readFileSync(path.join(repoRoot, "scripts", "sync-public.mjs"), "utf8");
+const securityIndex = readFileSync(path.join(repoRoot, "site", "school", "security", "index.html"), "utf8");
+const interactiveCss = readFileSync(path.join(repoRoot, "site", "school", "security", "interactive.css"), "utf8");
+const widgetEntry = readFileSync(path.join(repoRoot, "site", "school", "security", "react-widgets.entry.js"), "utf8");
+const pilotProspect = readFileSync(path.join(repoRoot, "site", "school", "security", "detcordon", "self-hosted-pilot", "index.html"), "utf8");
 const detcordonProspect = readFileSync(path.join(repoRoot, "site", "prospects", "detcordon.html"), "utf8");
 const errors = [];
 
@@ -72,6 +78,9 @@ for (const marker of [
 for (const protectedPath of [
   "/school/security",
   "/school/security/manifest.json",
+  "/school/security/react-widgets.js",
+  "/school/security/detcordon/self-hosted-pilot",
+  "/school/security/detcordon/self-hosted-pilot/prospect.css",
   "/school/cellular",
   "/school/cellular/",
   "/prospects/detcordon",
@@ -86,13 +95,15 @@ for (const protectedPath of [
 assert(!isSecuritySchoolPath("/prospects/mailroute"), "unrelated prospect routes must remain outside this gate");
 
 const emptyDecision = securitySchoolAccessDecision(
-  new Request("https://ragbaz.cc/prospects/detcordon", { headers: { "cf-connecting-ip": "100.100.10.10" } }),
+  new Request("https://ragbaz.cc/school/security/detcordon/self-hosted-pilot", { headers: { "cf-connecting-ip": "100.100.10.10" } }),
   {},
 );
 assert(emptyDecision.protected && !emptyDecision.allowed, "missing IP configuration must fail closed");
 
 for (const protectedUrl of [
   "https://ragbaz.cc/school/security/",
+  "https://ragbaz.cc/school/security/react-widgets.js",
+  "https://ragbaz.cc/school/security/detcordon/self-hosted-pilot",
   "https://ragbaz.cc/school/cellular/",
   "https://ragbaz.cc/prospects/detcordon",
   "https://ragbaz.cc/prospects/detcordon.html",
@@ -112,7 +123,7 @@ const netbirdDecision = securitySchoolAccessDecision(
 assert(netbirdDecision.allowed, "an exact configured NetBird IP must be allowed");
 
 const spoofedDecision = securitySchoolAccessDecision(
-  new Request("https://ragbaz.cc/prospects/detcordon", { headers: { "x-forwarded-for": "100.100.10.10" } }),
+  new Request("https://ragbaz.cc/school/security/detcordon/self-hosted-pilot", { headers: { "x-forwarded-for": "100.100.10.10" } }),
   { TAILSCALE_ALLOWED_IPS: "100.100.10.10" },
 );
 assert(!spoofedDecision.allowed, "browser-supplied forwarding headers must not grant access");
@@ -131,6 +142,42 @@ for (const requiredProspectText of [
   assert(detcordonProspect.includes(requiredProspectText), `full DetCordon prospect content is missing: ${requiredProspectText}`);
 }
 assert(!detcordonProspect.includes("public-safe overview"), "DetCordon prospect must not be a redacted public-safe edition");
+
+for (const requiredIndexText of [
+  'data-react-widget="top-navigation"',
+  'data-react-widget="library-explorer"',
+  'data-react-widget="publication-states"',
+  "/school/security/detcordon/self-hosted-pilot",
+  "./react-widgets.js",
+]) {
+  assert(securityIndex.includes(requiredIndexText), `Security School interactive shell is missing: ${requiredIndexText}`);
+}
+
+for (const requiredPilotText of [
+  "$24,000",
+  "$12,000",
+  'data-react-widget="top-navigation"',
+  'data-react-widget="use-case-explorer"',
+  'data-react-widget="value-simulator"',
+  'data-react-widget="progress-timeline"',
+  'data-react-widget="git-log-tree"',
+  "/school/security/react-widgets.js",
+  "proposed terms are non-contractual",
+]) {
+  assert(pilotProspect.includes(requiredPilotText), `self-hosted pilot prospect is missing: ${requiredPilotText}`);
+}
+
+const browserSurface = `${securityIndex}\n${pilotProspect}\n${widgetEntry}`.toLowerCase();
+for (const remoteRuntime of ["unpkg.com", "cdn.jsdelivr.net", "esm.sh", "cdnjs.cloudflare.com", "react.development.js"]) {
+  assert(!browserSurface.includes(remoteRuntime), `security publication must not load a remote JavaScript runtime: ${remoteRuntime}`);
+}
+assert(widgetEntry.includes('from "react"'), "React widget entry must use the locally installed React package");
+assert(widgetEntry.includes('from "react-dom/client"'), "React widget entry must use the locally installed React DOM package");
+assert(interactiveCss.includes("--rx-topbar-height: 70px"), "interactive top navigation must use a comfortable 70px desktop bar");
+assert(interactiveCss.includes("@media (max-width: 760px)"), "interactive publication styles must include a mobile breakpoint");
+assert(interactiveCss.includes("@media (min-width: 1600px)"), "interactive publication styles must include a large-screen breakpoint");
+assert(packageJson.indexOf("build-security-react-widgets.mjs") < packageJson.indexOf("check-security-library.mjs"), "React widget bundle must be built before security publication validation");
+assert(syncPublic.includes('entry.name.endsWith(".entry.js")'), "sync-public must withhold unbundled React entry source files");
 
 assert(wrangler.includes('"run_worker_first"'), "wrangler assets must invoke the Worker before protected assets");
 for (const routePattern of [
@@ -156,4 +203,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`security-library: validated ${collectionIds.size} private-network collection(s), ${objectUris.size} unique URI(s), full DetCordon prospect retention, worker-first routing, and fail-closed VPN access`);
+console.log(`security-library: validated ${collectionIds.size} private-network collection(s), ${objectUris.size} unique URI(s), responsive React publication widgets, self-hosted pilot prospect, full DetCordon prospect retention, worker-first routing, and fail-closed VPN access`);
