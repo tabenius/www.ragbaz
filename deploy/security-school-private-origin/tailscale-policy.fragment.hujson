@@ -1,0 +1,22 @@
+// Merge these sections into the existing tailnet policy. Do not replace
+// unrelated grants, groups, tags, posture rules, or tests.
+//
+// Set the three placeholders to host-local values before applying this file.
+{
+  "hosts": {
+    "ragbaz-reader-mo": "${RAGBAZ_READER_MO_IP}",
+    "ragbaz-reader-quux1tab": "${RAGBAZ_READER_QUUX1TAB_IP}",
+    "ragbaz-origin-konsonans": "${RAGBAZ_ORIGIN_KONSONANS_IP}",
+  },
+
+  "grants": [
+    {
+      "src": [
+        "ragbaz-reader-mo",
+        "ragbaz-reader-quux1tab",
+      ],
+      "dst": ["ragbaz-origin-konsonans"],
+      "ip": ["tcp:443"],
+    },
+  ],
+}
