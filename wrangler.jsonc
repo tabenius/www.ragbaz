@@ -22,6 +22,9 @@
       "/prospects/detcordon",
       "/prospects/detcordon.html",
       "/prospects/detcordon/*",
+      "/doc/products/detcordon",
+      "/doc/products/detcordon.html",
+      "/doc/products/detcordon/*",
     ],
   },
   "vars": {
