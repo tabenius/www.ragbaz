@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ragbaz.cc/school/security/manifest.schema.json",
-  "title": "RAGBAZ Security School Public Manifest",
+  "title": "RAGBAZ Security School Private-Network Manifest",
   "type": "object",
   "required": ["version", "library", "themes", "collections"],
   "properties": {
@@ -14,11 +14,13 @@
         "title": { "type": "string", "minLength": 1 },
         "subtitle": { "type": "string" },
         "baseUri": { "const": "crypto://ragbaz-security" },
-        "publicationMode": { "const": "public-only" },
+        "publicationMode": { "const": "private-network-only" },
         "securityPolicy": {
           "type": "object",
-          "required": ["encryptedObjectsPublished", "unlockInterfaceEnabled", "clientKeyMaterialAccepted", "persistentPlaintextStorage"],
+          "required": ["networkAccess", "denyByDefault", "encryptedObjectsPublished", "unlockInterfaceEnabled", "clientKeyMaterialAccepted", "persistentPlaintextStorage"],
           "properties": {
+            "networkAccess": { "const": "netbird-or-tailscale-ip-allowlist" },
+            "denyByDefault": { "const": true },
             "encryptedObjectsPublished": { "const": false },
             "unlockInterfaceEnabled": { "const": false },
             "clientKeyMaterialAccepted": { "const": false },
@@ -55,7 +57,7 @@
       "properties": {
         "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
         "title": { "type": "string", "minLength": 1 },
-        "classification": { "const": "public" }
+        "classification": { "const": "defensive" }
       },
       "additionalProperties": false
     },
@@ -68,7 +70,7 @@
         "subtitle": { "type": "string" },
         "summary": { "type": "string" },
         "status": { "const": "published" },
-        "classification": { "const": "public" },
+        "classification": { "const": "network-restricted-defensive" },
         "href": { "type": "string", "pattern": "^/" },
         "uri": { "type": "string", "pattern": "^crypto://ragbaz-security/" },
         "children": {
