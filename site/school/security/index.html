@@ -9,7 +9,9 @@
   <meta name="description" content="A private-network, local-first, object-addressable reader for RAGBAZ defensive security research and school material." />
   <link rel="icon" href="../../assets/detcordon-mark.svg" />
   <link rel="stylesheet" href="./reader.css" />
+  <link rel="stylesheet" href="./interactive.css" />
   <script src="../../assets/local-mode.js" defer></script>
+  <script src="./react-widgets.js" defer></script>
   <script src="./reader.js" type="module"></script>
 </head>
 <body>
@@ -20,9 +22,15 @@
       <img src="../../assets/detcordon-mark.svg" alt="" width="42" height="42" />
       <span><strong>RAGBAZ</strong><small>Security School</small></span>
     </a>
-    <div class="topbar-actions">
-      <button class="icon-button" id="tree-toggle" type="button" aria-expanded="false" aria-controls="object-tree"><span aria-hidden="true">☰</span><span class="sr-only">Open object tree</span></button>
-      <button class="icon-button" id="settings-toggle" type="button" aria-expanded="false" aria-controls="reader-settings"><span aria-hidden="true">◐</span><span class="sr-only">Open reader settings</span></button>
+    <div
+      data-react-widget="top-navigation"
+      data-label="Security School navigation"
+      data-primary='[{"label":"Library","href":"#library-main"},{"label":"Collections","href":"#collections"},{"label":"Publication model","href":"#publication-model"},{"label":"Pilot prospect","href":"/school/security/detcordon/self-hosted-pilot"}]'
+      data-menu='[{"label":"Object tree","action":"tree"},{"label":"Reader settings","action":"settings"},{"label":"Network policy","action":"policy"},{"label":"Cellular School","href":"/school/cellular/"},{"label":"Full DetCordon prospect","href":"/prospects/detcordon"},{"label":"Technical dossier","href":"/doc/products/detcordon"},{"label":"Contact RAGBAZ","href":"mailto:ragbaz@proton.me"}]'
+    ></div>
+    <div class="topbar-actions topbar-actions--bridge" aria-hidden="true">
+      <button class="icon-button" id="tree-toggle" type="button" tabindex="-1" aria-expanded="false" aria-controls="object-tree"><span aria-hidden="true">☰</span><span class="sr-only">Open object tree</span></button>
+      <button class="icon-button" id="settings-toggle" type="button" tabindex="-1" aria-expanded="false" aria-controls="reader-settings"><span aria-hidden="true">◐</span><span class="sr-only">Open reader settings</span></button>
     </div>
   </header>
 
@@ -34,10 +42,11 @@
       <div class="hero-emblem"><img src="../../assets/detcordon-mark.svg" alt="DetCordon signal-red emblem" /></div>
       <p class="eyebrow">PRIVATE SECURITY LIBRARY · NETBIRD / TAILSCALE</p>
       <h1 id="hero-title">Security knowledge should reveal its boundaries before it reveals its depth.</h1>
-      <p class="hero-copy">Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This first release contains defensive material only and is reachable solely from explicitly allowlisted NetBird or Tailscale client addresses.</p>
+      <p class="hero-copy">Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This release contains defensive material only and is reachable solely from explicitly allowlisted NetBird or Tailscale client or gateway addresses.</p>
       <div class="hero-actions">
         <a class="primary-action" href="#collections">Explore collections</a>
         <button class="secondary-action" id="show-policy" type="button">Inspect network policy</button>
+        <a class="secondary-action" href="/school/security/detcordon/self-hosted-pilot">Open pilot prospect</a>
       </div>
       <dl class="hero-stats" aria-label="Library status">
         <div><dt>Access boundary</dt><dd>VPN IP allowlist</dd></div>
@@ -55,6 +64,14 @@
       <button class="close-note" type="button" aria-label="Close network note">×</button>
     </section>
 
+    <section class="section-block" aria-labelledby="explorer-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">REACT COLLECTION EXPLORER</p><h2 id="explorer-title">Find the defensive object family you need.</h2></div>
+        <p>The interactive search reads the same private-network manifest as the static cards and object tree. It adds discovery without changing classifications, unlocking content, or accepting client key material.</p>
+      </div>
+      <div data-react-widget="library-explorer"></div>
+    </section>
+
     <section class="section-block" id="collections" aria-labelledby="collections-title">
       <div class="section-heading">
         <div><p class="eyebrow">DEFENSIVE DOCUMENT FAMILIES</p><h2 id="collections-title">The RAGBAZ Security School library</h2></div>
@@ -63,15 +80,16 @@
       <div class="collection-grid" id="collection-grid" aria-live="polite"><div class="loading-card">Loading private-network object manifest…</div></div>
     </section>
 
-    <section class="section-block" aria-labelledby="model-title">
+    <section class="section-block" id="publication-model" aria-labelledby="model-title">
       <div class="section-heading">
         <div><p class="eyebrow">PUBLICATION MODEL</p><h2 id="model-title">One library, independently addressable objects</h2></div>
         <p>The current edition uses stable <code>crypto://ragbaz-security/…</code> identifiers while publishing no PoC, implementation-depth payload, ciphertext, or key material.</p>
       </div>
+      <div data-react-widget="publication-states"></div>
       <div class="collection-grid">
         <article class="collection-card"><div class="card-top"><span class="status-pill">network restricted</span></div><h3>Course and article objects</h3><p class="card-summary">Each document family can later divide into sections, lessons, figures, references, traces, and downloadable assets without changing the library identity model.</p></article>
         <article class="collection-card"><div class="card-top"><span class="status-pill">local-first</span></div><h3>Reader preferences</h3><p class="card-summary">Theme, font, reading width, reduced motion, and navigation fold state remain on the reader device. No content key is requested or stored.</p></article>
-        <article class="collection-card"><div class="card-top"><span class="status-pill">source-driven</span></div><h3>Single manifest</h3><p class="card-summary">The visible cards and right-edge object tree share one manifest, reducing drift between publication metadata and navigation.</p></article>
+        <article class="collection-card"><div class="card-top"><span class="status-pill">source-driven</span></div><h3>Single manifest</h3><p class="card-summary">The visible cards, interactive explorer, and right-edge object tree share one manifest, reducing drift between publication metadata and navigation.</p></article>
       </div>
     </section>
   </main>
@@ -100,6 +118,6 @@
     <p>Private-network defensive edition · no PoC published</p>
   </footer>
 
-  <noscript><div class="noscript">This source-driven reader needs JavaScript to load its local manifest and render the object tree.</div></noscript>
+  <noscript><div class="noscript">The source-driven reader needs JavaScript to load its local manifest and render the object tree. Static policy and publication-model text remains available.</div></noscript>
 </body>
 </html>
