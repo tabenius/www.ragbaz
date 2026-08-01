@@ -1,0 +1,23 @@
+services:
+  security-school:
+    build:
+      context: ../..
+      dockerfile: deploy/security-school-private-origin/Dockerfile
+    container_name: ragbaz-security-school
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8788:8788"
+    read_only: true
+    tmpfs:
+      - /config:size=16m,mode=0700
+      - /data:size=16m,mode=0700
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8788/school/security/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
