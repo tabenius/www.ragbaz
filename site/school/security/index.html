@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <title>RAGBAZ Security School</title>
-  <meta name="description" content="A public, local-first, object-addressable reader for RAGBAZ security research and school material." />
+  <meta name="description" content="A private-network, local-first, object-addressable reader for RAGBAZ defensive security research and school material." />
   <link rel="icon" href="../../assets/detcordon-mark.svg" />
   <link rel="stylesheet" href="./reader.css" />
   <script src="../../assets/local-mode.js" defer></script>
@@ -17,21 +18,11 @@
   <header class="topbar">
     <a class="brand" href="/" aria-label="RAGBAZ home">
       <img src="../../assets/detcordon-mark.svg" alt="" width="42" height="42" />
-      <span>
-        <strong>RAGBAZ</strong>
-        <small>Security School</small>
-      </span>
+      <span><strong>RAGBAZ</strong><small>Security School</small></span>
     </a>
-
     <div class="topbar-actions">
-      <button class="icon-button" id="tree-toggle" type="button" aria-expanded="false" aria-controls="object-tree">
-        <span aria-hidden="true">☰</span>
-        <span class="sr-only">Open object tree</span>
-      </button>
-      <button class="icon-button" id="settings-toggle" type="button" aria-expanded="false" aria-controls="reader-settings">
-        <span aria-hidden="true">◐</span>
-        <span class="sr-only">Open reader settings</span>
-      </button>
+      <button class="icon-button" id="tree-toggle" type="button" aria-expanded="false" aria-controls="object-tree"><span aria-hidden="true">☰</span><span class="sr-only">Open object tree</span></button>
+      <button class="icon-button" id="settings-toggle" type="button" aria-expanded="false" aria-controls="reader-settings"><span aria-hidden="true">◐</span><span class="sr-only">Open reader settings</span></button>
     </div>
   </header>
 
@@ -40,123 +31,63 @@
 
   <main id="library-main">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-emblem">
-        <img src="../../assets/detcordon-mark.svg" alt="DetCordon signal-red emblem" />
-      </div>
-      <p class="eyebrow">PUBLIC SECURITY LIBRARY · OBJECT-ADDRESSABLE</p>
+      <div class="hero-emblem"><img src="../../assets/detcordon-mark.svg" alt="DetCordon signal-red emblem" /></div>
+      <p class="eyebrow">PRIVATE SECURITY LIBRARY · NETBIRD / TAILSCALE</p>
       <h1 id="hero-title">Security knowledge should reveal its boundaries before it reveals its depth.</h1>
-      <p class="hero-copy">
-        Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This first release contains public defensive material only: Cellular School, a public edition of <em>On Digital Robbery</em>, and the DetCordon architectural prospectus.
-      </p>
+      <p class="hero-copy">Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This first release contains defensive material only and is reachable solely from explicitly allowlisted NetBird or Tailscale client addresses.</p>
       <div class="hero-actions">
-        <a class="primary-action" href="#collections">Explore public collections</a>
-        <button class="secondary-action" id="show-policy" type="button">Inspect publication policy</button>
+        <a class="primary-action" href="#collections">Explore collections</a>
+        <button class="secondary-action" id="show-policy" type="button">Inspect network policy</button>
       </div>
       <dl class="hero-stats" aria-label="Library status">
-        <div><dt>Published collections</dt><dd>3</dd></div>
-        <div><dt>Encrypted objects</dt><dd>None in this release</dd></div>
+        <div><dt>Access boundary</dt><dd>VPN IP allowlist</dd></div>
+        <div><dt>PoC objects</dt><dd>None in this release</dd></div>
         <div><dt>Client key handling</dt><dd>Disabled</dd></div>
       </dl>
     </section>
 
     <section class="reader-note" id="policy-note" hidden>
       <div>
-        <p class="eyebrow">CURRENT PUBLICATION POSTURE</p>
-        <h2>Public objects only.</h2>
-        <p>The current site does not publish encrypted objects, accept decryption keys, expose an unlock interface, or persist sensitive material. Theme, typography, reading width, reduced effects, and tree fold state are the only local preferences.</p>
+        <p class="eyebrow">CURRENT NETWORK POSTURE</p>
+        <h2>Deny by default.</h2>
+        <p>The Cloudflare worker returns a non-cacheable 404 unless the trusted <code>CF-Connecting-IP</code> exactly matches a configured NetBird, Tailscale, or VPN gateway address. The site does not accept forwarded client-IP headers from browsers, publish encrypted objects, request private keys, or expose an unlock interface.</p>
       </div>
-      <button class="close-note" type="button" aria-label="Close publication note">×</button>
+      <button class="close-note" type="button" aria-label="Close network note">×</button>
     </section>
 
     <section class="section-block" id="collections" aria-labelledby="collections-title">
       <div class="section-heading">
-        <div>
-          <p class="eyebrow">PUBLISHED DOCUMENT FAMILIES</p>
-          <h2 id="collections-title">The RAGBAZ Security School library</h2>
-        </div>
-        <p>Cards and the edge tree are generated from <code>manifest.json</code>, so titles, links, classifications, and object identities stay aligned.</p>
+        <div><p class="eyebrow">DEFENSIVE DOCUMENT FAMILIES</p><h2 id="collections-title">The RAGBAZ Security School library</h2></div>
+        <p>Cards and the edge tree are generated from <code>manifest.json</code>, keeping titles, links, classifications, and object identities aligned.</p>
       </div>
-      <div class="collection-grid" id="collection-grid" aria-live="polite">
-        <div class="loading-card">Loading public object manifest…</div>
-      </div>
+      <div class="collection-grid" id="collection-grid" aria-live="polite"><div class="loading-card">Loading private-network object manifest…</div></div>
     </section>
 
     <section class="section-block" aria-labelledby="model-title">
       <div class="section-heading">
-        <div>
-          <p class="eyebrow">PUBLICATION MODEL</p>
-          <h2 id="model-title">One library, independently addressable objects</h2>
-        </div>
-        <p>The public release already uses stable <code>crypto://ragbaz-security/…</code> identifiers even though every published object is currently open.</p>
+        <div><p class="eyebrow">PUBLICATION MODEL</p><h2 id="model-title">One library, independently addressable objects</h2></div>
+        <p>The current edition uses stable <code>crypto://ragbaz-security/…</code> identifiers while publishing no PoC, implementation-depth payload, ciphertext, or key material.</p>
       </div>
       <div class="collection-grid">
-        <article class="collection-card">
-          <div class="card-top"><span class="status-pill">public</span></div>
-          <h3>Course and article objects</h3>
-          <p class="card-summary">Each document family can be divided into sections, lessons, figures, references, and downloadable assets without changing the outward URL structure.</p>
-        </article>
-        <article class="collection-card">
-          <div class="card-top"><span class="status-pill">local-first</span></div>
-          <h3>Reader preferences</h3>
-          <p class="card-summary">Theme, font, reading width, reduced motion, and navigation fold state stay on the reader’s device. No content key is requested or stored.</p>
-        </article>
-        <article class="collection-card">
-          <div class="card-top"><span class="status-pill">source-driven</span></div>
-          <h3>Single manifest</h3>
-          <p class="card-summary">The visible cards and right-edge object tree use the same manifest, reducing drift between publication metadata and navigation.</p>
-        </article>
+        <article class="collection-card"><div class="card-top"><span class="status-pill">network restricted</span></div><h3>Course and article objects</h3><p class="card-summary">Each document family can later divide into sections, lessons, figures, references, traces, and downloadable assets without changing the library identity model.</p></article>
+        <article class="collection-card"><div class="card-top"><span class="status-pill">local-first</span></div><h3>Reader preferences</h3><p class="card-summary">Theme, font, reading width, reduced motion, and navigation fold state remain on the reader device. No content key is requested or stored.</p></article>
+        <article class="collection-card"><div class="card-top"><span class="status-pill">source-driven</span></div><h3>Single manifest</h3><p class="card-summary">The visible cards and right-edge object tree share one manifest, reducing drift between publication metadata and navigation.</p></article>
       </div>
     </section>
   </main>
 
   <aside class="object-tree" id="object-tree" aria-label="Security object tree" aria-hidden="true">
-    <div class="tree-header">
-      <div>
-        <p class="eyebrow">OBJECT TREE</p>
-        <strong>crypto://ragbaz-security/</strong>
-      </div>
-      <button class="icon-button" id="tree-close" type="button" aria-label="Close object tree">×</button>
-    </div>
+    <div class="tree-header"><div><p class="eyebrow">OBJECT TREE</p><strong>crypto://ragbaz-security/</strong></div><button class="icon-button" id="tree-close" type="button" aria-label="Close object tree">×</button></div>
     <nav id="tree-nav" aria-label="Object navigation"></nav>
   </aside>
-  <button class="tree-edge-tab" id="tree-edge-tab" type="button" aria-label="Open object tree">
-    <span aria-hidden="true">‹</span>
-  </button>
+  <button class="tree-edge-tab" id="tree-edge-tab" type="button" aria-label="Open object tree"><span aria-hidden="true">‹</span></button>
 
   <aside class="reader-settings" id="reader-settings" aria-label="Reader settings" aria-hidden="true">
-    <div class="tree-header">
-      <div>
-        <p class="eyebrow">LOCAL READER SETTINGS</p>
-        <strong>Saved only on this device</strong>
-      </div>
-      <button class="icon-button" id="settings-close" type="button" aria-label="Close reader settings">×</button>
-    </div>
-
-    <label>
-      Theme
-      <select id="theme-select"></select>
-    </label>
-
-    <label>
-      Reading font
-      <select id="font-select">
-        <option value="variable-sans">Variable Sans</option>
-        <option value="literary-serif">Literary Serif</option>
-        <option value="technical-mono">Technical Mono</option>
-      </select>
-    </label>
-
-    <label>
-      Reading width
-      <input id="width-range" type="range" min="58" max="88" step="2" value="72" />
-      <output id="width-output" for="width-range">72ch</output>
-    </label>
-
-    <label class="check-row">
-      <input id="reduced-effects" type="checkbox" />
-      Reduce ornament and motion
-    </label>
-
+    <div class="tree-header"><div><p class="eyebrow">LOCAL READER SETTINGS</p><strong>Saved only on this device</strong></div><button class="icon-button" id="settings-close" type="button" aria-label="Close reader settings">×</button></div>
+    <label>Theme<select id="theme-select"></select></label>
+    <label>Reading font<select id="font-select"><option value="variable-sans">Variable Sans</option><option value="literary-serif">Literary Serif</option><option value="technical-mono">Technical Mono</option></select></label>
+    <label>Reading width<input id="width-range" type="range" min="58" max="88" step="2" value="72" /><output id="width-output" for="width-range">72ch</output></label>
+    <label class="check-row"><input id="reduced-effects" type="checkbox" />Reduce ornament and motion</label>
     <button class="secondary-action settings-reset" id="settings-reset" type="button">Reset local settings</button>
     <p class="settings-footnote">Only display preferences and tree fold state use local storage.</p>
   </aside>
@@ -165,15 +96,10 @@
 
   <footer class="site-footer">
     <img src="../../assets/detcordon-mark.svg" alt="" width="34" height="34" />
-    <div>
-      <strong>RAGBAZ Labs · Security School</strong>
-      <a href="mailto:ragbaz@proton.me">ragbaz@proton.me</a>
-    </div>
-    <p>Public defensive edition · object-addressable reader</p>
+    <div><strong>RAGBAZ Labs · Security School</strong><a href="mailto:ragbaz@proton.me">ragbaz@proton.me</a></div>
+    <p>Private-network defensive edition · no PoC published</p>
   </footer>
 
-  <noscript>
-    <div class="noscript">This source-driven reader needs JavaScript to load its local manifest and render the object tree. The linked public source pages remain directly accessible.</div>
-  </noscript>
+  <noscript><div class="noscript">This source-driven reader needs JavaScript to load its local manifest and render the object tree.</div></noscript>
 </body>
 </html>
