@@ -10,7 +10,7 @@ const siteRoot = path.join(repoRoot, "site", "prospects");
 const VALUE_CAPTION = "Internal studio value estimates in USD. Current value is derived from completion percentage and is not booked revenue.";
 const MATURITY_CAPTION = "Maturity is described qualitatively; no single completion percentage or derived current-value estimate is published.";
 
-export function generateProspectPages() {
+export function renderProspectPages() {
   const catalog = readSiteCatalog();
   const entries = prospectEntries(catalog).sort((left, right) => {
     const leftOrder = left.prospect?.order || left.slug;
@@ -18,9 +18,15 @@ export function generateProspectPages() {
     return leftOrder.localeCompare(rightOrder);
   });
 
-  for (const [index, entry] of entries.entries()) {
-    const html = renderProspectPage({ entry, entries, index });
-    writeFileSync(path.join(siteRoot, `${entry.prospect.slug}.html`), html, "utf8");
+  return entries.map((entry, index) => ({
+    slug: entry.prospect.slug,
+    html: renderProspectPage({ entry, entries, index }),
+  }));
+}
+
+export function generateProspectPages() {
+  for (const { slug, html } of renderProspectPages()) {
+    writeFileSync(path.join(siteRoot, `${slug}.html`), html, "utf8");
   }
 }
 
