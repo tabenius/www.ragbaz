@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { prospectEntries, readSiteCatalog } from "../../../../metadata/src/site-catalog.mjs";
+import { prospectEntries, readSiteCatalog } from "../../catalog/site-catalog.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const siteRoot = path.join(repoRoot, "site", "prospects");

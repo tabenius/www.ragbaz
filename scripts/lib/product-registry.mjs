@@ -1,4 +1,4 @@
-import { publicProducts, readSiteCatalog } from "../../../../metadata/src/site-catalog.mjs";
+import { publicProducts, readSiteCatalog } from "../../catalog/site-catalog.mjs";
 
 const TAG_CSS_CLASS = {
   "live": "tag-live",
@@ -197,7 +197,7 @@ export function generateCompletionHtml(registry, updatedDate) {
     <section class="page-head">
       <div class="wrap">
         <h1 class="mono">// product value</h1>
-        <p>Published product catalog, pricing signals, and completion/value metadata distributed from <span class="mono" style="color:var(--fg-4)">/metadata/products.json</span>. Internal or unpublished lines are kept out of this public view.</p>
+        <p>Published product catalog, pricing signals, and completion/value metadata distributed from the versioned public catalog snapshot. Internal or unpublished lines are kept out of this public view.</p>
         <p class="mono" style="font-size:.8rem"><a href="/pricing">pricing →</a> &nbsp; <a href="/#products">product lines →</a> &nbsp; <a href="/stats">live stats →</a></p>
       </div>
     </section>
@@ -237,7 +237,7 @@ function closeHM(){ document.getElementById('hm-overlay').classList.remove('open
 }
 
 export function generateProductsJsModule(registry) {
-  return `// Generated from /metadata/products.json — do not edit directly.
+  return `// Generated from catalog/products.json — do not edit directly.
 // Run \`npm run prepare:content\` to regenerate.
 
 export const PRODUCTS = ${JSON.stringify(registry.products, null, 2)};

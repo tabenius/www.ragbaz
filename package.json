@@ -5,12 +5,13 @@
   "description": "ragbaz.cc — static site served from the Cloudflare edge via OpenNext",
   "scripts": {
     "prepare:content": "node scripts/generate-products-page.mjs && node scripts/sync-product-badges.mjs && node scripts/generate-prospect-pages.mjs && node scripts/check-site-catalog.mjs && node scripts/build-embedded-docs.mjs && node scripts/ensure-local-mode.mjs && node scripts/augment-security-publications.mjs && node scripts/build-security-react-widgets.mjs && node scripts/check-security-library.mjs && node scripts/sync-public.mjs && node scripts/generate-workspace-index.mjs && node scripts/check-public-leaks.mjs",
+    "catalog:sync": "node scripts/sync-catalog-snapshot.mjs",
     "clean": "node --eval \"import { rmSync } from 'node:fs'; for (const path of ['.next', '.open-next']) rmSync(path, { recursive: true, force: true });\"",
     "dev": "npm run prepare:content && next dev",
     "build": "npm run prepare:content && next build",
     "cf:build": "npm run clean && npm run build && opennextjs-cloudflare build --skipNextBuild",
     "preview": "npm run cf:build && opennextjs-cloudflare preview",
-    "deploy": "npm run cf:build && opennextjs-cloudflare deploy --env=\"\" && npm run graphql:refresh",
+    "deploy": "npm run cf:build && node scripts/render-wrangler-config.mjs && opennextjs-cloudflare deploy --config .wrangler.production.jsonc --env=\"\" && npm run graphql:refresh",
     "smoke:edge": "node scripts/smoke-worker.mjs",
     "smoke:edge:staging": "RAGBAZ_SMOKE_ORIGINS=https://staging.ragbaz.cc node scripts/smoke-worker.mjs",
     "staging:env": "sh scripts/bootstrap-staging-env.sh",
@@ -24,13 +25,14 @@
   },
   "dependencies": {
     "graphql": "^17.0.2",
-    "next": "^15.4.6",
+    "next": "^16.3.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "smol-toml": "^1.7.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.8.0",
-    "wrangler": "^4.107.0"
+    "@opennextjs/cloudflare": "^1.20.2",
+    "webpack": "^5.109.2",
+    "wrangler": "^4.123.0"
   }
 }

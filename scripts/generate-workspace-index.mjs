@@ -10,6 +10,16 @@ import {
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(repoRoot, "lib", "workspace-index.generated.mjs");
+
+if (process.env.RAGBAZ_USE_COMMITTED_WORKSPACE_INDEX === "1") {
+  const existing = readGeneratedWorkspaceIndex(outputPath);
+  if (!existing?.snapshot) {
+    throw new Error(`committed workspace index missing or invalid: ${outputPath}`);
+  }
+  console.log("workspace-index: using committed production snapshot");
+  process.exit(0);
+}
+
 const snapshot = buildWorkspaceSnapshot();
 const existing = readGeneratedWorkspaceIndex(outputPath);
 

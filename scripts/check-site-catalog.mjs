@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { prospectEntries, publicProducts, readSiteCatalog, unpublishedProducts } from "../../../metadata/src/site-catalog.mjs";
+import { prospectEntries, publicProducts, readSiteCatalog, unpublishedProducts } from "../catalog/site-catalog.mjs";
 import { generateCompletionHtml, generateProductsJsModule, readProductRegistry } from "./lib/product-registry.mjs";
 import { renderProspectPages } from "./lib/prospect-registry.mjs";
 
@@ -69,12 +69,12 @@ for (const entry of prospectEntries(catalog)) {
 }
 
 // Byte-parity: the generated artifacts must match what the catalog currently
-// produces, otherwise committed pages silently drift from /metadata/products.json.
+// produces, otherwise committed pages silently drift from catalog/products.json.
 const registry = readProductRegistry();
 const updatedDate = registry.version || new Date().toISOString().slice(0, 10);
 
 assert(
-  stripLocalMode(completionHtml) === generateCompletionHtml(registry, updatedDate),
+  stripLocalMode(completionHtml) === stripLocalMode(generateCompletionHtml(registry, updatedDate)),
   "site/completion.html is out of sync with products.json (run `npm run prepare:content`)",
   failures,
 );
@@ -82,7 +82,7 @@ assert(
 for (const { slug, html } of renderProspectPages()) {
   const onDisk = readFileSync(path.join(repoRoot, "site", "prospects", `${slug}.html`), "utf8");
   assert(
-    stripLocalMode(onDisk) === html,
+    stripLocalMode(onDisk) === stripLocalMode(html),
     `site/prospects/${slug}.html is out of sync with products.json (run \`npm run prepare:content\`)`,
     failures,
   );

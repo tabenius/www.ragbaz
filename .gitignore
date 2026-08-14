@@ -5,9 +5,12 @@ node_modules/
 public/
 embedded-docs/
 .wrangler/
+.wrangler.production.jsonc
 .env*
 !.env.example
 !.env*.example
 
 # build-generated embedded gated content
 lib/accounts/gated-content.generated.mjs
+site/school/security/react-widgets.js
+site/school/security/react-widgets.js.LICENSE.txt

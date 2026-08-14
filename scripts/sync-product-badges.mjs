@@ -1,11 +1,11 @@
 // Sync the hand-written homepage product articles with the canonical catalog
-// (/data/src/metadata/products.json): status tag text and the completion meter
+// (catalog/products.json): status tag text and the completion meter
 // in each
 // article header. Copy stays hand-written; the data-driven badges do not.
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { readSiteCatalog } from "../../../metadata/src/site-catalog.mjs";
+import { readSiteCatalog } from "../catalog/site-catalog.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const indexPath = path.join(repoRoot, "site", "index.html");
@@ -59,4 +59,4 @@ for (const entry of entries) {
 }
 
 writeFileSync(indexPath, html, "utf8");
-console.log(`sync-product-badges: synced ${synced} product header(s) from metadata/products.json (evaluated ${evaluatedAt})`);
+console.log(`sync-product-badges: synced ${synced} product header(s) from catalog/products.json (evaluated ${evaluatedAt})`);

@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const docsRoot = path.resolve(repoRoot, "..", "..", "doc.ragbaz.cc");
+const docsRoot = process.env.RAGBAZ_DOCS_ROOT
+  ? path.resolve(process.env.RAGBAZ_DOCS_ROOT)
+  : path.resolve(repoRoot, "..", "..", "doc.ragbaz.cc");
 const docsBuildDir = path.join(docsRoot, "build");
 const embeddedDocsDir = path.join(repoRoot, "embedded-docs");
 

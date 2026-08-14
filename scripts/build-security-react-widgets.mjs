@@ -1,14 +1,9 @@
-import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
-const require = createRequire(import.meta.url);
-const webpackBundle = require("next/dist/compiled/webpack/webpack");
-if (typeof webpackBundle.init === "function") webpackBundle.init();
-const webpack = webpackBundle.webpack || webpackBundle;
+import webpack from "webpack";
 
 if (typeof webpack !== "function") {
-  throw new TypeError("Next's bundled webpack compiler is unavailable");
+  throw new TypeError("Webpack compiler is unavailable");
 }
 
 const here = path.dirname(fileURLToPath(import.meta.url));
