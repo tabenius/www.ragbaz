@@ -102,18 +102,32 @@
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
   </style>
+<link rel="stylesheet" href="../interactive.css" />
+  <link rel="stylesheet" href="./interactive-overrides.css" />
+  <script src="../react-widgets.js" defer></script>
+  <script src="../../../assets/local-mode.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#threat-landscape">Skip to text</a>
   <div class="cloud left" aria-hidden="true"></div><div class="cloud right" aria-hidden="true"></div>
   <header class="topbar">
-    <a class="brand" href="../"><img src="../../../assets/detcordon-mark.svg" alt="" /><span><strong>RAGBAZ</strong><small>Security School</small></span></a>
+    <a class="brand" href="../" aria-label="RAGBAZ Security School home"><img src="../../../assets/detcordon-mark.svg" alt="" width="42" height="42" /><span><strong>RAGBAZ</strong><small>On Digital Robbery</small></span></a>
+    <div
+      data-react-widget="top-navigation"
+      data-label="On Digital Robbery navigation"
+      data-primary='[{"label":"Threat model","href":"#threat-landscape"},{"label":"Trust rings","href":"#privilege-rings"},{"label":"Payments","href":"#payment-paradigms"},{"label":"Controls","href":"#defensive-matrix"}]'
+      data-menu='[{"label":"Document tree","href":"#document-tree"},{"label":"Reading settings","href":"#reading-settings"},{"label":"Publication boundary","href":"#removed-material"},{"label":"Security School library","href":"/school/security/"},{"label":"Self-hosted pilot prospect","href":"/school/security/detcordon/self-hosted-pilot"},{"label":"Contact RAGBAZ","href":"mailto:ragbaz@proton.me"}]'
+    ></div>
+  </header>
+
+  <section class="article-reading-settings" id="reading-settings" aria-labelledby="reading-settings-title">
+    <div><p class="eyebrow">LOCAL READER SETTINGS</p><h2 id="reading-settings-title">Adjust the typeset edition.</h2><p>Theme, font, and line measure remain on this device. No private key, decrypted object, or content credential is requested.</p></div>
     <div class="controls" aria-label="Reading settings">
       <label>Theme<select id="theme"><option value="detcordon-signal-red">Signal Red</option><option value="ragbaz-gruvbox-slate">Gruvbox Slate</option><option value="tufte-darkgray-mokia">Tufte Darkgray</option><option value="arctic-cipher-blue">Arctic Cipher</option><option value="monastic-oxide">Monastic Oxide</option><option value="phosphor-night-ops">Phosphor Night</option></select></label>
       <label>Font<select id="font"><option value="literary-serif">Literary Serif</option><option value="variable-sans">Variable Sans</option><option value="technical-mono">Technical Mono</option></select></label>
       <label>Width<input id="measure" type="range" min="58" max="88" step="2" value="72" /></label>
     </div>
-  </header>
+  </section>
 
   <div class="layout">
     <article>
@@ -123,12 +137,18 @@
           <p class="eyebrow">Network-restricted defensive edition</p>
           <h1>On Digital Robbery</h1>
           <p class="subtitle">Android wallets, SoftPOS, NFC/EMV, hardware attestation, transaction routing, and privilege boundaries—reframed as defensive architecture rather than operational instruction.</p>
-          <div class="badges"><span class="badge">No PoC</span><span class="badge">No executable fixtures</span><span class="badge">NetBird / Tailscale only</span></div>
+          <div class="badges"><span class="badge">No PoC</span><span class="badge">No executable fixtures</span><span class="badge">Private mesh only</span></div>
           <p class="lede">The modern Android device can be a consumer wallet, a merchant terminal, and an untrusted compute node at the same time. Effective assurance therefore depends on where each security promise is enforced, what a more privileged layer can observe, and how device evidence is correlated with backend behavior.</p>
         </div>
       </section>
 
       <div class="publication-note"><strong>Publication boundary.</strong> This edition deliberately excludes raw command sequences, exploitation procedures, relay implementation details, bypass recipes, offensive bills of materials, downloadable tooling, and all proof-of-concept mechanics. It preserves only the architectural and defensive reasoning needed to understand the trust model.</div>
+
+      <section class="content interactive-boundary" id="publication-state-explorer">
+        <p class="eyebrow">Publication state</p><h2>Understand what this defensive edition exposes—and what it does not.</h2>
+        <p>This interactive state model describes the object-addressable publication architecture. The current release contains readable defensive material inside the VPN boundary and no proof-of-concept payloads, ciphertext, private keys, or unlock interface.</p>
+        <div data-react-widget="publication-states"></div>
+      </section>
 
       <section class="content" id="threat-landscape">
         <p class="eyebrow">01 · Threat landscape</p><h2>From dedicated terminals to hostile general-purpose devices</h2>
@@ -208,7 +228,7 @@
       <footer>RAGBAZ Labs · Security School · Defensive architecture edition<br /><a href="mailto:ragbaz@proton.me">ragbaz@proton.me</a></footer>
     </article>
 
-    <aside class="tree" aria-label="Document object tree">
+    <aside class="tree" id="document-tree" aria-label="Document object tree">
       <p class="eyebrow">Object tree</p><p class="root">crypto://ragbaz-security/on-digital-robbery/</p>
       <ol>
         <li><a href="#threat-landscape">01 · Threat landscape</a></li>

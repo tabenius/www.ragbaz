@@ -32,7 +32,7 @@ const assert = (condition, message) => { if (!condition) fail(message); };
 assert(manifest.version === 1, "manifest version must be 1");
 assert(manifest.library?.baseUri === "crypto://ragbaz-security", "library baseUri must be crypto://ragbaz-security");
 assert(manifest.library?.publicationMode === "private-network-only", "Security School must remain private-network-only");
-assert(manifest.library?.securityPolicy?.networkAccess === "netbird-or-tailscale-ip-allowlist", "network access must use the NetBird/Tailscale IP allowlist");
+assert(manifest.library?.securityPolicy?.networkAccess === "private-mesh-ip-allowlist", "network access must use an exact private-mesh IP allowlist");
 assert(manifest.library?.securityPolicy?.denyByDefault === true, "network access must deny by default");
 assert(manifest.library?.securityPolicy?.encryptedObjectsPublished === false, "encrypted objects must not be published in this release");
 assert(manifest.library?.securityPolicy?.unlockInterfaceEnabled === false, "unlock UI must remain disabled");
@@ -140,10 +140,10 @@ assert(wildcardIps.size === 0, "CIDRs and wildcards must be rejected; configure 
 for (const requiredProspectText of [
   "DetectionOnly WAF tap",
   "Docker/Firecracker victim",
-  "105 passing tests",
+  "tenant-bound mTLS",
   "age-encrypted",
-  "TLS for inter-service event/sample/heartbeat traffic",
-  "Multi-sandbox managed-lab scaling",
+  "deterministic compromise causality",
+  "managed HA cutover operations",
 ]) {
   assert(detcordonProspect.includes(requiredProspectText), `full DetCordon prospect content is missing: ${requiredProspectText}`);
 }

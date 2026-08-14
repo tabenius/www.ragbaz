@@ -19,7 +19,7 @@
           "type": "object",
           "required": ["networkAccess", "denyByDefault", "encryptedObjectsPublished", "unlockInterfaceEnabled", "clientKeyMaterialAccepted", "persistentPlaintextStorage"],
           "properties": {
-            "networkAccess": { "const": "netbird-or-tailscale-ip-allowlist" },
+            "networkAccess": { "const": "private-mesh-ip-allowlist" },
             "denyByDefault": { "const": true },
             "encryptedObjectsPublished": { "const": false },
             "unlockInterfaceEnabled": { "const": false },

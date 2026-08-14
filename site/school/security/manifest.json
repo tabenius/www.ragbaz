@@ -8,7 +8,7 @@
     "baseUri": "crypto://ragbaz-security",
     "publicationMode": "private-network-only",
     "securityPolicy": {
-      "networkAccess": "netbird-or-tailscale-ip-allowlist",
+      "networkAccess": "private-mesh-ip-allowlist",
       "denyByDefault": true,
       "encryptedObjectsPublished": false,
       "unlockInterfaceEnabled": false,

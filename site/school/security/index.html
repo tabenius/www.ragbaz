@@ -10,9 +10,9 @@
   <link rel="icon" href="../../assets/detcordon-mark.svg" />
   <link rel="stylesheet" href="./reader.css" />
   <link rel="stylesheet" href="./interactive.css" />
-  <script src="../../assets/local-mode.js" defer></script>
-  <script src="./react-widgets.js" defer></script>
+<script src="./react-widgets.js" defer></script>
   <script src="./reader.js" type="module"></script>
+  <script src="../../assets/local-mode.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#library-main">Skip to library</a>
@@ -40,9 +40,9 @@
   <main id="library-main">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-emblem"><img src="../../assets/detcordon-mark.svg" alt="DetCordon signal-red emblem" /></div>
-      <p class="eyebrow">PRIVATE SECURITY LIBRARY · NETBIRD / TAILSCALE</p>
+      <p class="eyebrow">PRIVATE SECURITY LIBRARY · ALLOWLISTED PRIVATE MESH</p>
       <h1 id="hero-title">Security knowledge should reveal its boundaries before it reveals its depth.</h1>
-      <p class="hero-copy">Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This release contains defensive material only and is reachable solely from explicitly allowlisted NetBird or Tailscale client or gateway addresses.</p>
+      <p class="hero-copy">Every course, article, laboratory, figure, trace, and downloadable asset can have its own identity and publication state. This release contains defensive material only and is reachable solely from explicitly allowlisted private-mesh client or gateway addresses.</p>
       <div class="hero-actions">
         <a class="primary-action" href="#collections">Explore collections</a>
         <button class="secondary-action" id="show-policy" type="button">Inspect network policy</button>
@@ -59,7 +59,7 @@
       <div>
         <p class="eyebrow">CURRENT NETWORK POSTURE</p>
         <h2>Deny by default.</h2>
-        <p>The Cloudflare worker returns a non-cacheable 404 unless the trusted <code>CF-Connecting-IP</code> exactly matches a configured NetBird, Tailscale, or VPN gateway address. The site does not accept forwarded client-IP headers from browsers, publish encrypted objects, request private keys, or expose an unlock interface.</p>
+        <p>The Cloudflare worker returns a non-cacheable 404 unless the trusted <code>CF-Connecting-IP</code> exactly matches a configured private-mesh or VPN gateway address. The site does not accept forwarded client-IP headers from browsers, publish encrypted objects, request private keys, or expose an unlock interface.</p>
       </div>
       <button class="close-note" type="button" aria-label="Close network note">×</button>
     </section>

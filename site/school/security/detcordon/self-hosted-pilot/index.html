@@ -10,11 +10,23 @@
   <link rel="icon" href="/assets/detcordon-mark.svg" />
   <link rel="stylesheet" href="/school/security/interactive.css" />
   <link rel="stylesheet" href="./prospect.css" />
-  <script src="/assets/local-mode.js" defer></script>
-  <script src="/school/security/react-widgets.js" defer></script>
+<script src="/school/security/react-widgets.js" defer></script>
+<style id="tibetan-cloud-edge-ornaments">
+    .prospect-edge-cloud{position:fixed;z-index:1;top:var(--rx-topbar-height,70px);bottom:0;width:clamp(72px,8vw,150px);opacity:.22;pointer-events:none;background:url('/school/security/assets/tibetan-clouds.svg') center top/100% auto repeat-y;filter:saturate(.72) contrast(1.04);mask-image:linear-gradient(to bottom,transparent 0,#000 8%,#000 90%,transparent 100%)}
+    .prospect-edge-cloud--left{left:clamp(-58px,-3vw,-24px)}
+    .prospect-edge-cloud--right{right:clamp(-58px,-3vw,-24px);transform:scaleX(-1)}
+    .prospect-main,.dc-topbar{position:relative;z-index:2}
+    @media(max-width:900px){.prospect-edge-cloud{width:84px;opacity:.15}.prospect-edge-cloud--left{left:-52px}.prospect-edge-cloud--right{right:-52px}}
+    @media(max-width:560px){.prospect-edge-cloud{width:68px;opacity:.1}.prospect-edge-cloud--left{left:-48px}.prospect-edge-cloud--right{right:-48px}}
+    @media(prefers-reduced-motion:reduce){.prospect-edge-cloud{background-attachment:scroll}}
+  </style>
+  <script src="../../../../assets/local-mode.js" defer></script>
 </head>
 <body class="prospect">
   <a class="skip-link" href="#overview">Skip to prospectus</a>
+
+  <div class="prospect-edge-cloud prospect-edge-cloud--left" aria-hidden="true"></div>
+  <div class="prospect-edge-cloud prospect-edge-cloud--right" aria-hidden="true"></div>
 
   <header class="dc-topbar">
     <a class="brand" href="/school/security/" aria-label="RAGBAZ Security School home">
