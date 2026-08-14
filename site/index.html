@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ragbaz — studio runtime</title>
-  <meta name="description" content="ragbaz is a small studio. Security-first runtimes: articulate hardened headless WordPress, Konsonans AI Governance EU AI Act Platform, detcordon containment-first malware observation, mailroute mail stream guard, matches autonomous battle simulation, and more." />
+  <meta name="description" content="ragbaz is a small studio building security-first runtimes: hardened headless WordPress, policy and evidence infrastructure for AI governance, containment-first malware observation, mail stream controls, autonomous battle simulation, and more." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="ragbaz — studio runtime" />
-  <meta property="og:description" content="ragbaz: hardened headless WordPress runtime, EU AI Act Platform, containment-first malware observation, mail stream guard, autonomous battle simulation, and systematic trading toolkit." />
+  <meta property="og:description" content="ragbaz: hardened headless WordPress, AI governance controls and evidence, containment-first malware observation, mail stream controls, autonomous battle simulation, and systematic trading tooling." />
   <meta property="og:url" content="https://ragbaz.cc" />
   <meta name="theme-color" content="#0a0908" />
   <link rel="icon" href="./assets/logo-mark.svg" />
@@ -555,15 +555,15 @@
   <main>
     <section class="hero">
       <div class="wrap">
-        <div class="eyebrow mono">studio · product lines</div>
+        <div class="eyebrow mono">studio · product lines · updated 2026-08-14</div>
         <div class="featured-showcase" aria-label="featured RAGBAZ projects">
           <div class="featured-frame">
             <article class="featured-slide active" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">building</span><span>01 / governance</span></div>
+                <div class="featured-kicker mono"><span class="status">pilot-stage</span><span>01 / governance</span></div>
                 <h2>EU AI Act<br />Governance <span>Platform</span></h2>
-                <p class="featured-desc">Konsonans AI Governance — a policy-as-code control plane that governs AI agents for EU AI Act compliance: every action passes a typed policy gate, lands in a tamper-evident audit chain, and can be held for human approval.</p>
-                <div class="featured-tags"><span>policy gate</span><span>audit chain</span><span>human oversight</span></div>
+                <p class="featured-desc">Konsonans AI Governance is a policy and evidence control plane for agentic systems: typed allow / hold / deny decisions, identity-aware ingress, human approval, hash-chained audit, and signed evidence packs. It supports deployment-specific EU AI Act work; it does not certify conformity.</p>
+                <div class="featured-tags"><span>policy gate</span><span>signed evidence</span><span>human oversight</span></div>
               </div>
               <div class="featured-panel">
                 <div class="featured-panel-head">
@@ -573,9 +573,9 @@
                   <div class="label mono">what it does</div>
                 </div>
                 <ul>
-                  <li>routes every agent tool-call through a risk-tiered policy gate (allow / hold / deny)</li>
-                  <li>writes a hash-chained, signable audit trail (art 9 / art 12)</li>
-                  <li>holds high-risk actions for human approval with safe-default timeouts (art 14)</li>
+                  <li>routes agent tool-calls through identity-aware, risk-tiered policy gates</li>
+                  <li>exports hash-chained evidence with software or PKCS#11 / HSM signatures</li>
+                  <li>checks demo, deployment, and release prerequisites before operator handoff</li>
                 </ul>
                 <div class="links">
                   <a class="link" href="/ai-governance">open buyer page →</a>
@@ -655,10 +655,10 @@
 
             <article class="featured-slide" data-featured-slide>
               <div class="featured-copy">
-                <div class="featured-kicker mono"><span class="status">research</span><span>05 / detcordon</span></div>
+                <div class="featured-kicker mono"><span class="status">prototype / pilot</span><span>05 / detcordon</span></div>
                 <h2>containment-first<br /><span>observation</span></h2>
-                <p class="featured-desc">Unknown payloads can't safely detonate on your workstation — but ignoring them leaves blind spots. DetCordon runs hostile web content in disposable, network-isolated sandboxes, recording every I/O into structured indicators without exposing your surface.</p>
-                <div class="featured-tags"><span>sandbox</span><span>recorder</span><span>ioc extraction</span></div>
+                <p class="featured-desc">DetCordon places disposable Docker or Firecracker victims behind a DetectionOnly HTTP tap, then moves events and encrypted samples to a separate evidence sink. Bounded replay and on-demand sending preserve observed request provenance without claiming request-to-process-to-sample causality.</p>
+                <div class="featured-tags"><span>detection-only tap</span><span>tenant mtls</span><span>evidence bundles</span></div>
               </div>
               <div class="featured-panel">
                 <div class="featured-panel-head">
@@ -668,11 +668,14 @@
                   <div class="label mono">what it does</div>
                 </div>
                 <ul>
-                  <li>captures network, DOM, storage, and file-system behavior</li>
-                  <li>keeps payload execution isolated from workstation state</li>
-                  <li>turns each run into reusable evidence bundles, indicators, and reports</li>
+                  <li>separates disposable victims from an audited, age-encrypted sink</li>
+                  <li>ships tenant-bound mTLS for event, sample, and heartbeat channels</li>
+                  <li>exports offline-verifiable bundles with bounded replay provenance</li>
                 </ul>
-                <a class="link" href="/prospects/detcordon">open prospectus →</a>
+                <div class="links">
+                  <a class="link" href="https://detcordon.ragbaz.cc/">open product site →</a>
+                  <a class="link" href="/prospects/detcordon">open prospectus →</a>
+                </div>
               </div>
             </article>
 
@@ -850,8 +853,8 @@
         </div>
 
         <article class="prod flagship" id="p-governance">
-          <div class="hd"><h3>ai governance</h3><span class="pct mono" title="completion — evaluated 2026-07-10"><span class="track"><span class="fill" style="width:61%"></span></span>61% complete</span><span class="st mono">building</span></div>
-          <div class="desc">AI agents act autonomously — every tool-call is an unrecorded risk without a governance layer. No audit trail, no human oversight, no proof of compliance when a regulator asks. Konsonans AI Governance routes every agent action through a typed policy gate, writes a tamper-evident SHA-256 hash chain, and holds high-risk decisions for human approval before they reach the upstream tool. <a class="link" href="/ai-governance">buyer page →</a> <a class="link" href="/konsonans-ai-governance">formal specification →</a> <a class="link" href="/prospects/ai-governance">prospectus →</a></div>
+          <div class="hd"><h3>ai governance</h3><span class="st mono">pilot-stage</span></div>
+          <div class="desc">Konsonans AI Governance routes agent actions through typed allow / hold / deny policy, identity and RBAC, human approval, and a tamper-evident SHA-256 audit chain. Operator preflight, self-contained buyer-demo, release-packet, and HSM-capable evidence paths ship; external review and deployment-specific conformity remain gates, not product claims. <a class="link" href="/ai-governance">buyer page →</a> <a class="link" href="/konsonans-ai-governance">formal specification →</a> <a class="link" href="/prospects/ai-governance">prospectus →</a></div>
           <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/ai-governance">architecture →</a></summary>
           <div class="comps">
             <div class="comp"><h4>mcp ingress</h4><p>model-context-protocol gateway. every agent tool-call is intercepted and routed through the policy gate before it reaches the upstream tool. identity + rbac enforced at entry.</p></div>
@@ -907,13 +910,13 @@
         </article>
 
         <article class="prod" id="p-detcordon">
-          <div class="hd"><h3>detcordon</h3><span class="st mono">beta</span></div>
-          <div class="desc">Unknown payloads are the most dangerous — you cannot safely detonate them on your workstation, but ignoring them leaves blind spots. DetCordon fronts a disposable, network-isolated victim with a DetectionOnly WAF tap and ships events and samples one-way to an age-encrypted, audited evidence sink on a separate host — 105 passing tests, most buyer-priority work already implemented. <a class="link" href="/prospects/detcordon">open prospect →</a>  <a class="link" href="/school/forensics">forensics school →</a>  <a class="link" href="/doc/products/detcordon">docs →</a>  <a class="link" href="mailto:sales@ragbaz.cc?subject=DetCordon%20pilot%20request">request a pilot →</a></div>
+          <div class="hd"><h3>detcordon</h3><span class="st mono">prototype / pilot</span></div>
+          <div class="desc">DetCordon fronts disposable, network-isolated Docker or Firecracker victims with a DetectionOnly HTTP tap. Tenant-bound mTLS moves events, samples, and heartbeats to an age-encrypted, audited sink; bounded replay and on-demand sending preserve observed HTTP provenance. Deterministic request-to-process-to-sample lineage remains planned. <a class="link" href="https://detcordon.ragbaz.cc/">product site →</a> <a class="link" href="/prospects/detcordon">open prospect →</a> <a class="link" href="/school/forensics">forensics school →</a> <a class="link" href="/doc/products/detcordon">docs →</a> <a class="link" href="mailto:sales@ragbaz.cc?subject=DetCordon%20pilot%20request">request a pilot →</a></div>
           <details class="comps-details"><summary>components<a class="link arch" onclick="event.stopPropagation()" href="/doc/products/detcordon">architecture →</a></summary>
           <div class="comps">
-            <div class="comp"><h4>waf tap</h4><p>DetectionOnly ingress observes hostile HTTP requests and emits request metadata over a one-way event path without blocking the experiment.</p></div>
+            <div class="comp"><h4>waf tap</h4><p>DetectionOnly ingress assigns fresh request IDs, records observed HTTP metadata, and keeps captured provenance separate from runtime facts.</p></div>
             <div class="comp"><h4>disposable victim</h4><p>Docker and Firecracker backends isolate intentionally vulnerable workloads so each detonation can be discarded and rebuilt.</p></div>
-            <div class="comp"><h4>evidence sink</h4><p>a separate host receives events and samples, age-encrypts captured evidence, and preserves an auditable provenance trail.</p></div>
+            <div class="comp"><h4>evidence sink</h4><p>a separate active-passive sink receives tenant-bound mTLS events and samples, age-encrypts evidence, and exports offline-verifiable bundles.</p></div>
             <div class="comp"><h4>operator dashboard</h4><p>authenticated review and export surface for events, samples, containment evidence, and buyer-facing demonstrations.</p></div>
           </div></details>
           <div class="flow mono"><span class="f-node">hostile-http</span><span class="f-arr">→</span><span class="f-node">waf-tap</span><span class="f-arr">→</span><span class="f-node">disposable-victim</span><span class="f-arr">|</span><span class="f-node">events + samples</span><span class="f-arr">→</span><span class="f-node">evidence-sink</span><span class="f-arr">→</span><span class="f-node">operator-dashboard</span></div>
@@ -982,7 +985,7 @@
       <span class="meta mono">studio · oslo + stockholm · warm-solarized-dark</span>
     </div>
   </footer>
-  <div class="wrap last-updated"><time datetime="2026-07-10">2026-07-10</time></div>
+  <div class="wrap last-updated"><time datetime="2026-08-14">2026-08-14</time></div>
 <script>
 function setHMExpanded(open){ var b=document.querySelector('.hm-btn'); if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
 function toggleHM(){ var o=document.getElementById('hm-overlay'),s=document.getElementById('hm-scrim'),open=!o.classList.contains('open'); o.classList.toggle('open', open); s.classList.toggle('open', open); setHMExpanded(open); }
